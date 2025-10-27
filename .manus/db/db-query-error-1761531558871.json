@@ -1,0 +1,8 @@
+{
+  "query": "ALTER TABLE `users` \n  ADD COLUMN `emailVerified` INT NOT NULL DEFAULT 0 AFTER `provider`,\n  ADD COLUMN `verificationToken` VARCHAR(255) NULL AFTER `emailVerified`,\n  ADD COLUMN `resetPasswordToken` VARCHAR(255) NULL AFTER `verificationToken`,\n  ADD COLUMN `resetPasswordExpires` TIMESTAMP NULL AFTER `resetPasswordToken`;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3ES6PvcnTNEV8vB.57a33a906c17 --database mJzsRrstkbLobg3DApXsgD --execute ALTER TABLE `users` \n  ADD COLUMN `emailVerified` INT NOT NULL DEFAULT 0 AFTER `provider`,\n  ADD COLUMN `verificationToken` VARCHAR(255) NULL AFTER `emailVerified`,\n  ADD COLUMN `resetPasswordToken` VARCHAR(255) NULL AFTER `verificationToken`,\n  ADD COLUMN `resetPasswordExpires` TIMESTAMP NULL AFTER `resetPasswordToken`;",
+  "returncode": 1,
+  "logs": [
+    "ERROR 1054 (42S22) at line 1: Unknown column 'emailverified' in 'users'"
+  ]
+}

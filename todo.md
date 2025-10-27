@@ -46,4 +46,15 @@
   - [x] Script de atualização de variáveis de ambiente
   - [x] Script de deploy/redeploy
   - [x] Documentação de uso dos scripts
+- [ ] Implementar NextAuth no código
+  - [x] Instalar dependências (next-auth, bcryptjs, nodemailer)
+  - [ ] Criar rotas de autenticação (/api/auth/*)
+  - [ ] Criar páginas de login e registro
+  - [x] Atualizar schema do banco para usuários
+  - [x] Aplicar migração no banco de dados
+  - [x] Corrigir erros TypeScript (loginMethod → provider)
+  - [ ] Criar configuração NextAuth
+  - [ ] Substituir OAuth da Manus por NextAuth
+  - [ ] Testar login com Google
+  - [ ] Testar cadastro com email/senha
 

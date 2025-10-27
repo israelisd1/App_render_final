@@ -11,11 +11,22 @@ export const users = mysqlTable("users", {
    * Use this for relations between tables.
    */
   id: int("id").autoincrement().primaryKey(),
-  /** Manus OAuth identifier (openId) returned from the OAuth callback. Unique per user. */
-  openId: varchar("openId", { length: 64 }).notNull().unique(),
+  /** OAuth identifier (openId) - opcional, usado apenas para OAuth providers */
+  openId: varchar("openId", { length: 64 }).unique(),
   name: text("name"),
-  email: varchar("email", { length: 320 }),
-  loginMethod: varchar("loginMethod", { length: 64 }),
+  email: varchar("email", { length: 320 }).unique(),
+  /** Senha hash (bcrypt) - usado apenas para login com email/senha */
+  password: varchar("password", { length: 255 }),
+  /** Provider de autenticação: 'email', 'google', 'manus' */
+  provider: varchar("provider", { length: 64 }).default("email").notNull(),
+  /** Se o email foi verificado */
+  emailVerified: int("emailVerified").default(0).notNull(), // 0 = não verificado, 1 = verificado
+  /** Token de verificação de email */
+  verificationToken: varchar("verificationToken", { length: 255 }),
+  /** Token de reset de senha */
+  resetPasswordToken: varchar("resetPasswordToken", { length: 255 }),
+  /** Expiração do token de reset */
+  resetPasswordExpires: timestamp("resetPasswordExpires"),
   role: mysqlEnum("role", ["user", "admin"]).default("user").notNull(),
   tokenBalance: int("tokenBalance").default(3).notNull(), // Saldo de tokens (inicia com 3)
   createdAt: timestamp("createdAt").defaultNow().notNull(),
