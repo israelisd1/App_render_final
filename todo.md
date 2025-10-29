@@ -90,10 +90,11 @@
     - [x] Adicionar campos de assinatura (subscription_id, plan, quota)
     - [x] Criar migração SQL
     - [x] Aplicar migração no banco (9 campos adicionados)
-  - [ ] FASE 3: Configurar produtos no Stripe
-    - [ ] Criar plano Basic (R$99,90/mês - 100 imagens)
-    - [ ] Criar plano Pro (R$149,90/mês - 170 imagens alta resolução)
-    - [ ] Criar pacote extra (R$49,90 - 20 imagens)
+  - [x] FASE 3: Configurar produtos no Stripe
+    - [x] Criar guia de configuração (STRIPE_PRODUCTS_SETUP.md)
+    - [x] Criar arquivo de constantes (stripe-products.ts)
+    - [x] Solicitar Price IDs do usuário
+    - [x] Configurar variáveis de ambiente
   - [ ] FASE 4: Backend - Lógica de assinatura
     - [ ] Funções de banco (canUserRender, decrementQuota, etc)
     - [ ] Rotas de assinatura (create, cancel, buy-extra)
