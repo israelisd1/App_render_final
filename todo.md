@@ -46,6 +46,10 @@
   - [x] Script de atualização de variáveis de ambiente
   - [x] Script de deploy/redeploy
   - [x] Documentação de uso dos scripts
+- [x] Corrigir preview da aplicação (servidor não inicia)
+  - [x] Desabilitar temporariamente NextAuth (problema com imports)
+  - [x] Fazer servidor iniciar corretamente
+  - [x] Testar preview funcionando - APLICAÇÃO FUNCIONAL!
 - [ ] Implementar NextAuth no código
   - [x] Instalar dependências (next-auth, bcryptjs, nodemailer)
   - [x] Criar rotas de autenticação (/api/auth/*)
@@ -62,7 +66,18 @@
   - [x] Adicionar traduções PT-BR/EN para auth
   - [x] Integrar NextAuth no servidor principal (server/_core/index.ts)
   - [ ] Adicionar rotas no App.tsx
-  - [ ] Substituir OAuth da Manus por NextAuth (opcional - manter ambos)
+  - [ ] Corrigir imports do next-auth (GoogleProvider e CredentialsProvider)
+  - [ ] Reabilitar NextAuth routes no servidor
   - [ ] Testar login com Google
   - [ ] Testar cadastro com email/senha
+  
+## NOTA IMPORTANTE:
+NextAuth está 90% implementado mas DESABILITADO devido a erro de import.
+Aplicação funciona perfeitamente com OAuth da Manus.
+
+Para finalizar NextAuth:
+1. Investigar exports corretos do next-auth 4.24.11
+2. Corrigir imports em server/auth/nextauth.config.ts
+3. Descomentar registerAuthRoutes() em server/_core/index.ts
+4. Adicionar rotas /login, /signup, /forgot-password no App.tsx
 

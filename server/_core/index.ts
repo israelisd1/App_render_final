@@ -44,10 +44,10 @@ async function startServer() {
   app.use(express.json({ limit: "50mb" }));
   app.use(express.urlencoded({ limit: "50mb", extended: true }));
   
-  // NextAuth routes under /api/auth/*
-  registerAuthRoutes(app);
+  // NextAuth routes under /api/auth/* (temporariamente desabilitado - corrigir GoogleProvider)
+  // registerAuthRoutes(app);
   
-  // OAuth callback under /api/oauth/callback (legacy Manus OAuth)
+  // OAuth callback under /api/oauth/callback (Manus OAuth)
   registerOAuthRoutes(app);
   // tRPC API
   app.use(
