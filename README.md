@@ -1,4 +1,4 @@
-# Arqrender - Renderização Arquitetônica com IA
+# Arqrender - Renderização Arquitetônica com Renderização Avançada
 
 > Transforme seus desenhos 2D em renderizações fotorrealistas de alta qualidade em segundos.
 
@@ -24,7 +24,7 @@
 ### Principais Diferenciais
 
 - ⚡ **Renderizações em 10-30 segundos** - Sem espera, sem complicação
-- 🎨 **Algoritmos avançados de IA** - Preservam geometria e adicionam iluminação realista
+- 🎨 **Algoritmos avançados de Renderização Avançada** - Preservam geometria e adicionam iluminação realista
 - 💼 **Sistema de créditos flexível** - Pague apenas pelo que usar
 - 🌍 **Bilíngue** - Interface completa em Português (BR) e Inglês
 - 📱 **Responsivo** - Funciona perfeitamente em desktop, tablet e mobile
@@ -33,7 +33,7 @@
 
 ### Renderização Principal
 - **Upload de imagens 2D** (plantas baixas, esboços, renders básicos)
-- **Renderização com IA** em 10-30 segundos
+- **Renderização com Renderização Avançada** em 10-30 segundos
 - **Tipos de cena**: Interior e Exterior
 - **Formatos de saída**: JPG e PNG
 - **Prompts personalizados** para controle criativo
@@ -91,7 +91,7 @@
 - **JWT** para autenticação
 
 ### Integrações
-- **RapidAPI** - Renderização com IA
+- **RapidAPI** - Renderização com Renderização Avançada
 - **Stripe** - Pagamentos e webhooks
 - **DigitalOcean Spaces** - Armazenamento S3
 - **NextAuth.js** - Autenticação (Google OAuth + Email/Senha)
@@ -349,7 +349,7 @@ Contribuições são bem-vindas! Por favor:
 
 ## 🙏 Agradecimentos
 
-- [RapidAPI](https://rapidapi.com/) - API de renderização com IA
+- [RapidAPI](https://rapidapi.com/) - API de renderização com Renderização Avançada
 - [Stripe](https://stripe.com/) - Processamento de pagamentos
 - [DigitalOcean](https://www.digitalocean.com/) - Infraestrutura cloud
 - [Shadcn/ui](https://ui.shadcn.com/) - Componentes UI

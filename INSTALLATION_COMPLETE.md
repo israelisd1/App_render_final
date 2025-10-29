@@ -34,7 +34,7 @@ Crie contas nos seguintes serviços (todos têm planos gratuitos ou trial):
 - [ ] **Registro.br** - Domínio .com.br (https://registro.br) - Opcional
 - [ ] **Google Cloud** - OAuth para login (https://console.cloud.google.com)
 - [ ] **Stripe** - Pagamentos (https://stripe.com)
-- [ ] **RapidAPI** - Renderização com IA (https://rapidapi.com)
+- [ ] **RapidAPI** - Renderização com Renderização Avançada (https://rapidapi.com)
 - [ ] **Gmail** - SMTP para emails (ou outro provedor)
 
 ### 💰 Custos Estimados
@@ -294,8 +294,8 @@ Crie os seguintes produtos:
 
 ### 7.2 Encontrar API de Renderização
 
-1. Na busca, procure por: **"AI Image Generation"** ou **"Architectural Rendering"**
-2. Escolha uma API (ex: Stability AI, Midjourney, etc.)
+1. Na busca, procure por: **"Advanced Rendering Image Generation"** ou **"Architectural Rendering"**
+2. Escolha uma API (ex: Stability Advanced Rendering, Midjourney, etc.)
 3. Clique em **"Subscribe to Test"**
 4. Escolha um plano (geralmente tem plano gratuito para testes)
 
@@ -587,7 +587,7 @@ http://164.90.123.45
 - [ ] **Login com email/senha funciona**
 - [ ] **Login com Google funciona**
 - [ ] **Upload de imagem funciona**
-- [ ] **Renderização com IA funciona**
+- [ ] **Renderização com Renderização Avançada funciona**
 - [ ] **Sistema de tokens funciona**
 - [ ] **Compra de tokens funciona (Stripe)**
 - [ ] **Histórico de renderizações exibe**

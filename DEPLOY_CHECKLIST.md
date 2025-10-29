@@ -94,7 +94,7 @@ Use este checklist para garantir que todos os passos foram seguidos corretamente
 - [ ] Página inicial carrega corretamente
 - [ ] Login/autenticação funcionando
 - [ ] Upload de imagem funciona
-- [ ] Renderização com IA funciona
+- [ ] Renderização com Renderização Avançada funciona
 - [ ] Sistema de tokens funciona
 - [ ] Compra de tokens funciona (Stripe)
 - [ ] Webhook do Stripe configurado e testado

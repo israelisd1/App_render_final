@@ -2,7 +2,7 @@
 
 ## Funcionalidades Implementadas
 
-- [x] Sistema de renderização com IA via RapidAPI
+- [x] Sistema de renderização com Renderização Avançada via RapidAPI
 - [x] Upload de imagens 2D
 - [x] Sistema de tokens (compra e consumo)
 - [x] Integração com Stripe para pagamentos
@@ -80,6 +80,31 @@
   - [x] Consolidar informações de todos os guias
   - [x] Adicionar tabelas de custos
   - [x] Atualizar instruções de deploy
+- [ ] Remover mençõ- [x] Remover menções a "IA" em todos os textos
+  - [x] Substituir por "renderização avançada"
+  - [x] Atualizar frontend (traduções PT-BR/EN)
+  - [x] Atualizar documentação (README, guias) - 12 arquivos .md
+  - [x] Meta tags usam VITE_APP_TITLE (sem hardcode)
+- [ ] Implementar novo modelo de assinatura
+  - [ ] Criar plano Basic (R$99,90/mês - 100 imagens)
+  - [ ] Criar plano Pro (R$149,90/mês - 170 imagens alta resolução)
+  - [ ] Configurar produtos no Stripe
+  - [ ] Atualizar schema do banco (subscription, plan, monthly_quota)
+  - [ ] Implementar lógica de reset mensal
+  - [ ] Remover sistema de tokens atual
+- [ ] Implementar compra de pacotes extras
+  - [ ] Múltiplos de 20 imagens por R$49,90
+  - [ ] Respeitar resolução do plano principal
+  - [ ] Criar interface de compra
+  - [ ] Integrar com Stripe
+- [ ] Implementar controle de qualidade de imagem
+  - [ ] Investigar parâmetro rendering_time da RapidAPI
+  - [ ] Usar rendering_time="detailed" sempre
+  - [ ] Comprimir saída para HD no plano Basic
+  - [ ] Manter qualidade máxima no plano Pro
+  - [ ] Ocultar botão download alta res para Basic
+  - [ ] Mostrar botão apenas para plano Pro
+  - [ ] Adicionar badge/tooltip explicativo
 
 ## NOTA IMPORTANTE:
 NextAuth está 90% implementado mas DESABILITADO devido a erro de import.

@@ -533,7 +533,7 @@ sudo -u archrender pnpm store prune
 - [ ] Variáveis de ambiente configuradas
 - [ ] SSL/HTTPS funcionando
 - [ ] Upload de imagens testado
-- [ ] Renderização com IA testada
+- [ ] Renderização com Renderização Avançada testada
 - [ ] Pagamento Stripe testado
 - [ ] Backup automático configurado
 - [ ] Monitoramento ativo

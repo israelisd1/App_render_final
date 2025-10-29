@@ -5,7 +5,7 @@ Aplicação web para renderização de imagens arquitetônicas 2D em alta qualid
 ## Funcionalidades
 
 - **Upload de Imagens**: Faça upload de desenhos arquitetônicos 2D (plantas, fachadas, interiores)
-- **Renderização IA**: Transforme suas imagens em renderizações fotorrealísticas
+- **Renderização Renderização Avançada**: Transforme suas imagens em renderizações fotorrealísticas
 - **Configurações Personalizadas**:
   - Tipo de cena: Interior ou Exterior
   - Formato de saída: JPG, PNG, WebP, AVIF

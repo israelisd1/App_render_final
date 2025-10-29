@@ -40,7 +40,7 @@ sudo nano /home/archrender/arch-render-app/.env
 ```
 
 Adicione suas chaves de API:
-- `RAPIDAPI_KEY` - Para renderização com IA
+- `RAPIDAPI_KEY` - Para renderização com Renderização Avançada
 - `STRIPE_SECRET_KEY` - Para pagamentos
 - `STRIPE_PUBLISHABLE_KEY` - Para checkout
 - `STRIPE_WEBHOOK_SECRET` - Para webhooks

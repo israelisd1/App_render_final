@@ -74,7 +74,7 @@ O **DigitalOcean App Platform** é uma solução PaaS que permite fazer deploy d
 ├─────────────────────────────────────────────────────────┤
 │  • Google OAuth (Login)                                 │
 │  • Stripe (Pagamentos)                                  │
-│  • RapidAPI (Renderização IA)                           │
+│  • RapidAPI (Renderização Renderização Avançada)                           │
 └─────────────────────────────────────────────────────────┘
 ```
 
@@ -233,7 +233,7 @@ DOMÍNIO (se aplicável):
 2. Clique no ícone **+** no canto superior direito → **New repository**
 3. Preencha:
    - **Repository name**: `arqrender` (ou nome de sua preferência)
-   - **Description**: `Aplicação de renderização arquitetônica com IA`
+   - **Description**: `Aplicação de renderização arquitetônica com Renderização Avançada`
    - **Visibility**: Private (recomendado) ou Public
 4. **NÃO** marque "Initialize this repository with a README"
 5. Clique em **Create repository**
@@ -458,7 +458,7 @@ STRIPE (Test Mode):
 
 **Tempo estimado**: 10 minutos
 
-O RapidAPI fornece acesso à API de renderização arquitetônica com IA.
+O RapidAPI fornece acesso à API de renderização arquitetônica com Renderização Avançada.
 
 ### 5.1 Encontrar a API de Renderização
 
@@ -867,7 +867,7 @@ STRIPE_PRICE_10_TOKENS=price_xxxxxxxxxxxxx
 STRIPE_PRICE_50_TOKENS=price_xxxxxxxxxxxxx
 
 # ============================================
-# RAPIDAPI (Renderização IA)
+# RAPIDAPI (Renderização Renderização Avançada)
 # ============================================
 RAPIDAPI_KEY=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 RAPIDAPI_HOST=architecture-rendering-api.p.rapidapi.com

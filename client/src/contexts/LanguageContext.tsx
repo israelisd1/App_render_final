@@ -21,7 +21,7 @@ const translations = {
     
     // Home
     "home.title": "Arqrender",
-    "home.subtitle": "Renderização Arquitetônica com IA",
+    "home.subtitle": "Renderização Arquitetônica Avançada",
     "home.description": "Transforme seus desenhos 2D em renderizações fotorrealistas de alta qualidade em segundos. Perfeito para arquitetos, designers de interiores e profissionais da construção.",
     "home.cta": "Começar a Renderizar",
     "home.ctaLogin": "Começar Agora",
@@ -187,7 +187,7 @@ const translations = {
     
     // Home
     "home.title": "Arqrender",
-    "home.subtitle": "AI-Powered Architectural Rendering",
+    "home.subtitle": "Advanced Architectural Rendering",
     "home.description": "Transform your 2D drawings into photorealistic high-quality renderings in seconds. Perfect for architects, interior designers, and construction professionals.",
     "home.cta": "Start Rendering",
     "home.ctaLogin": "Get Started",
