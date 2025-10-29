@@ -71,6 +71,16 @@
   - [ ] Testar login com Google
   - [ ] Testar cadastro com email/senha
   
+- [x] Corrigir orientação das setas do slider na página principal
+  - [x] Setas devem estar na horizontal (não vertical)
+  - [x] Ajustar SVG do slider (BeforeAfterSlider.tsx)
+- [x] Atualizar documentação
+  - [x] Revisar README.md
+  - [x] Adicionar índice e badges
+  - [x] Consolidar informações de todos os guias
+  - [x] Adicionar tabelas de custos
+  - [x] Atualizar instruções de deploy
+
 ## NOTA IMPORTANTE:
 NextAuth está 90% implementado mas DESABILITADO devido a erro de import.
 Aplicação funciona perfeitamente com OAuth da Manus.
