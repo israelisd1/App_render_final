@@ -48,12 +48,19 @@
   - [x] Documentação de uso dos scripts
 - [ ] Implementar NextAuth no código
   - [x] Instalar dependências (next-auth, bcryptjs, nodemailer)
-  - [ ] Criar rotas de autenticação (/api/auth/*)
+  - [x] Criar rotas de autenticação (/api/auth/*)
   - [ ] Criar páginas de login e registro
+    - [x] Página de login (LoginPage.tsx)
+    - [ ] Página de registro (SignupPage.tsx)
+    - [ ] Página de recuperação de senha
   - [x] Atualizar schema do banco para usuários
   - [x] Aplicar migração no banco de dados
   - [x] Corrigir erros TypeScript (loginMethod → provider)
-  - [ ] Criar configuração NextAuth
+  - [x] Criar configuração NextAuth (nextauth.config.ts)
+  - [x] Adicionar funções de banco para NextAuth (db.ts)
+  - [x] Criar tipos TypeScript para NextAuth
+  - [ ] Adicionar traduções PT-BR/EN para auth
+  - [ ] Integrar NextAuth no servidor principal
   - [ ] Substituir OAuth da Manus por NextAuth
   - [ ] Testar login com Google
   - [ ] Testar cadastro com email/senha

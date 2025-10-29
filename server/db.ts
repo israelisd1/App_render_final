@@ -443,3 +443,126 @@ export async function getUserDetailedStats(userId: number) {
   }
 }
 
+
+
+// ============================================
+// NEXTAUTH FUNCTIONS
+// ============================================
+
+/**
+ * Buscar usuário por email
+ */
+export async function getUserByEmail(email: string) {
+  const db = await getDb();
+  if (!db) return null;
+
+  const result = await db.select().from(users).where(eq(users.email, email)).limit(1);
+  return result.length > 0 ? result[0] : null;
+}
+
+/**
+ * Criar novo usuário (para NextAuth)
+ */
+export async function createUser(userData: {
+  email: string;
+  name?: string | null;
+  password?: string | null;
+  provider: string;
+  emailVerified?: number;
+  verificationToken?: string | null;
+  tokenBalance?: number;
+}) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  const [result] = await db.insert(users).values({
+    email: userData.email,
+    name: userData.name || null,
+    password: userData.password || null,
+    provider: userData.provider,
+    emailVerified: userData.emailVerified || 0,
+    verificationToken: userData.verificationToken || null,
+    tokenBalance: userData.tokenBalance || 3,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    lastSignedIn: new Date(),
+  });
+
+  return result.insertId;
+}
+
+/**
+ * Atualizar último login do usuário
+ */
+export async function updateUserLastSignIn(userId: number) {
+  const db = await getDb();
+  if (!db) return;
+
+  await db.update(users).set({ lastSignedIn: new Date() }).where(eq(users.id, userId));
+}
+
+/**
+ * Buscar usuário por token de verificação
+ */
+export async function getUserByVerificationToken(token: string) {
+  const db = await getDb();
+  if (!db) return null;
+
+  const result = await db.select().from(users).where(eq(users.verificationToken, token)).limit(1);
+  return result.length > 0 ? result[0] : null;
+}
+
+/**
+ * Verificar email do usuário
+ */
+export async function verifyUserEmail(userId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  await db.update(users).set({
+    emailVerified: 1,
+    verificationToken: null,
+    updatedAt: new Date(),
+  }).where(eq(users.id, userId));
+}
+
+/**
+ * Definir token de reset de senha
+ */
+export async function setResetPasswordToken(userId: number, token: string, expires: Date) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  await db.update(users).set({
+    resetPasswordToken: token,
+    resetPasswordExpires: expires,
+    updatedAt: new Date(),
+  }).where(eq(users.id, userId));
+}
+
+/**
+ * Buscar usuário por token de reset de senha
+ */
+export async function getUserByResetToken(token: string) {
+  const db = await getDb();
+  if (!db) return null;
+
+  const result = await db.select().from(users).where(eq(users.resetPasswordToken, token)).limit(1);
+  return result.length > 0 ? result[0] : null;
+}
+
+/**
+ * Atualizar senha do usuário
+ */
+export async function updateUserPassword(userId: number, hashedPassword: string) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  await db.update(users).set({
+    password: hashedPassword,
+    resetPasswordToken: null,
+    resetPasswordExpires: null,
+    updatedAt: new Date(),
+  }).where(eq(users.id, userId));
+}
+
