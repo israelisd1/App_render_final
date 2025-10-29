@@ -86,12 +86,23 @@
   - [x] Atualizar documentação (README, guias) - 12 arquivos .md
   - [x] Meta tags usam VITE_APP_TITLE (sem hardcode)
 - [ ] Implementar novo modelo de assinatura
-  - [ ] Criar plano Basic (R$99,90/mês - 100 imagens)
-  - [ ] Criar plano Pro (R$149,90/mês - 170 imagens alta resolução)
-  - [ ] Configurar produtos no Stripe
-  - [ ] Atualizar schema do banco (subscription, plan, monthly_quota)
-  - [ ] Implementar lógica de reset mensal
-  - [ ] Remover sistema de tokens atual
+  - [x] FASE 2: Atualizar schema do banco
+    - [x] Adicionar campos de assinatura (subscription_id, plan, quota)
+    - [x] Criar migração SQL
+    - [x] Aplicar migração no banco (9 campos adicionados)
+  - [ ] FASE 3: Configurar produtos no Stripe
+    - [ ] Criar plano Basic (R$99,90/mês - 100 imagens)
+    - [ ] Criar plano Pro (R$149,90/mês - 170 imagens alta resolução)
+    - [ ] Criar pacote extra (R$49,90 - 20 imagens)
+  - [ ] FASE 4: Backend - Lógica de assinatura
+    - [ ] Funções de banco (canUserRender, decrementQuota, etc)
+    - [ ] Rotas de assinatura (create, cancel, buy-extra)
+    - [ ] Webhook handler do Stripe
+    - [ ] Implementar cancelamento no final do ciclo (cancel_at_period_end)
+  - [ ] FASE 5: Controle de qualidade de imagem
+  - [ ] FASE 6: Frontend - Páginas de assinatura
+  - [ ] FASE 7: Traduções
+  - [ ] FASE 8: Testes e validação
 - [ ] Implementar compra de pacotes extras
   - [ ] Múltiplos de 20 imagens por R$49,90
   - [ ] Respeitar resolução do plano principal

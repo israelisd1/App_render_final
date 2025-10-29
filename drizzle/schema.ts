@@ -28,7 +28,21 @@ export const users = mysqlTable("users", {
   /** Expiração do token de reset */
   resetPasswordExpires: timestamp("resetPasswordExpires"),
   role: mysqlEnum("role", ["user", "admin"]).default("user").notNull(),
+  
+  // Sistema de Tokens (DEPRECATED - manter por compatibilidade)
   tokenBalance: int("tokenBalance").default(3).notNull(), // Saldo de tokens (inicia com 3)
+  
+  // Sistema de Assinaturas (NOVO)
+  stripeCustomerId: varchar("stripeCustomerId", { length: 255 }), // ID do customer no Stripe
+  subscriptionId: varchar("subscriptionId", { length: 255 }), // ID da assinatura no Stripe
+  subscriptionStatus: mysqlEnum("subscriptionStatus", ["active", "canceled", "past_due", "inactive"]).default("inactive"),
+  plan: mysqlEnum("plan", ["free", "basic", "pro"]).default("free").notNull(),
+  monthlyQuota: int("monthlyQuota").default(0).notNull(), // Quota mensal de renderizações
+  monthlyRendersUsed: int("monthlyRendersUsed").default(0).notNull(), // Renderizações usadas no mês
+  extraRenders: int("extraRenders").default(0).notNull(), // Renderizações extras compradas
+  billingPeriodStart: timestamp("billingPeriodStart"), // Início do período de cobrança
+  billingPeriodEnd: timestamp("billingPeriodEnd"), // Fim do período de cobrança
+  
   createdAt: timestamp("createdAt").defaultNow().notNull(),
   updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
   lastSignedIn: timestamp("lastSignedIn").defaultNow().notNull(),
