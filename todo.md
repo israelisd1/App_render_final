@@ -95,11 +95,12 @@
     - [x] Criar arquivo de constantes (stripe-products.ts)
     - [x] Solicitar Price IDs do usuário
     - [x] Configurar variáveis de ambiente
-  - [ ] FASE 4: Backend - Lógica de assinatura
-    - [ ] Funções de banco (canUserRender, decrementQuota, etc)
-    - [ ] Rotas de assinatura (create, cancel, buy-extra)
-    - [ ] Webhook handler do Stripe
-    - [ ] Implementar cancelamento no final do ciclo (cancel_at_period_end)
+  - [x] FASE 4: Backend - Lógica de assinatura
+    - [x] Funções de banco (canUserRender, decrementQuota, etc) - 8 funções
+    - [x] Rotas de assinatura (create, cancel, buy-extra, reactivate, status, portal)
+    - [x] Webhook handler do Stripe (6 eventos processados)
+    - [x] Implementar cancelamento no final do ciclo (cancel_at_period_end)
+    - [x] Integrar rotas no servidor principal
   - [ ] FASE 5: Controle de qualidade de imagem
   - [ ] FASE 6: Frontend - Páginas de assinatura
   - [ ] FASE 7: Traduções

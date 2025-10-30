@@ -566,3 +566,183 @@ export async function updateUserPassword(userId: number, hashedPassword: string)
   }).where(eq(users.id, userId));
 }
 
+
+
+// ============================================================================
+// SUBSCRIPTION FUNCTIONS
+// ============================================================================
+
+/**
+ * Verifica se o usuário pode criar uma nova renderização
+ * Retorna true se tiver quota disponível (mensal ou extra)
+ */
+export async function canUserRender(userId: number): Promise<{ canRender: boolean; reason?: string }> {
+  const db = await getDb();
+  if (!db) return { canRender: false, reason: 'Database not available' };
+
+  const user = await db.select().from(users).where(eq(users.id, userId)).limit(1);
+  if (!user.length) return { canRender: false, reason: 'User not found' };
+
+  const userData = user[0];
+
+  // Verificar se precisa resetar quota mensal
+  if (userData.billingPeriodEnd && new Date() > new Date(userData.billingPeriodEnd)) {
+    await resetMonthlyQuota(userId);
+    // Recarregar dados do usuário após reset
+    const updatedUser = await db.select().from(users).where(eq(users.id, userId)).limit(1);
+    if (updatedUser.length) {
+      Object.assign(userData, updatedUser[0]);
+    }
+  }
+
+  const totalAvailable = (userData.monthlyQuota - userData.monthlyRendersUsed) + userData.extraRenders;
+
+  if (totalAvailable <= 0) {
+    return {
+      canRender: false,
+      reason: userData.plan === 'free' 
+        ? 'No active subscription. Please subscribe to a plan.'
+        : 'Monthly quota exceeded. Purchase extra renders or upgrade your plan.'
+    };
+  }
+
+  return { canRender: true };
+}
+
+/**
+ * Decrementa a quota do usuário após criar uma renderização
+ * Usa quota mensal primeiro, depois renders extras
+ */
+export async function decrementQuota(userId: number): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error('Database not available');
+
+  const user = await db.select().from(users).where(eq(users.id, userId)).limit(1);
+  if (!user.length) throw new Error('User not found');
+
+  const userData = user[0];
+
+  if (userData.monthlyRendersUsed < userData.monthlyQuota) {
+    // Usa quota mensal
+    await db.update(users)
+      .set({ monthlyRendersUsed: userData.monthlyRendersUsed + 1 })
+      .where(eq(users.id, userId));
+  } else if (userData.extraRenders > 0) {
+    // Usa renders extras
+    await db.update(users)
+      .set({ extraRenders: userData.extraRenders - 1 })
+      .where(eq(users.id, userId));
+  } else {
+    throw new Error('No quota available');
+  }
+}
+
+/**
+ * Reseta a quota mensal do usuário e inicia novo período de cobrança
+ */
+export async function resetMonthlyQuota(userId: number): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error('Database not available');
+
+  const now = new Date();
+  const nextMonth = new Date(now);
+  nextMonth.setMonth(nextMonth.getMonth() + 1);
+
+  await db.update(users)
+    .set({
+      monthlyRendersUsed: 0,
+      billingPeriodStart: now,
+      billingPeriodEnd: nextMonth,
+    })
+    .where(eq(users.id, userId));
+}
+
+/**
+ * Atualiza informações de assinatura do usuário após evento do Stripe
+ */
+export async function updateUserSubscription(params: {
+  userId: number;
+  stripeCustomerId?: string;
+  subscriptionId?: string;
+  subscriptionStatus?: 'active' | 'canceled' | 'past_due' | 'inactive';
+  plan?: 'free' | 'basic' | 'pro';
+  monthlyQuota?: number;
+}): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error('Database not available');
+
+  const updateData: any = {};
+
+  if (params.stripeCustomerId !== undefined) updateData.stripeCustomerId = params.stripeCustomerId;
+  if (params.subscriptionId !== undefined) updateData.subscriptionId = params.subscriptionId;
+  if (params.subscriptionStatus !== undefined) updateData.subscriptionStatus = params.subscriptionStatus;
+  if (params.plan !== undefined) updateData.plan = params.plan;
+  if (params.monthlyQuota !== undefined) updateData.monthlyQuota = params.monthlyQuota;
+
+  // Se está ativando uma assinatura, iniciar período de cobrança
+  if (params.subscriptionStatus === 'active' && params.monthlyQuota) {
+    const now = new Date();
+    const nextMonth = new Date(now);
+    nextMonth.setMonth(nextMonth.getMonth() + 1);
+    
+    updateData.billingPeriodStart = now;
+    updateData.billingPeriodEnd = nextMonth;
+    updateData.monthlyRendersUsed = 0;
+  }
+
+  // Se está cancelando, manter até o final do período
+  if (params.subscriptionStatus === 'canceled') {
+    // Não altera billingPeriodEnd - usuário mantém acesso até lá
+    updateData.subscriptionStatus = 'canceled';
+  }
+
+  await db.update(users)
+    .set(updateData)
+    .where(eq(users.id, userId));
+}
+
+/**
+ * Adiciona renders extras ao usuário (compra de pacote)
+ */
+export async function addExtraRenders(userId: number, amount: number): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error('Database not available');
+
+  const user = await db.select().from(users).where(eq(users.id, userId)).limit(1);
+  if (!user.length) throw new Error('User not found');
+
+  const currentExtra = user[0].extraRenders;
+
+  await db.update(users)
+    .set({ extraRenders: currentExtra + amount })
+    .where(eq(users.id, userId));
+}
+
+/**
+ * Busca usuário por Stripe Customer ID
+ */
+export async function getUserByStripeCustomerId(stripeCustomerId: string) {
+  const db = await getDb();
+  if (!db) return undefined;
+
+  const result = await db.select().from(users)
+    .where(eq(users.stripeCustomerId, stripeCustomerId))
+    .limit(1);
+
+  return result.length > 0 ? result[0] : undefined;
+}
+
+/**
+ * Busca usuário por ID
+ */
+export async function getUserById(userId: number) {
+  const db = await getDb();
+  if (!db) return undefined;
+
+  const result = await db.select().from(users)
+    .where(eq(users.id, userId))
+    .limit(1);
+
+  return result.length > 0 ? result[0] : undefined;
+}
+

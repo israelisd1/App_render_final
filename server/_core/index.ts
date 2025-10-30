@@ -6,6 +6,8 @@ import { createExpressMiddleware } from "@trpc/server/adapters/express";
 import { registerOAuthRoutes } from "./oauth";
 import { registerAuthRoutes } from "../auth/routes";
 import { appRouter } from "../routers";
+import subscriptionRouter from "../routes/subscription";
+import stripeWebhookRouter from "../routes/stripe-webhook";
 import { createContext } from "./context";
 import { serveStatic, setupVite } from "./vite";
 import { handleStripeWebhook } from "../webhookHandler";
@@ -34,10 +36,10 @@ async function startServer() {
   const server = createServer(app);
   // Stripe webhook - DEVE vir ANTES do body parser JSON
   // O Stripe precisa do raw body para verificar a assinatura
-  app.post(
-    "/api/stripe/webhook",
+  app.use(
+    "/api/stripe",
     express.raw({ type: "application/json" }),
-    handleStripeWebhook
+    stripeWebhookRouter
   );
 
   // Configure body parser with larger size limit for file uploads
@@ -49,6 +51,9 @@ async function startServer() {
   
   // OAuth callback under /api/oauth/callback (Manus OAuth)
   registerOAuthRoutes(app);
+  
+  // Subscription routes
+  app.use("/api/subscription", subscriptionRouter);
   // tRPC API
   app.use(
     "/api/trpc",
