@@ -58,6 +58,7 @@ const translations = {
     "history.status.completed": "Concluído",
     "history.status.failed": "Falhou",
     "history.download": "Baixar Imagem",
+    "history.downloadHD": "📥 Download Alta Resolução (Pro)",
     "history.refine": "Refinar",
     "history.error": "Erro",
     
@@ -224,6 +225,7 @@ const translations = {
     "history.status.completed": "Completed",
     "history.status.failed": "Failed",
     "history.download": "Download Image",
+    "history.downloadHD": "📥 Download High Resolution (Pro)",
     "history.refine": "Refine",
     "history.error": "Error",
     

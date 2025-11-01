@@ -1,0 +1,9 @@
+{
+  "query": "ALTER TABLE renders ADD COLUMN IF NOT EXISTS quality ENUM('standard', 'detailed') DEFAULT 'standard';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3ES6PvcnTNEV8vB.57a33a906c17 --database mJzsRrstkbLobg3DApXsgD --execute ALTER TABLE renders ADD COLUMN IF NOT EXISTS quality ENUM('standard', 'detailed') DEFAULT 'standard';",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 392
+}

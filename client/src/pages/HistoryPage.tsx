@@ -227,6 +227,16 @@ export default function HistoryPage() {
                           <Download className="h-4 w-4 mr-2" />
                           {t("history.download")}
                         </Button>
+                        {/* Botão de Download HD - apenas para usuários Pro */}
+                        {user?.plan === 'pro' && (
+                          <Button
+                            onClick={() => handleDownload(render.renderedImageUrl!, render)}
+                            className="w-full bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white"
+                          >
+                            <Download className="h-4 w-4 mr-2" />
+                            {t("history.downloadHD")}
+                          </Button>
+                        )}
                         <Button
                           onClick={() => {
                             setSelectedRenderId(render.id);

@@ -1,0 +1,82 @@
+{
+  "query": "SHOW COLUMNS FROM users WHERE Field IN ('stripeCustomerId', 'subscriptionId', 'subscriptionStatus', 'plan', 'monthlyQuota', 'monthlyRendersUsed', 'extraRenders', 'billingPeriodStart', 'billingPeriodEnd');",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3ES6PvcnTNEV8vB.57a33a906c17 --database mJzsRrstkbLobg3DApXsgD --execute SHOW COLUMNS FROM users WHERE Field IN ('stripeCustomerId', 'subscriptionId', 'subscriptionStatus', 'plan', 'monthlyQuota', 'monthlyRendersUsed', 'extraRenders', 'billingPeriodStart', 'billingPeriodEnd');",
+  "rows": [
+    {
+      "Field": "stripeCustomerId",
+      "Type": "varchar(255)",
+      "Null": "YES",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "subscriptionId",
+      "Type": "varchar(255)",
+      "Null": "YES",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "subscriptionStatus",
+      "Type": "enum('active','canceled','past_due','inactive')",
+      "Null": "YES",
+      "Key": "",
+      "Default": "inactive",
+      "Extra": ""
+    },
+    {
+      "Field": "plan",
+      "Type": "enum('free','basic','pro')",
+      "Null": "NO",
+      "Key": "",
+      "Default": "free",
+      "Extra": ""
+    },
+    {
+      "Field": "monthlyQuota",
+      "Type": "int(11)",
+      "Null": "NO",
+      "Key": "",
+      "Default": "0",
+      "Extra": ""
+    },
+    {
+      "Field": "monthlyRendersUsed",
+      "Type": "int(11)",
+      "Null": "NO",
+      "Key": "",
+      "Default": "0",
+      "Extra": ""
+    },
+    {
+      "Field": "extraRenders",
+      "Type": "int(11)",
+      "Null": "NO",
+      "Key": "",
+      "Default": "0",
+      "Extra": ""
+    },
+    {
+      "Field": "billingPeriodStart",
+      "Type": "timestamp",
+      "Null": "YES",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    },
+    {
+      "Field": "billingPeriodEnd",
+      "Type": "timestamp",
+      "Null": "YES",
+      "Key": "",
+      "Default": "NULL",
+      "Extra": ""
+    }
+  ],
+  "messages": [],
+  "stdout": "Field\tType\tNull\tKey\tDefault\tExtra\nstripeCustomerId\tvarchar(255)\tYES\t\tNULL\t\nsubscriptionId\tvarchar(255)\tYES\t\tNULL\t\nsubscriptionStatus\tenum('active','canceled','past_due','inactive')\tYES\t\tinactive\t\nplan\tenum('free','basic','pro')\tNO\t\tfree\t\nmonthlyQuota\tint(11)\tNO\t\t0\t\nmonthlyRendersUsed\tint(11)\tNO\t\t0\t\nextraRenders\tint(11)\tNO\t\t0\t\nbillingPeriodStart\ttimestamp\tYES\t\tNULL\t\nbillingPeriodEnd\ttimestamp\tYES\t\tNULL\t\n",
+  "stderr": "",
+  "execution_time_ms": 108
+}

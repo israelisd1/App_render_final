@@ -58,13 +58,18 @@ export const appRouter = router({
           `image/${input.outputFormat}`
         );
 
-        // 3. Criar registro no banco
+        // 3. Determinar qualidade baseada no plano
+        const qualityLevel = ctx.user.plan === 'pro' ? 'detailed' : 'standard';
+        console.log(`[Render] User plan: ${ctx.user.plan}, quality: ${qualityLevel}`);
+        
+        // 4. Criar registro no banco
         const result = await createRender({
           userId: ctx.user.id,
           originalImageUrl,
           sceneType: input.sceneType,
           outputFormat: input.outputFormat,
           prompt: input.prompt,
+          quality: qualityLevel,
           status: "processing",
         });
 
@@ -95,14 +100,51 @@ export const appRouter = router({
               outputFormat: input.outputFormat,
               image: originalImageUrl,
               prompt: input.prompt,
-            });
+            }, ctx.user.plan || 'basic'); // Passa plano do usuário para controlar qualidade
 
             console.log(`[Render ${renderId}] Resposta da API:`, JSON.stringify(apiResponse));
 
             if (apiResponse.output) {
+              let finalImageUrl = apiResponse.output;
+              
+              // Se usuário é Basic, comprimir imagem para HD
+              if (ctx.user.plan !== 'pro') {
+                try {
+                  console.log(`[Render ${renderId}] Plano Basic/Free detectado - comprimindo imagem para HD...`);
+                  const { downloadImage, compressImageToHD } = await import('./imageCompression');
+                  const { storagePut } = await import('./storage');
+                  
+                  // Baixar imagem original da API
+                  const originalBuffer = await downloadImage(apiResponse.output);
+                  
+                  // Comprimir para HD
+                  const compressedBuffer = await compressImageToHD(
+                    originalBuffer,
+                    input.outputFormat as 'jpg' | 'png' | 'webp' | 'avif'
+                  );
+                  
+                  // Upload da versão comprimida para S3
+                  const compressedKey = `renders/${ctx.user.id}/compressed-${timestamp}-${randomSuffix}.${input.outputFormat}`;
+                  const { url: compressedUrl } = await storagePut(
+                    compressedKey,
+                    compressedBuffer,
+                    `image/${input.outputFormat}`
+                  );
+                  
+                  finalImageUrl = compressedUrl;
+                  console.log(`[Render ${renderId}] Imagem comprimida salva em: ${compressedUrl}`);
+                } catch (compressionError) {
+                  console.error(`[Render ${renderId}] Erro ao comprimir imagem:`, compressionError);
+                  // Em caso de erro, usar imagem original da API
+                  console.log(`[Render ${renderId}] Usando imagem original da API`);
+                }
+              } else {
+                console.log(`[Render ${renderId}] Plano Pro - usando qualidade máxima (sem compressão)`);
+              }
+              
               console.log(`[Render ${renderId}] Renderização concluída com sucesso`);
               await updateRenderStatus(renderId, "completed", {
-                renderedImageUrl: apiResponse.output,
+                renderedImageUrl: finalImageUrl,
                 completedAt: new Date(),
               });
             } else {

@@ -8,6 +8,7 @@ interface RenderRequest {
   image: string; // URL ou base64
   prompt?: string;
   base64Response?: boolean;
+  quality?: "standard" | "detailed"; // Controla qualidade: standard (~15s) ou detailed (~30s)
 }
 
 interface RenderResponse {
@@ -19,9 +20,14 @@ interface RenderResponse {
 
 /**
  * Chama a API de renderização arquitetônica
+ * @param request - Parâmetros da renderização
+ * @param userPlan - Plano do usuário para controlar qualidade:
+ *   - 'free' ou 'basic': quality="standard" (~15s)
+ *   - 'pro': quality="detailed" (~30s, alta resolução)
  */
 export async function callArchitectureRenderingAPI(
-  request: RenderRequest
+  request: RenderRequest,
+  userPlan: 'free' | 'basic' | 'pro' = 'basic'
 ): Promise<RenderResponse> {
   const apiKey = process.env.RAPIDAPI_KEY;
   
@@ -30,6 +36,18 @@ export async function callArchitectureRenderingAPI(
   }
 
   try {
+    // Qualidade baseada no plano do usuário:
+    // - Basic: quality="standard" (~15s, qualidade padrão)
+    // - Pro: quality="detailed" (~30s, qualidade máxima)
+    const qualityLevel = userPlan === 'pro' ? 'detailed' : 'standard';
+    
+    const enhancedRequest = {
+      ...request,
+      quality: qualityLevel,
+    };
+    
+    console.log(`[ArchitectureAPI] Rendering with quality="${qualityLevel}" for plan="${userPlan}"`);
+
     const response = await fetch(
       "https://architecture-rendering-api.p.rapidapi.com/render",
       {
@@ -39,7 +57,7 @@ export async function callArchitectureRenderingAPI(
           "x-rapidapi-host": "architecture-rendering-api.p.rapidapi.com",
           "x-rapidapi-key": apiKey,
         },
-        body: JSON.stringify(request),
+        body: JSON.stringify(enhancedRequest),
       }
     );
 

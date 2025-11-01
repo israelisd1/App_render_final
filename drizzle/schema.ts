@@ -68,6 +68,7 @@ export const renders = mysqlTable("renders", {
   adjustmentBrightness: int("adjustmentBrightness"), // -50 a +50
   adjustmentContrast: int("adjustmentContrast"), // -50 a +50
   adjustmentLighting: int("adjustmentLighting"), // -30 a +30
+  quality: mysqlEnum("quality", ["standard", "detailed"]).default("standard"), // Qualidade da renderização
   status: mysqlEnum("status", ["pending", "processing", "completed", "failed"]).default("pending").notNull(),
   errorMessage: text("errorMessage"),
   createdAt: timestamp("createdAt").defaultNow().notNull(),

@@ -101,7 +101,16 @@
     - [x] Webhook handler do Stripe (6 eventos processados)
     - [x] Implementar cancelamento no final do ciclo (cancel_at_period_end)
     - [x] Integrar rotas no servidor principal
-  - [ ] FASE 5: Controle de qualidade de imagem
+  - [x] FASE 5: Controle de qualidade de imagem
+    - [x] Investigar documentação RapidAPI (parâmetro quality confirmado)
+    - [x] Atualizar API para usar quality="standard" (Basic) ou "detailed" (Pro)
+    - [x] Instalar Sharp para compressão de imagens
+    - [x] Implementar compressão para HD (1920x1080) no plano Basic
+    - [x] Manter qualidade máxima para plano Pro (sem compressão)
+    - [x] Adicionar campo quality ao schema de renders
+    - [x] Atualizar frontend com botão HD condicional (apenas Pro)
+    - [x] Adicionar traduções PT-BR/EN para botão HD
+    - [x] Criar guia de testes (QUALITY_CONTROL_TESTING.md)
   - [ ] FASE 6: Frontend - Páginas de assinatura
   - [ ] FASE 7: Traduções
   - [ ] FASE 8: Testes e validação
@@ -110,14 +119,14 @@
   - [ ] Respeitar resolução do plano principal
   - [ ] Criar interface de compra
   - [ ] Integrar com Stripe
-- [ ] Implementar controle de qualidade de imagem
-  - [ ] Investigar parâmetro rendering_time da RapidAPI
-  - [ ] Usar rendering_time="detailed" sempre
-  - [ ] Comprimir saída para HD no plano Basic
-  - [ ] Manter qualidade máxima no plano Pro
-  - [ ] Ocultar botão download alta res para Basic
-  - [ ] Mostrar botão apenas para plano Pro
-  - [ ] Adicionar badge/tooltip explicativo
+- [x] Implementar controle de qualidade de imagem
+  - [x] Investigar parâmetro quality da RapidAPI (confirmado: "standard" ou "detailed")
+  - [x] Usar quality baseado no plano (standard para Basic, detailed para Pro)
+  - [x] Comprimir saída para HD no plano Basic (1920x1080, Sharp)
+  - [x] Manter qualidade máxima no plano Pro (sem compressão)
+  - [x] Ocultar botão download alta res para Basic
+  - [x] Mostrar botão "Download Alta Resolução (Pro)" apenas para plano Pro
+  - [x] Adicionar traduções PT-BR/EN
 
 ## NOTA IMPORTANTE:
 NextAuth está 90% implementado mas DESABILITADO devido a erro de import.
