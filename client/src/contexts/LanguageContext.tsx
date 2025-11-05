@@ -18,6 +18,8 @@ const translations = {
     "header.history": "Histórico",
     "header.logout": "Sair",
     "header.login": "Fazer Login",
+    "header.basicPlan": "Basic",
+    "header.proPlan": "Pro",
     
     // Home
     "home.title": "Arqrender",
@@ -175,6 +177,91 @@ const translations = {
     "home.readyToRender": "Agora você está pronto para criar renderizações incríveis.",
     "home.startRendering": "Começar a Renderizar",
     "home.viewHistory": "Ver Histórico",
+    
+    // Pricing Page
+    "pricing.title": "Escolha Seu Plano",
+    "pricing.subtitle": "Renderizações ilimitadas de alta qualidade para profissionais",
+    "pricing.period": "/mês",
+    "pricing.popular": "MAIS POPULAR",
+    "pricing.currentPlan": "Plano Atual",
+    "pricing.processing": "Processando...",
+    "pricing.questions": "Dúvidas sobre os planos?",
+    "pricing.manageSubscription": "Gerenciar Assinatura",
+    
+    // Pricing - Basic Plan
+    "pricing.basic.name": "Basic",
+    "pricing.basic.description": "Ideal para freelancers e pequenos projetos",
+    "pricing.basic.feature1": "100 renderizações por mês",
+    "pricing.basic.feature2": "Qualidade HD (1920x1080)",
+    "pricing.basic.feature3": "Tempo de renderização: ~15 segundos",
+    "pricing.basic.feature4": "Todos os formatos (JPG, PNG, WebP, AVIF)",
+    "pricing.basic.feature5": "Suporte por email",
+    "pricing.basic.cta": "Assinar Basic",
+    
+    // Pricing - Pro Plan
+    "pricing.pro.name": "Pro",
+    "pricing.pro.description": "Para profissionais que exigem o máximo",
+    "pricing.pro.feature1": "170 renderizações por mês",
+    "pricing.pro.feature2": "Qualidade Ultra HD (resolução máxima)",
+    "pricing.pro.feature3": "Tempo de renderização: ~30 segundos",
+    "pricing.pro.feature4": "Download em alta resolução",
+    "pricing.pro.feature5": "Todos os formatos (JPG, PNG, WebP, AVIF)",
+    "pricing.pro.feature6": "Suporte prioritário",
+    "pricing.pro.cta": "Assinar Pro",
+    
+    // Pricing - Extra Renders
+    "pricing.extra.title": "Precisa de Mais Renderizações?",
+    "pricing.extra.description": "Compre pacotes extras a qualquer momento",
+    "pricing.extra.renders": "20 renderizações extras",
+    "pricing.extra.note": "Respeita a qualidade do seu plano atual",
+    
+    // Subscription Page
+    "subscription.title": "Minha Assinatura",
+    "subscription.authRequired": "Autenticação Necessária",
+    "subscription.authDescription": "Faça login para gerenciar sua assinatura",
+    "subscription.login": "Fazer Login",
+    "subscription.basicPlan": "Plano Basic",
+    "subscription.proPlan": "Plano Pro",
+    "subscription.active": "Ativa",
+    "subscription.canceled": "Cancelada",
+    "subscription.noSubscription": "Sem assinatura ativa",
+    "subscription.changePlan": "Mudar Plano",
+    
+    // Subscription - Usage Stats
+    "subscription.monthlyQuota": "Quota Mensal",
+    "subscription.rendersPerMonth": "renderizações/mês",
+    "subscription.used": "Utilizadas",
+    "subscription.remaining": "Disponíveis",
+    "subscription.extra": "extras",
+    
+    // Subscription - Billing
+    "subscription.billingInfo": "Informações de Cobrança",
+    "subscription.nextBilling": "Próxima cobrança",
+    "subscription.willCancelAt": "Assinatura será cancelada em",
+    
+    // Subscription - Actions
+    "subscription.actions": "Ações",
+    "subscription.buyExtraTitle": "Comprar Renderizações Extras",
+    "subscription.buyExtraDescription": "20 renderizações por R$ 49,90",
+    "subscription.buyExtra": "Comprar Extras",
+    "subscription.paymentMethod": "Forma de Pagamento",
+    "subscription.paymentMethodDescription": "Atualizar cartão e ver histórico",
+    "subscription.manage": "Gerenciar",
+    "subscription.cancelTitle": "Cancelar Assinatura",
+    "subscription.cancelDescription": "Cancela no final do período atual",
+    "subscription.cancel": "Cancelar",
+    "subscription.cancelConfirm": "Tem certeza que deseja cancelar sua assinatura? Você ainda terá acesso até o final do período pago.",
+    "subscription.reactivateTitle": "Reativar Assinatura",
+    "subscription.reactivateDescription": "Continue aproveitando todos os benefícios",
+    "subscription.reactivate": "Reativar",
+    
+    // Subscription - Mutations
+    "subscription.cancelSuccess": "Assinatura cancelada com sucesso",
+    "subscription.cancelError": "Erro ao cancelar assinatura",
+    "subscription.reactivateSuccess": "Assinatura reativada com sucesso",
+    "subscription.reactivateError": "Erro ao reativar assinatura",
+    "subscription.portalError": "Erro ao abrir portal de pagamento",
+    "subscription.buyExtraError": "Erro ao comprar renderizações extras",
   },
   "en": {
     // Header
@@ -184,7 +271,9 @@ const translations = {
     "header.newRender": "New Render",
     "header.history": "History",
     "header.logout": "Logout",
-    "header.login": "Sign In",
+    "header.login": "Login",
+    "header.basicPlan": "Basic",
+    "header.proPlan": "Pro",
     
     // Home
     "home.title": "Arqrender",
@@ -342,6 +431,91 @@ const translations = {
     "home.readyToRender": "You're now ready to create amazing renderings.",
     "home.startRendering": "Start Rendering",
     "home.viewHistory": "View History",
+    
+    // Pricing Page
+    "pricing.title": "Choose Your Plan",
+    "pricing.subtitle": "Unlimited high-quality renderings for professionals",
+    "pricing.period": "/month",
+    "pricing.popular": "MOST POPULAR",
+    "pricing.currentPlan": "Current Plan",
+    "pricing.processing": "Processing...",
+    "pricing.questions": "Questions about plans?",
+    "pricing.manageSubscription": "Manage Subscription",
+    
+    // Pricing - Basic Plan
+    "pricing.basic.name": "Basic",
+    "pricing.basic.description": "Perfect for freelancers and small projects",
+    "pricing.basic.feature1": "100 renders per month",
+    "pricing.basic.feature2": "HD Quality (1920x1080)",
+    "pricing.basic.feature3": "Rendering time: ~15 seconds",
+    "pricing.basic.feature4": "All formats (JPG, PNG, WebP, AVIF)",
+    "pricing.basic.feature5": "Email support",
+    "pricing.basic.cta": "Subscribe Basic",
+    
+    // Pricing - Pro Plan
+    "pricing.pro.name": "Pro",
+    "pricing.pro.description": "For professionals who demand the best",
+    "pricing.pro.feature1": "170 renders per month",
+    "pricing.pro.feature2": "Ultra HD Quality (maximum resolution)",
+    "pricing.pro.feature3": "Rendering time: ~30 seconds",
+    "pricing.pro.feature4": "High resolution download",
+    "pricing.pro.feature5": "All formats (JPG, PNG, WebP, AVIF)",
+    "pricing.pro.feature6": "Priority support",
+    "pricing.pro.cta": "Subscribe Pro",
+    
+    // Pricing - Extra Renders
+    "pricing.extra.title": "Need More Renders?",
+    "pricing.extra.description": "Buy extra packs anytime",
+    "pricing.extra.renders": "20 extra renders",
+    "pricing.extra.note": "Respects your current plan quality",
+    
+    // Subscription Page
+    "subscription.title": "My Subscription",
+    "subscription.authRequired": "Authentication Required",
+    "subscription.authDescription": "Sign in to manage your subscription",
+    "subscription.login": "Sign In",
+    "subscription.basicPlan": "Basic Plan",
+    "subscription.proPlan": "Pro Plan",
+    "subscription.active": "Active",
+    "subscription.canceled": "Canceled",
+    "subscription.noSubscription": "No active subscription",
+    "subscription.changePlan": "Change Plan",
+    
+    // Subscription - Usage Stats
+    "subscription.monthlyQuota": "Monthly Quota",
+    "subscription.rendersPerMonth": "renders/month",
+    "subscription.used": "Used",
+    "subscription.remaining": "Available",
+    "subscription.extra": "extra",
+    
+    // Subscription - Billing
+    "subscription.billingInfo": "Billing Information",
+    "subscription.nextBilling": "Next billing",
+    "subscription.willCancelAt": "Subscription will be canceled on",
+    
+    // Subscription - Actions
+    "subscription.actions": "Actions",
+    "subscription.buyExtraTitle": "Buy Extra Renders",
+    "subscription.buyExtraDescription": "20 renders for R$ 49.90",
+    "subscription.buyExtra": "Buy Extras",
+    "subscription.paymentMethod": "Payment Method",
+    "subscription.paymentMethodDescription": "Update card and view history",
+    "subscription.manage": "Manage",
+    "subscription.cancelTitle": "Cancel Subscription",
+    "subscription.cancelDescription": "Cancels at the end of current period",
+    "subscription.cancel": "Cancel",
+    "subscription.cancelConfirm": "Are you sure you want to cancel your subscription? You'll still have access until the end of the paid period.",
+    "subscription.reactivateTitle": "Reactivate Subscription",
+    "subscription.reactivateDescription": "Continue enjoying all benefits",
+    "subscription.reactivate": "Reactivate",
+    
+    // Subscription - Mutations
+    "subscription.cancelSuccess": "Subscription canceled successfully",
+    "subscription.cancelError": "Error canceling subscription",
+    "subscription.reactivateSuccess": "Subscription reactivated successfully",
+    "subscription.reactivateError": "Error reactivating subscription",
+    "subscription.portalError": "Error opening payment portal",
+    "subscription.buyExtraError": "Error buying extra renders",
   },
 };
 

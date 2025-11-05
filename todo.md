@@ -111,7 +111,14 @@
     - [x] Atualizar frontend com botão HD condicional (apenas Pro)
     - [x] Adicionar traduções PT-BR/EN para botão HD
     - [x] Criar guia de testes (QUALITY_CONTROL_TESTING.md)
-  - [ ] FASE 6: Frontend - Páginas de assinatura
+  - [x] FASE 6: Frontend - Páginas de assinatura
+    - [x] Criar página de Pricing (/pricing)
+    - [x] Criar página de gerenciamento de assinatura (/subscription)
+    - [x] Adicionar indicadores de plano no header (badge Basic/Pro)
+    - [x] Implementar fluxo de upgrade/downgrade
+    - [x] Integrar botões com Stripe Checkout
+    - [x] Adicionar traduções PT-BR/EN completas
+    - [x] Adicionar rotas no App.tsx
   - [ ] FASE 7: Traduções
   - [ ] FASE 8: Testes e validação
 - [ ] Implementar compra de pacotes extras
@@ -137,4 +144,14 @@ Para finalizar NextAuth:
 2. Corrigir imports em server/auth/nextauth.config.ts
 3. Descomentar registerAuthRoutes() em server/_core/index.ts
 4. Adicionar rotas /login, /signup, /forgot-password no App.tsx
+
+
+
+## Correções Concluídas
+
+- [x] Corrigir sistema de download HD
+  - [x] Adicionar campo highResUrl ao schema de renders
+  - [x] Salvar URL original da API separadamente para plano Pro
+  - [x] Criar função de download HD que usa highResUrl
+  - [x] Botão HD agora baixa versão de alta resolução real (maior tamanho)
 

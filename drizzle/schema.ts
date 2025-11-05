@@ -59,6 +59,7 @@ export const renders = mysqlTable("renders", {
   userId: int("userId").notNull(),
   originalImageUrl: text("originalImageUrl").notNull(),
   renderedImageUrl: text("renderedImageUrl"),
+  highResUrl: text("highResUrl"), // URL original da API em alta resolução (apenas Pro)
   sceneType: mysqlEnum("sceneType", ["interior", "exterior"]).notNull(),
   outputFormat: varchar("outputFormat", { length: 10 }).notNull(),
   prompt: text("prompt"),

@@ -2,7 +2,7 @@ import { useAuth } from "@/_core/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { APP_LOGO, APP_TITLE, getLoginUrl } from "@/const";
 import { Link } from "wouter";
-import { Coins, ShoppingCart, Menu, X, Globe } from "lucide-react";
+import { Coins, ShoppingCart, Menu, X, Globe, Crown, Zap } from "lucide-react";
 import { useState } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
 
@@ -45,6 +45,23 @@ export default function Header() {
           {isAuthenticated ? (
             <>
               <span className="text-amber-800">{t("header.hello")}, {user?.name}</span>
+              {/* Plan Badge */}
+              <Link href="/subscription">
+                <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full cursor-pointer transition-all hover:scale-105 ${
+                  user?.plan === 'pro' 
+                    ? 'bg-gradient-to-r from-orange-500 to-red-500 text-white' 
+                    : 'bg-gradient-to-r from-amber-500 to-orange-500 text-white'
+                }`}>
+                  {user?.plan === 'pro' ? (
+                    <Crown className="h-4 w-4" />
+                  ) : (
+                    <Zap className="h-4 w-4" />
+                  )}
+                  <span className="text-sm font-semibold">
+                    {user?.plan === 'pro' ? t("header.proPlan") : t("header.basicPlan")}
+                  </span>
+                </div>
+              </Link>
               <div className="flex items-center gap-2">
                 <Link href="/tokens">
                   <div className="flex items-center gap-2 bg-amber-100 dark:bg-amber-900/30 px-3 py-1.5 rounded-full hover:bg-amber-200 dark:hover:bg-amber-900/50 transition-colors border border-amber-300 dark:border-amber-700 cursor-pointer">

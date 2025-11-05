@@ -79,6 +79,37 @@ export default function HistoryPage() {
     }
   };
 
+  const handleDownloadHD = async (render: any) => {
+    try {
+      if (!render.highResUrl) {
+        toast.error('URL de alta resolução não disponível');
+        return;
+      }
+
+      // Criar nome descritivo do arquivo com sufixo HD
+      const date = new Date(render.createdAt).toLocaleDateString('pt-BR').replace(/\//g, '-');
+      const type = render.sceneType === 'interior' ? 'Interior' : 'Exterior';
+      const format = render.outputFormat.toUpperCase();
+      const fileName = `Arqrender_${type}_${date}_${render.id}_HD.${render.outputFormat}`;
+
+      // Fazer download
+      const response = await fetch(render.highResUrl);
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = fileName;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+      
+      toast.success('Download HD iniciado!');
+    } catch (error) {
+      toast.error('Erro ao fazer download HD. Tente novamente.');
+    }
+  };
+
   const handleApplyAdjustments = () => {
     if (selectedRenderId) {
       // Criar prompt descritivo baseado nos ajustes
@@ -227,10 +258,10 @@ export default function HistoryPage() {
                           <Download className="h-4 w-4 mr-2" />
                           {t("history.download")}
                         </Button>
-                        {/* Botão de Download HD - apenas para usuários Pro */}
-                        {user?.plan === 'pro' && (
+                        {/* Botão de Download HD - apenas para usuários Pro com highResUrl */}
+                        {user?.plan === 'pro' && render.highResUrl && (
                           <Button
-                            onClick={() => handleDownload(render.renderedImageUrl!, render)}
+                            onClick={() => handleDownloadHD(render)}
                             className="w-full bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white"
                           >
                             <Download className="h-4 w-4 mr-2" />

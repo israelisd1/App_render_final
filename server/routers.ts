@@ -106,6 +106,7 @@ export const appRouter = router({
 
             if (apiResponse.output) {
               let finalImageUrl = apiResponse.output;
+              let highResUrl = null;
               
               // Se usuário é Basic, comprimir imagem para HD
               if (ctx.user.plan !== 'pro') {
@@ -139,12 +140,15 @@ export const appRouter = router({
                   console.log(`[Render ${renderId}] Usando imagem original da API`);
                 }
               } else {
-                console.log(`[Render ${renderId}] Plano Pro - usando qualidade máxima (sem compressão)`);
+                // Plano Pro: salvar URL original em alta resolução
+                console.log(`[Render ${renderId}] Plano Pro - salvando URL de alta resolução`);
+                highResUrl = apiResponse.output;
               }
               
               console.log(`[Render ${renderId}] Renderização concluída com sucesso`);
               await updateRenderStatus(renderId, "completed", {
                 renderedImageUrl: finalImageUrl,
+                highResUrl: highResUrl,
                 completedAt: new Date(),
               });
             } else {

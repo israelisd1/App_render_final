@@ -11,6 +11,8 @@ import HistoryPage from "./pages/HistoryPage";
 import TokensPage from "./pages/TokensPage";
 import CheckoutSuccess from "./pages/CheckoutSuccess";
 import AdminPage from "./pages/AdminPage";
+import PricingPage from "./pages/PricingPage";
+import SubscriptionPage from "./pages/SubscriptionPage";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -21,6 +23,8 @@ function Router() {
       <Route path={"/history"} component={HistoryPage} />
       <Route path={"/tokens"} component={TokensPage} />
       <Route path={"/tokens/success"} component={CheckoutSuccess} />
+      <Route path={"/pricing"} component={PricingPage} />
+      <Route path={"/subscription"} component={SubscriptionPage} />
       <Route path={"/admin"} component={AdminPage} />
       <Route path={"/404"} component={NotFound} />
       <Route component={NotFound} />

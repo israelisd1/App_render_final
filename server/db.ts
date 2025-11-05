@@ -106,13 +106,14 @@ export async function createRender(render: InsertRender) {
 export async function updateRenderStatus(
   id: number,
   status: "pending" | "processing" | "completed" | "failed",
-  data?: { renderedImageUrl?: string; errorMessage?: string; completedAt?: Date }
+  data?: { renderedImageUrl?: string; highResUrl?: string | null; errorMessage?: string; completedAt?: Date }
 ) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   
   const updateData: any = { status };
   if (data?.renderedImageUrl) updateData.renderedImageUrl = data.renderedImageUrl;
+  if (data?.highResUrl !== undefined) updateData.highResUrl = data.highResUrl;
   if (data?.errorMessage) updateData.errorMessage = data.errorMessage;
   if (data?.completedAt) updateData.completedAt = data.completedAt;
   
