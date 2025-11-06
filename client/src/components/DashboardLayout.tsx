@@ -39,11 +39,11 @@ const MIN_WIDTH = 200;
 const MAX_WIDTH = 480;
 
 export default function DashboardLayout({
-  const loginUrl = useLoginUrl();
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const loginUrl = useLoginUrl();
   const [sidebarWidth, setSidebarWidth] = useState(() => {
     const saved = localStorage.getItem(SIDEBAR_WIDTH_KEY);
     return saved ? parseInt(saved, 10) : DEFAULT_WIDTH;

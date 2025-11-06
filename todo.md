@@ -338,3 +338,18 @@ Para finalizar NextAuth:
   - [x] Hook useLoginUrl implementado em todos os componentes
   - [x] Sistema detectando auth provider corretamente
 
+
+
+
+## BUG: Erro ao Publicar (06/11/2025)
+
+- [x] Investigar erro de publicação
+  - [x] Verificar erros de build TypeScript
+  - [x] Verificar erros de build do cliente
+  - [x] Verificar erros de build do servidor
+  - [x] Erro encontrado: useLoginUrl() no lugar errado em DashboardLayout.tsx
+- [x] Corrigir erros encontrados
+  - [x] Mover useLoginUrl() para dentro do corpo da função
+- [x] Testar build de produção localmente - SUCESSO!
+- [ ] Publicar versão corrigida
+
