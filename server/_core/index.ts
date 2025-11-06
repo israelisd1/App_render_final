@@ -4,7 +4,8 @@ import { createServer } from "http";
 import net from "net";
 import { createExpressMiddleware } from "@trpc/server/adapters/express";
 import { registerOAuthRoutes } from "./oauth";
-import { registerAuthRoutes } from "../auth/routes";
+import { registerCustomAuthRoutes, authMiddleware } from "../auth/customAuth";
+import cookieParser from "cookie-parser";
 import { appRouter } from "../routers";
 import subscriptionRouter from "../routes/subscription";
 import stripeWebhookRouter from "../routes/stripe-webhook";
@@ -46,8 +47,14 @@ async function startServer() {
   app.use(express.json({ limit: "50mb" }));
   app.use(express.urlencoded({ limit: "50mb", extended: true }));
   
-  // NextAuth routes under /api/auth/* (temporariamente desabilitado - corrigir GoogleProvider)
-  // registerAuthRoutes(app);
+  // Cookie parser para autenticação
+  app.use(cookieParser());
+  
+  // Middleware de autenticação global
+  app.use(authMiddleware);
+  
+  // Custom Auth routes under /api/auth/*
+  registerCustomAuthRoutes(app);
   
   // OAuth callback under /api/oauth/callback (Manus OAuth)
   registerOAuthRoutes(app);

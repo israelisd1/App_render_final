@@ -119,6 +119,21 @@ export type TokenTransaction = typeof tokenTransactions.$inferSelect;
 export type InsertTokenTransaction = typeof tokenTransactions.$inferInsert;
 
 /**
+ * Configurações do sistema (feature flags)
+ */
+export const systemSettings = mysqlTable("system_settings", {
+  id: int("id").autoincrement().primaryKey(),
+  settingKey: varchar("setting_key", { length: 100 }).notNull().unique(),
+  settingValue: text("setting_value").notNull(),
+  description: text("description"),
+  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow(),
+  updatedBy: varchar("updated_by", { length: 320 }), // email do admin
+});
+
+export type SystemSetting = typeof systemSettings.$inferSelect;
+export type InsertSystemSetting = typeof systemSettings.$inferInsert;
+
+/**
  * Transações do Stripe para rastreamento de pagamentos
  */
 export const stripeTransactions = mysqlTable("stripe_transactions", {

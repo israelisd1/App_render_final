@@ -703,7 +703,7 @@ export async function updateUserSubscription(params: {
 
   await db.update(users)
     .set(updateData)
-    .where(eq(users.id, userId));
+    .where(eq(users.id, params.userId));
 }
 
 /**

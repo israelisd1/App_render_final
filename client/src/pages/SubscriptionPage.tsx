@@ -116,19 +116,19 @@ export default function SubscriptionPage() {
                   <div>
                     <CardTitle className="text-2xl text-amber-900">{planName}</CardTitle>
                     <CardDescription className="text-amber-700">
-                      {subscriptionStatus?.status === 'active' && (
+                      {subscriptionStatus?.subscriptionStatus === 'active' && (
                         <span className="flex items-center gap-2 mt-1">
                           <CheckCircle className="h-4 w-4 text-green-600" />
                           {t('subscription.active')}
                         </span>
                       )}
-                      {subscriptionStatus?.status === 'canceled' && (
+                      {subscriptionStatus?.subscriptionStatus === 'canceled' && (
                         <span className="flex items-center gap-2 mt-1">
                           <XCircle className="h-4 w-4 text-red-600" />
                           {t('subscription.canceled')}
                         </span>
                       )}
-                      {!subscriptionStatus?.status && (
+                      {!subscriptionStatus?.subscriptionStatus && (
                         <span className="flex items-center gap-2 mt-1">
                           <AlertCircle className="h-4 w-4 text-amber-600" />
                           {t('subscription.noSubscription')}
@@ -200,8 +200,7 @@ export default function SubscriptionPage() {
               <CardContent>
                 <p className="text-amber-800">
                   {t('subscription.nextBilling')}: {new Date(subscriptionStatus.billingPeriodEnd).toLocaleDateString('pt-BR')}
-                </p>
-                {subscriptionStatus.cancelAtPeriodEnd && (
+                </p>                {subscriptionStatus?.subscriptionStatus === 'canceled' && (
                   <p className="text-red-600 mt-2 flex items-center gap-2">
                     <AlertCircle className="h-4 w-4" />
                     {t('subscription.willCancelAt')} {new Date(subscriptionStatus.billingPeriodEnd).toLocaleDateString('pt-BR')}
@@ -260,7 +259,7 @@ export default function SubscriptionPage() {
               </div>
 
               {/* Cancel/Reactivate Subscription */}
-              {subscriptionStatus?.status === 'active' && (
+                {subscriptionStatus?.subscriptionStatus === 'active' && (
                 <div className="flex items-center justify-between p-4 bg-red-50 rounded-lg border border-red-200">
                   <div>
                     <h3 className="font-semibold text-red-900">{t('subscription.cancelTitle')}</h3>
@@ -285,7 +284,7 @@ export default function SubscriptionPage() {
                 </div>
               )}
 
-              {subscriptionStatus?.cancelAtPeriodEnd && (
+                  {subscriptionStatus?.subscriptionStatus === 'canceled' && (
                 <div className="flex items-center justify-between p-4 bg-green-50 rounded-lg border border-green-200">
                   <div>
                     <h3 className="font-semibold text-green-900">{t('subscription.reactivateTitle')}</h3>

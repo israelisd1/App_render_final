@@ -216,3 +216,80 @@ Para finalizar NextAuth:
   - [x] Testar com plano Pro - SUCESSO!
   - [x] Testar com plano Basic - SUCESSO!
 
+
+
+
+## Migração NextAuth - Forçada com Rollback (06/11/2025)
+
+- [x] FASE 1: Sistema de Feature Flag para Rollback
+  - [x] Criar tabela system_settings no banco
+  - [x] Adicionar campo auth_provider (manus/nextauth)
+  - [x] Criar interface admin para alternar sistemas
+  - [x] Implementar middleware de seleção de auth
+  
+- [x] FASE 2: Correção de Imports NextAuth (CANCELADO - incompatibilidade ESM/CommonJS)
+
+## Migração para Lucia Auth (Alternativa ao NextAuth)
+
+- [x] FASE 2B: Autenticação Customizada (Arctic + JWT)
+  - [x] Desinstalar next-auth
+  - [x] Instalar arctic (Google OAuth) + jsonwebtoken + cookie-parser
+  - [x] Criar módulo customAuth.ts com todas as rotas
+  - [x] Implementar signup, signin, signout, session
+  - [x] Implementar Google OAuth com Arctic
+  - [x] Implementar forgot/reset password
+  - [x] Integrar com servidor Express
+  - [x] Testar todos os endpoints - SUCESSO!
+  - [ ] Investigar exports corretos do next-auth 4.24.11
+  - [ ] Corrigir import do GoogleProvider
+  - [ ] Testar imports sem erros
+  - [ ] Configurar NEXTAUTH_SECRET e NEXTAUTH_URL
+  
+- [ ] FASE 3: Configuração Google OAuth
+  - [ ] Obter Google Client ID do Google Cloud Console
+  - [ ] Obter Google Client Secret
+  - [ ] Configurar variáveis de ambiente
+  - [ ] Testar autenticação Google
+  
+- [ ] FASE 4: Habilitar Rotas NextAuth
+  - [ ] Descomentar registerAuthRoutes() no servidor
+  - [ ] Testar endpoints /api/auth/*
+  - [ ] Validar signup, signin, session
+  
+- [ ] FASE 5: Migração de Usuários Existentes
+  - [ ] Criar script de migração openId → email
+  - [ ] Marcar usuários Manus com provider='manus'
+  - [ ] Forçar reset de senha para usuários Manus
+  - [ ] Enviar emails de notificação (mock)
+  
+- [ ] FASE 6: Atualização do Frontend
+  - [ ] Adicionar rotas /login, /signup, /forgot-password no App.tsx
+  - [ ] Criar hook useNextAuth
+  - [ ] Substituir useAuth por useNextAuth em todos os componentes
+  - [ ] Atualizar Header.tsx
+  - [ ] Atualizar RenderPage.tsx
+  - [ ] Atualizar HistoryPage.tsx
+  - [ ] Atualizar SubscriptionPage.tsx
+  
+- [ ] FASE 7: Sistema de Emails
+  - [ ] Decidir: SMTP real ou mock
+  - [ ] Configurar nodemailer (se SMTP)
+  - [ ] Criar templates de email
+  - [ ] Testar envio de verificação
+  - [ ] Testar envio de reset de senha
+  
+- [ ] FASE 8: Testes End-to-End
+  - [ ] Testar cadastro com email/senha
+  - [ ] Testar login com email/senha
+  - [ ] Testar login com Google
+  - [ ] Testar reset de senha
+  - [ ] Testar fluxo de assinatura com NextAuth
+  - [ ] Testar renderizações com NextAuth
+  - [ ] Testar rollback via painel admin
+  
+- [ ] FASE 9: Desativação OAuth Manus
+  - [ ] Alterar feature flag para nextauth
+  - [ ] Monitorar logs por 24h
+  - [ ] Confirmar zero erros
+  - [ ] Remover código OAuth Manus (opcional)
+

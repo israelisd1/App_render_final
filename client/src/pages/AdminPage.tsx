@@ -4,7 +4,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { getLoginUrl } from "@/const";
 import { trpc } from "@/lib/trpc";
-import { Users, Coins, TrendingUp, FileText, DollarSign } from "lucide-react";
+import { Users, Coins, TrendingUp, FileText, DollarSign, Shield, AlertTriangle } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
 import Header from "@/components/Header";
 import { useLanguage } from "@/contexts/LanguageContext";
 
@@ -19,6 +21,34 @@ export default function AdminPage() {
   const { data: users, isLoading: usersLoading } = trpc.admin.users.useQuery(undefined, {
     enabled: isAuthenticated && user?.email === 'israelisd@gmail.com',
   });
+
+  // Auth Provider Management
+  const { data: authProviderData, refetch: refetchAuthProvider } = trpc.systemConfig.getAuthProvider.useQuery(undefined, {
+    enabled: isAuthenticated && user?.role === 'admin',
+  });
+  
+  const setAuthProviderMutation = trpc.systemConfig.setAuthProvider.useMutation({
+    onSuccess: () => {
+      toast.success('Sistema de autenticação alterado com sucesso!');
+      refetchAuthProvider();
+    },
+    onError: (error) => {
+      toast.error(`Erro ao alterar sistema: ${error.message}`);
+    },
+  });
+
+  const [isChangingAuth, setIsChangingAuth] = useState(false);
+
+  const handleAuthProviderChange = async (provider: 'manus' | 'nextauth') => {
+    if (confirm(`Tem certeza que deseja alternar para ${provider === 'manus' ? 'OAuth Manus' : 'NextAuth'}?\n\nEsta ação é reversível a qualquer momento.`)) {
+      setIsChangingAuth(true);
+      try {
+        await setAuthProviderMutation.mutateAsync({ provider });
+      } finally {
+        setIsChangingAuth(false);
+      }
+    }
+  };
 
   // Verificar se o usuário tem permissão
   if (!isAuthenticated) {
@@ -65,6 +95,64 @@ export default function AdminPage() {
           <h1 className="text-4xl font-bold text-amber-900 mb-2">Painel Administrativo</h1>
           <p className="text-amber-700">Visão geral do sistema e gerenciamento de usuários</p>
         </div>
+
+        {/* Sistema de Autenticação - Rollback Control */}
+        <Card className="mb-8 bg-white/90 backdrop-blur border-amber-200">
+          <CardHeader>
+            <div className="flex items-center gap-2">
+              <Shield className="h-5 w-5 text-amber-600" />
+              <CardTitle className="text-amber-900">Sistema de Autenticação</CardTitle>
+            </div>
+            <CardDescription className="text-amber-700">
+              Alternar entre OAuth Manus (legado) e NextAuth (novo sistema). Rollback instantâneo em caso de problemas.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="flex items-center gap-4">
+                <div className="flex-1">
+                  <p className="text-sm font-medium text-amber-900 mb-1">Sistema Ativo:</p>
+                  <p className="text-2xl font-bold text-amber-900">
+                    {authProviderData?.provider === 'manus' ? '🔵 OAuth Manus' : '🟢 NextAuth'}
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex gap-3">
+                <Button
+                  onClick={() => handleAuthProviderChange('manus')}
+                  disabled={isChangingAuth || authProviderData?.provider === 'manus'}
+                  variant={authProviderData?.provider === 'manus' ? 'default' : 'outline'}
+                  className={authProviderData?.provider === 'manus' 
+                    ? 'bg-blue-600 hover:bg-blue-700' 
+                    : 'border-blue-600 text-blue-600 hover:bg-blue-50'
+                  }
+                >
+                  OAuth Manus (Legado)
+                </Button>
+
+                <Button
+                  onClick={() => handleAuthProviderChange('nextauth')}
+                  disabled={isChangingAuth || authProviderData?.provider === 'nextauth'}
+                  variant={authProviderData?.provider === 'nextauth' ? 'default' : 'outline'}
+                  className={authProviderData?.provider === 'nextauth' 
+                    ? 'bg-green-600 hover:bg-green-700' 
+                    : 'border-green-600 text-green-600 hover:bg-green-50'
+                  }
+                >
+                  NextAuth (Novo)
+                </Button>
+              </div>
+
+              <div className="flex items-start gap-2 p-3 bg-amber-50 border border-amber-200 rounded-md">
+                <AlertTriangle className="h-4 w-4 text-amber-600 mt-0.5 flex-shrink-0" />
+                <p className="text-xs text-amber-700">
+                  <strong>Atenção:</strong> A mudança é instantânea (cache de 5s). Usuários logados podem precisar fazer logout/login após a troca.
+                </p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
 
         {/* Estatísticas Gerais */}
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-5 mb-8">

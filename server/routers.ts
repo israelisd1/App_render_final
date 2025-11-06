@@ -9,6 +9,8 @@ import { addTokens, createRender, deductTokens, getActiveTokenPackages, getRende
 import { createCheckoutSession, validateCoupon, calculateDiscount } from "./stripe";
 import { renders } from "../drizzle/schema";
 import { storagePut } from "./storage";
+import { getAuthProvider, setAuthProvider, getAllSystemSettings } from "./systemSettings";
+import { clearAuthProviderCache } from "./_core/authMiddleware";
 
 export const appRouter = router({
   system: systemRouter,
@@ -581,13 +583,89 @@ export const appRouter = router({
         });
       }
 
-      const stripe = (await import('./stripe')).stripe;
+      const stripeModule = await import('./stripe');
+      const stripe = stripeModule.stripe;
+      
+      if (!stripe) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Stripe não configurado",
+        });
+      }
+
       const session = await stripe.billingPortal.sessions.create({
         customer: ctx.user.stripeCustomerId,
         return_url: `${process.env.VITE_FRONTEND_URL || 'http://localhost:3000'}/subscription`,
       });
 
       return { url: session.url };
+    }),
+  }),
+
+  /**
+   * Router de configurações do sistema (admin only)
+   * Permite alternar entre OAuth Manus e NextAuth via painel admin
+   */
+  systemConfig: router({
+    /**
+     * Obter sistema de autenticação ativo
+     */
+    getAuthProvider: protectedProcedure.query(async ({ ctx }) => {
+      // Apenas admin pode ver
+      if (ctx.user.role !== "admin") {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "Apenas administradores podem acessar configurações do sistema",
+        });
+      }
+
+      const provider = await getAuthProvider();
+      return { provider };
+    }),
+
+    /**
+     * Definir sistema de autenticação ativo
+     */
+    setAuthProvider: protectedProcedure
+      .input(
+        z.object({
+          provider: z.enum(["manus", "nextauth"]),
+        })
+      )
+      .mutation(async ({ ctx, input }) => {
+        // Apenas admin pode alterar
+        if (ctx.user.role !== "admin") {
+          throw new TRPCError({
+            code: "FORBIDDEN",
+            message: "Apenas administradores podem alterar configurações do sistema",
+          });
+        }
+
+        const success = await setAuthProvider(input.provider, ctx.user.email || undefined);
+        
+        if (success) {
+          // Limpar cache para aplicar imediatamente
+          clearAuthProviderCache();
+          console.log(`[SystemConfig] Auth provider changed to: ${input.provider} by ${ctx.user.email}`);
+        }
+
+        return { success };
+      }),
+
+    /**
+     * Listar todas as configurações
+     */
+    getAllSettings: protectedProcedure.query(async ({ ctx }) => {
+      // Apenas admin pode ver
+      if (ctx.user.role !== "admin") {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: "Apenas administradores podem acessar configurações do sistema",
+        });
+      }
+
+      const settings = await getAllSystemSettings();
+      return { settings };
     }),
   }),
 });
