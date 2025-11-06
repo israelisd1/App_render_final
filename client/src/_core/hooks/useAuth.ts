@@ -1,4 +1,4 @@
-import { getLoginUrl } from "@/const";
+import { getLoginUrl, getLoginUrlAsync } from "@/const";
 import { trpc } from "@/lib/trpc";
 import { TRPCClientError } from "@trpc/client";
 import { useCallback, useEffect, useMemo } from "react";
@@ -67,7 +67,10 @@ export function useAuth(options?: UseAuthOptions) {
     if (typeof window === "undefined") return;
     if (window.location.pathname === redirectPath) return;
 
-    window.location.href = redirectPath
+    // Detectar auth provider e redirecionar para URL correta
+    getLoginUrlAsync().then(loginUrl => {
+      window.location.href = loginUrl;
+    });
   }, [
     redirectOnUnauthenticated,
     redirectPath,

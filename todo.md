@@ -319,3 +319,19 @@ Para finalizar NextAuth:
   - [x] Testar com OAuth Manus - redireciona corretamente
   - [x] Testar com NextAuth customizado - formulário funcionando!
 
+
+
+
+## BUG: Alternância de Autenticação Não Funciona (06/11/2025)
+
+- [x] Investigar por que OAuth Manus carrega mesmo com NextAuth habilitado no admin
+  - [x] Verificar valor no banco após alternar - nextauth ativo
+  - [x] Verificar cache do authMiddleware - funcionando
+  - [x] Verificar se useAuth está usando sistema correto - problema encontrado!
+  - [x] Verificar se getLoginUrl() está checando auth_provider - não estava checando
+- [x] Corrigir lógica de detecção de autenticação
+  - [x] Criar getLoginUrlAsync() que detecta auth provider
+  - [x] Modificar useAuth para usar getLoginUrlAsync()
+  - [x] Criar hook useAuthProvider
+- [ ] Testar alternância completa (Manus → NextAuth → Manus)
+
