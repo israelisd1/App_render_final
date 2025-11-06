@@ -7,15 +7,21 @@ import { Request, Response, NextFunction, Express } from "express";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
-import { Google } from "arctic";
 import * as db from "../db";
 
-// Configuração Arctic Google OAuth
-const google = new Google(
-  process.env.GOOGLE_CLIENT_ID || "",
-  process.env.GOOGLE_CLIENT_SECRET || "",
-  `${process.env.NEXTAUTH_URL || "http://localhost:3000"}/api/auth/callback/google`
-);
+// Lazy loading do Google OAuth para evitar problemas de inicialização
+let _google: any = null;
+async function getGoogleClient() {
+  if (!_google) {
+    const { Google } = await import("arctic");
+    _google = new Google(
+      process.env.GOOGLE_CLIENT_ID || "",
+      process.env.GOOGLE_CLIENT_SECRET || "",
+      `${process.env.NEXTAUTH_URL || "http://localhost:3000"}/api/auth/callback/google`
+    );
+  }
+  return _google;
+}
 
 const JWT_SECRET = process.env.JWT_SECRET || process.env.NEXTAUTH_SECRET || "fallback-secret-change-me";
 const JWT_EXPIRY = "30d"; // 30 dias
@@ -257,7 +263,8 @@ export function registerCustomAuthRoutes(app: Express) {
         maxAge: 10 * 60 * 1000,
       });
 
-      const url = google.createAuthorizationURL(state, codeVerifier, ["openid", "profile", "email"]);
+      const googleClient = await getGoogleClient();
+      const url = googleClient.createAuthorizationURL(state, codeVerifier, ["openid", "profile", "email"]);
       res.redirect(url.toString());
     } catch (error: any) {
       console.error("[Auth] Google OAuth error:", error);
@@ -277,7 +284,8 @@ export function registerCustomAuthRoutes(app: Express) {
       }
 
       // Trocar code por tokens
-      const tokens = await google.validateAuthorizationCode(code as string, codeVerifier);
+      const googleClient = await getGoogleClient();
+      const tokens = await googleClient.validateAuthorizationCode(code as string, codeVerifier);
 
       // Buscar informações do usuário do Google
       const response = await fetch("https://www.googleapis.com/oauth2/v2/userinfo", {

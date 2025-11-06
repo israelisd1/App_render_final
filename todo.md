@@ -353,3 +353,22 @@ Para finalizar NextAuth:
 - [x] Testar build de produção localmente - SUCESSO!
 - [ ] Publicar versão corrigida
 
+
+
+
+## Erro Persistente de Publicação (06/11/2025)
+
+- [x] Investigar causa raiz do erro "algo deu errado"
+  - [x] Verificar logs do sistema de publicação - ServiceNotHealthy
+  - [x] Verificar se há erros TypeScript não detectados
+  - [x] Verificar arquivos .cjs que podem causar problemas - nenhum encontrado
+  - [x] Verificar configurações package.json - OK
+  - [x] Verificar se há imports problemáticos - ENCONTRADO!
+  - [x] Problema: import { Google } from "arctic" no topo do arquivo causava erro ESM Loader
+- [x] Corrigir problemas encontrados
+  - [x] Implementar lazy loading do Arctic com import() dinâmico
+  - [x] Criar função getGoogleClient() assíncrona
+  - [x] Atualizar todas referências de google para await getGoogleClient()
+  - [x] Build testado e validado - SUCESSO!
+- [ ] Testar publicação novamente
+
