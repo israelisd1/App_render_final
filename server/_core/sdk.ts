@@ -257,8 +257,27 @@ class SDKServer {
   }
 
   async authenticateRequest(req: Request): Promise<User> {
-    // Regular authentication flow
     const cookies = this.parseCookies(req.headers.cookie);
+    
+    // Tentar NextAuth primeiro (cookie auth_token)
+    const nextAuthToken = cookies.get('auth_token');
+    if (nextAuthToken) {
+      try {
+        const { verifyToken } = await import('../auth/customAuth');
+        const decoded = verifyToken(nextAuthToken);
+        if (decoded && decoded.id) {
+          const user = await db.getUserById(decoded.id);
+          if (user) {
+            return user;
+          }
+        }
+      } catch (error) {
+        // Token inválido, tentar OAuth Manus
+        console.log('[Auth] NextAuth token invalid, trying Manus OAuth');
+      }
+    }
+    
+    // Fallback para OAuth Manus
     const sessionCookie = cookies.get(COOKIE_NAME);
     const session = await this.verifySession(sessionCookie);
 

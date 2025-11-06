@@ -388,3 +388,21 @@ Para finalizar NextAuth:
 - [x] Testar build - SUCESSO! (100.6kb)
 - [ ] Testar publicação
 
+
+
+
+## Bug: Login NextAuth não funciona (06/11/2025)
+
+- [x] Investigar problema de login
+  - [x] Testar fluxo de signup - funcionando
+  - [x] Testar fluxo de signin - funcionando
+  - [x] Verificar se cookie está sendo setado - OK
+  - [x] Verificar se senha está sendo hasheada corretamente - OK
+  - [x] Verificar logs do servidor
+  - [x] PROBLEMA ENCONTRADO: tRPC não detectava cookie NextAuth
+- [x] Corrigir problema identificado
+  - [x] Modificar sdk.ts authenticateRequest() para detectar auth_token
+  - [x] Adicionar fallback para OAuth Manus
+  - [x] Testar integração tRPC + NextAuth - SUCESSO!
+- [x] Testar login completo - auth.me retorna usuário corretamente
+
