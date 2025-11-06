@@ -165,10 +165,8 @@ export default function Login() {
             </div>
 
             <div className="flex justify-end">
-              <Link href="/forgot-password">
-                <a className="text-sm text-amber-600 hover:text-amber-700 hover:underline">
-                  Esqueceu sua senha?
-                </a>
+              <Link href="/forgot-password" className="text-sm text-amber-600 hover:text-amber-700 hover:underline">
+                Esqueceu sua senha?
               </Link>
             </div>
 
@@ -190,10 +188,8 @@ export default function Login() {
 
           <div className="text-center text-sm text-amber-700">
             Não tem uma conta?{' '}
-            <Link href="/signup">
-              <a className="font-semibold text-amber-600 hover:text-amber-700 hover:underline">
-                Criar conta
-              </a>
+            <Link href="/signup" className="font-semibold text-amber-600 hover:text-amber-700 hover:underline">
+              Criar conta
             </Link>
           </div>
         </CardContent>

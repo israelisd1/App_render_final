@@ -406,3 +406,18 @@ Para finalizar NextAuth:
   - [x] Testar integração tRPC + NextAuth - SUCESSO!
 - [x] Testar login completo - auth.me retorna usuário corretamente
 
+
+
+
+## Erros React - Nested Anchor Tags (06/11/2025)
+
+- [x] Encontrar nested anchor tags
+  - [x] Verificar página Login.tsx - 2 nested anchors encontrados
+  - [x] Verificar página Signup.tsx - 1 nested anchor encontrado
+  - [x] Verificar componentes que usam Link - nenhum outro encontrado
+- [x] Corrigir hierarquia HTML
+  - [x] Login.tsx: remover <a> interno de Link (linhas 168-172, 193-197)
+  - [x] Signup.tsx: remover <a> interno de Link (linhas 224-228)
+  - [x] Passar className diretamente para Link
+- [x] Testar sem erros no console - build sucesso, servidor rodando
+

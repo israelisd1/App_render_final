@@ -221,10 +221,8 @@ export default function Signup() {
 
           <div className="text-center text-sm text-amber-700">
             Já tem uma conta?{' '}
-            <Link href="/login">
-              <a className="font-semibold text-amber-600 hover:text-amber-700 hover:underline">
-                Entrar
-              </a>
+            <Link href="/login" className="font-semibold text-amber-600 hover:text-amber-700 hover:underline">
+              Entrar
             </Link>
           </div>
         </CardContent>
