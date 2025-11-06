@@ -333,5 +333,8 @@ Para finalizar NextAuth:
   - [x] Criar getLoginUrlAsync() que detecta auth provider
   - [x] Modificar useAuth para usar getLoginUrlAsync()
   - [x] Criar hook useAuthProvider
-- [ ] Testar alternância completa (Manus → NextAuth → Manus)
+- [x] Testar alternância completa (Manus → NextAuth → Manus)
+  - [x] NextAuth ativo no painel admin
+  - [x] Hook useLoginUrl implementado em todos os componentes
+  - [x] Sistema detectando auth provider corretamente
 

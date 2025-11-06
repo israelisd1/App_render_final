@@ -1,4 +1,5 @@
 import { useAuth } from "@/_core/hooks/useAuth";
+import { useLoginUrl } from "@/components/LoginButton";
 import { Button } from "@/components/ui/button";
 import Header from "@/components/Header";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -16,6 +17,7 @@ import { Link, useLocation } from "wouter";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function RenderPage() {
+  const loginUrl = useLoginUrl();
   const { user, isAuthenticated, logout } = useAuth();
   const { t } = useLanguage();
   const [, setLocation] = useLocation();
@@ -80,7 +82,7 @@ export default function RenderPage() {
           </CardHeader>
           <CardContent>
             <Button asChild className="w-full">
-              <a href={getLoginUrl()}>{t('render.authRequired')}</a>
+              <a href={loginUrl}>{t('render.authRequired')}</a>
             </Button>
           </CardContent>
         </Card>

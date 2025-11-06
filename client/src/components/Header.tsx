@@ -1,6 +1,7 @@
 import { useAuth } from "@/_core/hooks/useAuth";
 import { Button } from "@/components/ui/button";
-import { APP_LOGO, APP_TITLE, getLoginUrl } from "@/const";
+import { APP_LOGO, APP_TITLE } from "@/const";
+import { useLoginUrl } from "@/components/LoginButton";
 import { Link } from "wouter";
 import { Coins, ShoppingCart, Menu, X, Globe, Crown, Zap } from "lucide-react";
 import { useState } from "react";
@@ -10,6 +11,7 @@ export default function Header() {
   const { user, isAuthenticated, logout } = useAuth();
   const { language, setLanguage, t } = useLanguage();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const loginUrl = useLoginUrl();
 
   return (
     <header className="border-b border-amber-200 bg-white/95 backdrop-blur-sm sticky top-0 z-50">
@@ -94,7 +96,7 @@ export default function Header() {
             </>
           ) : (
             <Button asChild className="bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white">
-              <a href={getLoginUrl()}>{t("header.login")}</a>
+              <a href={loginUrl}>{t("header.login")}</a>
             </Button>
           )}
           </nav>
@@ -132,7 +134,7 @@ export default function Header() {
             ) : (
               <div className="p-4">
                 <Button asChild className="w-full bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white">
-                  <a href={getLoginUrl()}>{t("header.login")}</a>
+                  <a href={loginUrl}>{t("header.login")}</a>
                 </Button>
               </div>
             )}

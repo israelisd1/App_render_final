@@ -2,13 +2,15 @@ import { useAuth } from "@/_core/hooks/useAuth";
 import { useLanguage } from "@/contexts/LanguageContext";
 import BeforeAfterSlider from "@/components/BeforeAfterSlider";
 import { Button } from "@/components/ui/button";
-import { APP_LOGO, APP_TITLE, getLoginUrl } from "@/const";
+import { APP_LOGO, APP_TITLE } from "@/const";
+import { useLoginUrl } from "@/components/LoginButton";
 import { Link } from "wouter";
 import Header from "@/components/Header";
 
 export default function Home() {
   const { user, isAuthenticated, loading, logout } = useAuth();
   const { t } = useLanguage();
+  const loginUrl = useLoginUrl();
   return (
     <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-amber-100">
       <Header />
@@ -34,7 +36,7 @@ export default function Home() {
             </Link>
           ) : (
             <Button asChild size="lg" className="bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white text-lg px-8 py-6">
-              <a href={getLoginUrl()}>{t("home.ctaLogin")}</a>
+              <a href={loginUrl}>{t("home.ctaLogin")}</a>
             </Button>
           )}
         </div>
@@ -62,7 +64,7 @@ export default function Home() {
                 </Link>
               ) : (
                 <Button asChild size="lg" className="bg-white text-amber-600 hover:bg-amber-50 text-lg px-10 py-6 font-bold shadow-xl">
-                  <a href={getLoginUrl()}>{t("cta.button")}</a>
+                  <a href={loginUrl}>{t("cta.button")}</a>
                 </Button>
               )}
             </div>

@@ -1,4 +1,5 @@
 import { useAuth } from "@/_core/hooks/useAuth";
+import { useLoginUrl } from "@/components/LoginButton";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { getLoginUrl } from "@/const";
@@ -10,6 +11,7 @@ import { useLocation } from "wouter";
 import Header from "@/components/Header";
 
 export default function SubscriptionPage() {
+  const loginUrl = useLoginUrl();
   const { user, isAuthenticated, loading } = useAuth();
   const { t } = useLanguage();
   const [, setLocation] = useLocation();
@@ -70,7 +72,7 @@ export default function SubscriptionPage() {
           </CardHeader>
           <CardContent>
             <Button asChild className="w-full bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white">
-              <a href={getLoginUrl()}>{t('subscription.login')}</a>
+              <a href={loginUrl}>{t('subscription.login')}</a>
             </Button>
           </CardContent>
         </Card>

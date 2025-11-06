@@ -1,4 +1,5 @@
 import { useAuth } from "@/_core/hooks/useAuth";
+import { useLoginUrl } from "@/components/LoginButton";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -11,6 +12,7 @@ import Header from "@/components/Header";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function AdminPage() {
+  const loginUrl = useLoginUrl();
   const { user, isAuthenticated } = useAuth();
   const { t } = useLanguage();
 
@@ -63,7 +65,7 @@ export default function AdminPage() {
           </CardHeader>
           <CardContent>
             <Button asChild className="w-full bg-gradient-to-r from-amber-600 to-orange-600">
-              <a href={getLoginUrl()}>Fazer Login</a>
+              <a href={loginUrl}>Fazer Login</a>
             </Button>
           </CardContent>
         </Card>

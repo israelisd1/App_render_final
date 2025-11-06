@@ -1,4 +1,5 @@
 import { useAuth } from "@/_core/hooks/useAuth";
+import { useLoginUrl } from "@/components/LoginButton";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -38,6 +39,7 @@ const MIN_WIDTH = 200;
 const MAX_WIDTH = 480;
 
 export default function DashboardLayout({
+  const loginUrl = useLoginUrl();
   children,
 }: {
   children: React.ReactNode;
@@ -79,7 +81,7 @@ export default function DashboardLayout({
           </div>
           <Button
             onClick={() => {
-              window.location.href = getLoginUrl();
+              window.location.href = loginUrl;
             }}
             size="lg"
             className="w-full shadow-lg hover:shadow-xl transition-all"

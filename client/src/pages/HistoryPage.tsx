@@ -1,4 +1,5 @@
 import { useAuth } from "@/_core/hooks/useAuth";
+import { useLoginUrl } from "@/components/LoginButton";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -14,6 +15,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 
 export default function HistoryPage() {
+  const loginUrl = useLoginUrl();
   const { user, isAuthenticated, logout } = useAuth();
   const { t } = useLanguage();
   const { data: renders, isLoading } = trpc.render.list.useQuery(undefined, {
@@ -144,7 +146,7 @@ export default function HistoryPage() {
           </CardHeader>
           <CardContent>
             <Button asChild className="w-full bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white">
-              <a href={getLoginUrl()}>Fazer Login</a>
+              <a href={loginUrl}>Fazer Login</a>
             </Button>
           </CardContent>
         </Card>

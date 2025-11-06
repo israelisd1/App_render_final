@@ -1,4 +1,5 @@
 import { useAuth } from "@/_core/hooks/useAuth";
+import { useLoginUrl } from "@/components/LoginButton";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { getLoginUrl } from "@/const";
@@ -10,6 +11,7 @@ import { useLocation } from "wouter";
 import Header from "@/components/Header";
 
 export default function PricingPage() {
+  const loginUrl = useLoginUrl();
   const { user, isAuthenticated } = useAuth();
   const { t } = useLanguage();
   const [, setLocation] = useLocation();
@@ -28,7 +30,7 @@ export default function PricingPage() {
 
   const handleSubscribe = (plan: 'basic' | 'pro') => {
     if (!isAuthenticated) {
-      window.location.href = getLoginUrl();
+      window.location.href = loginUrl;
       return;
     }
 
