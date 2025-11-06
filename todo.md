@@ -372,3 +372,19 @@ Para finalizar NextAuth:
   - [x] Build testado e validado - SUCESSO!
 - [ ] Testar publicação novamente
 
+
+
+
+## Erro Stripe na Publicação (06/11/2025)
+
+- [x] Corrigir inicialização do Stripe sem chave configurada
+  - [x] Encontrar onde Stripe é inicializado - 3 lugares
+  - [x] Adicionar verificação de chave antes de criar instância
+  - [x] Tornar Stripe opcional quando chave não existe
+  - [x] Modificar subscription.ts para usar stripe exportado
+  - [x] Modificar stripe-webhook.ts para usar stripe exportado
+  - [x] Adicionar import condicional no index.ts
+  - [x] Rotas Stripe só registradas se chave existir
+- [x] Testar build - SUCESSO! (100.6kb)
+- [ ] Testar publicação
+

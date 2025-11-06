@@ -5,7 +5,7 @@
  */
 
 import { Router, Request, Response } from 'express';
-import Stripe from 'stripe';
+import { stripe } from '../stripe';
 import { 
   getUserById, 
   updateUserSubscription, 
@@ -15,11 +15,6 @@ import {
 import { STRIPE_PRODUCTS, getPlanFromPriceId, getPlanConfig } from '../config/stripe-products';
 
 const router = Router();
-
-// Inicializar Stripe
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
-  apiVersion: '2024-12-18.acacia',
-});
 
 /**
  * POST /api/subscription/create-checkout

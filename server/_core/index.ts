@@ -7,11 +7,9 @@ import { registerOAuthRoutes } from "./oauth";
 import { registerCustomAuthRoutes, authMiddleware } from "../auth/customAuth";
 import cookieParser from "cookie-parser";
 import { appRouter } from "../routers";
-import subscriptionRouter from "../routes/subscription";
-import stripeWebhookRouter from "../routes/stripe-webhook";
 import { createContext } from "./context";
 import { serveStatic, setupVite } from "./vite";
-import { handleStripeWebhook } from "../webhookHandler";
+import { ENV } from "./env";
 
 function isPortAvailable(port: number): Promise<boolean> {
   return new Promise(resolve => {
@@ -35,13 +33,24 @@ async function findAvailablePort(startPort: number = 3000): Promise<number> {
 async function startServer() {
   const app = express();
   const server = createServer(app);
+  
+  // Import Stripe routes apenas se configurado
+  let subscriptionRouter: any = null;
+  let stripeWebhookRouter: any = null;
+  if (ENV.stripeSecretKey) {
+    subscriptionRouter = (await import("../routes/subscription")).default;
+    stripeWebhookRouter = (await import("../routes/stripe-webhook")).default;
+  }
+  
   // Stripe webhook - DEVE vir ANTES do body parser JSON
   // O Stripe precisa do raw body para verificar a assinatura
-  app.use(
-    "/api/stripe",
-    express.raw({ type: "application/json" }),
-    stripeWebhookRouter
-  );
+  if (stripeWebhookRouter) {
+    app.use(
+      "/api/stripe",
+      express.raw({ type: "application/json" }),
+      stripeWebhookRouter
+    );
+  }
 
   // Configure body parser with larger size limit for file uploads
   app.use(express.json({ limit: "50mb" }));
@@ -59,8 +68,10 @@ async function startServer() {
   // OAuth callback under /api/oauth/callback (Manus OAuth)
   registerOAuthRoutes(app);
   
-  // Subscription routes
-  app.use("/api/subscription", subscriptionRouter);
+  // Subscription routes (apenas se Stripe configurado)
+  if (subscriptionRouter) {
+    app.use("/api/subscription", subscriptionRouter);
+  }
   // tRPC API
   app.use(
     "/api/trpc",

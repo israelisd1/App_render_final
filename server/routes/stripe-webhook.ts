@@ -5,7 +5,7 @@
  */
 
 import { Router, Request, Response } from 'express';
-import Stripe from 'stripe';
+import { stripe } from '../stripe';
 import { 
   updateUserSubscription, 
   addExtraRenders,
@@ -15,11 +15,6 @@ import {
 import { getPlanFromPriceId, getPlanConfig } from '../config/stripe-products';
 
 const router = Router();
-
-// Inicializar Stripe
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
-  apiVersion: '2024-12-18.acacia',
-});
 
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET || '';
 
