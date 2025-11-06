@@ -55,9 +55,9 @@ export default function Home() {
             </p>
             <div className="mt-8">
               {isAuthenticated ? (
-                <Link href="/render">
+                <Link href="/pricing">
                   <Button size="lg" className="bg-white text-amber-600 hover:bg-amber-50 text-lg px-10 py-6 font-bold shadow-xl">
-                    {t("home.cta")}
+                    Ver Planos
                   </Button>
                 </Link>
               ) : (

@@ -250,23 +250,36 @@ export default function HistoryPage() {
                     )}
                     {render.status === "completed" && render.renderedImageUrl && (
                       <div className="space-y-2">
-                        <Button
-                          onClick={() => handleDownload(render.renderedImageUrl!, render)}
-                          variant="outline"
-                          className="w-full border-amber-300 text-amber-900 hover:bg-amber-50"
-                        >
-                          <Download className="h-4 w-4 mr-2" />
-                          {t("history.download")}
-                        </Button>
-                        {/* Botão de Download HD - apenas para usuários Pro com highResUrl */}
-                        {user?.plan === 'pro' && render.highResUrl && (
+                        {/* Plano Pro: apenas 1 botão Ultra HD */}
+                        {user?.plan === 'pro' ? (
                           <Button
-                            onClick={() => handleDownloadHD(render)}
+                            onClick={() => handleDownload(render.renderedImageUrl!, render)}
                             className="w-full bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white"
                           >
                             <Download className="h-4 w-4 mr-2" />
-                            {t("history.downloadHD")}
+                            {t("history.downloadUltraHD")}
                           </Button>
+                        ) : (
+                          /* Plano Basic/Free: 2 botões (HD desabilitado) */
+                          <>
+                            <Button
+                              onClick={() => handleDownload(render.renderedImageUrl!, render)}
+                              variant="outline"
+                              className="w-full border-amber-300 text-amber-900 hover:bg-amber-50"
+                            >
+                              <Download className="h-4 w-4 mr-2" />
+                              {t("history.download")}
+                            </Button>
+                            <Button
+                              disabled
+                              variant="outline"
+                              className="w-full border-gray-300 text-gray-400 cursor-not-allowed opacity-60"
+                              title={t("history.hdProOnly")}
+                            >
+                              <Download className="h-4 w-4 mr-2" />
+                              {t("history.downloadHD")}
+                            </Button>
+                          </>
                         )}
                         <Button
                           onClick={() => {

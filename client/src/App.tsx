@@ -8,7 +8,6 @@ import { LanguageProvider } from "./contexts/LanguageContext";
 import Home from "./pages/Home";
 import RenderPage from "./pages/RenderPage";
 import HistoryPage from "./pages/HistoryPage";
-import TokensPage from "./pages/TokensPage";
 import CheckoutSuccess from "./pages/CheckoutSuccess";
 import AdminPage from "./pages/AdminPage";
 import PricingPage from "./pages/PricingPage";
@@ -21,7 +20,6 @@ function Router() {
       <Route path={"/"} component={Home} />
       <Route path={"/render"} component={RenderPage} />
       <Route path={"/history"} component={HistoryPage} />
-      <Route path={"/tokens"} component={TokensPage} />
       <Route path={"/tokens/success"} component={CheckoutSuccess} />
       <Route path={"/pricing"} component={PricingPage} />
       <Route path={"/subscription"} component={SubscriptionPage} />

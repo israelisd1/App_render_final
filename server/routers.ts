@@ -513,6 +513,83 @@ export const appRouter = router({
         return await getUserDetailedStats(input.userId);
       }),
   }),
+
+  subscription: router({
+    /**
+     * Retorna status da assinatura do usuário
+     */
+    status: protectedProcedure.query(async ({ ctx }) => {
+      return {
+        plan: ctx.user.plan || 'free',
+        subscriptionStatus: ctx.user.subscriptionStatus,
+        monthlyQuota: ctx.user.monthlyQuota || 0,
+        monthlyRendersUsed: ctx.user.monthlyRendersUsed || 0,
+        extraRenders: ctx.user.extraRenders || 0,
+        billingPeriodStart: ctx.user.billingPeriodStart,
+        billingPeriodEnd: ctx.user.billingPeriodEnd,
+        stripeCustomerId: ctx.user.stripeCustomerId,
+        subscriptionId: ctx.user.subscriptionId,
+      };
+    }),
+
+    /**
+     * Cancela assinatura do usuário
+     */
+    cancel: protectedProcedure.mutation(async ({ ctx }) => {
+      if (!ctx.user.subscriptionId) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'Nenhuma assinatura ativa encontrada',
+        });
+      }
+
+      const stripe = (await import('./stripe')).stripe;
+      await stripe.subscriptions.update(ctx.user.subscriptionId, {
+        cancel_at_period_end: true,
+      });
+
+      return { success: true };
+    }),
+
+    /**
+     * Reativa assinatura cancelada
+     */
+    reactivate: protectedProcedure.mutation(async ({ ctx }) => {
+      if (!ctx.user.subscriptionId) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'Nenhuma assinatura encontrada',
+        });
+      }
+
+      const stripe = (await import('./stripe')).stripe;
+      await stripe.subscriptions.update(ctx.user.subscriptionId, {
+        cancel_at_period_end: false,
+      });
+
+      return { success: true };
+    }),
+
+    /**
+     * Abre portal do Stripe para gerenciar assinatura
+     */
+    portal: protectedProcedure.mutation(async ({ ctx }) => {
+      if (!ctx.user.stripeCustomerId) {
+        throw new TRPCError({
+          code: 'BAD_REQUEST',
+          message: 'Nenhum cliente Stripe encontrado',
+        });
+      }
+
+      const stripe = (await import('./stripe')).stripe;
+      const session = await stripe.billingPortal.sessions.create({
+        customer: ctx.user.stripeCustomerId,
+        return_url: `${process.env.VITE_FRONTEND_URL || 'http://localhost:3000'}/subscription`,
+      });
+
+      return { url: session.url };
+    }),
+  }),
 });
 
 export type AppRouter = typeof appRouter;

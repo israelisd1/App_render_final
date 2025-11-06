@@ -20,8 +20,9 @@ const translations = {
     "header.login": "Fazer Login",
     "header.basicPlan": "Basic",
     "header.proPlan": "Pro",
+    "header.viewPlans": "Ver Planos",
     
-    // Home
+    // Home Page
     "home.title": "Arqrender",
     "home.subtitle": "Renderização Arquitetônica Avançada",
     "home.description": "Transforme seus desenhos 2D em renderizações fotorrealistas de alta qualidade em segundos. Perfeito para arquitetos, designers de interiores e profissionais da construção.",
@@ -61,6 +62,8 @@ const translations = {
     "history.status.failed": "Falhou",
     "history.download": "Baixar Imagem",
     "history.downloadHD": "📥 Download Alta Resolução (Pro)",
+    "history.downloadUltraHD": "📥 Baixar Imagem (Ultra HD)",
+    "history.hdProOnly": "Disponível apenas no Plano Pro",
     "history.refine": "Refinar",
     "history.error": "Erro",
     
@@ -131,9 +134,10 @@ const translations = {
     // CTA Section
     "cta.title": "Comece Gratuitamente Hoje",
     "cta.subtitle": "Cadastre-se agora e ganhe",
-    "cta.tokensHighlight": "3 tokens gratuitos",
-    "cta.description": "para testar nossa plataforma. Cada token permite criar uma renderização de alta qualidade.",
+    "cta.tokensHighlight": "3 renderizações gratuitas",
+    "cta.description": "para testar nossa plataforma. Depois escolha o plano ideal para suas necessidades.",
     "cta.button": "Criar Conta Grátis",
+    "header.freeRenders": "renders gratuitos",
     
     // Before/After Slider
     "slider.before": "Antes (2D)",
@@ -274,8 +278,9 @@ const translations = {
     "header.login": "Login",
     "header.basicPlan": "Basic",
     "header.proPlan": "Pro",
+    "header.viewPlans": "View Plans",
     
-    // Home
+    // Home Page
     "home.title": "Arqrender",
     "home.subtitle": "Advanced Architectural Rendering",
     "home.description": "Transform your 2D drawings into photorealistic high-quality renderings in seconds. Perfect for architects, interior designers, and construction professionals.",
@@ -315,6 +320,8 @@ const translations = {
     "history.status.failed": "Failed",
     "history.download": "Download Image",
     "history.downloadHD": "📥 Download High Resolution (Pro)",
+    "history.downloadUltraHD": "📥 Download Image (Ultra HD)",
+    "history.hdProOnly": "Available only on Pro Plan",
     "history.refine": "Refine",
     "history.error": "Error",
     
@@ -385,9 +392,10 @@ const translations = {
     // CTA Section
     "cta.title": "Start Free Today",
     "cta.subtitle": "Sign up now and get",
-    "cta.tokensHighlight": "3 free tokens",
-    "cta.description": "to test our platform. Each token allows you to create one high-quality rendering.",
+    "cta.tokensHighlight": "3 free renderings",
+    "cta.description": "to test our platform. Then choose the ideal plan for your needs.",
     "cta.button": "Sign Up Free",
+    "header.freeRenders": "free renders",
     
     // Before/After Slider
     "slider.before": "Before (2D)",

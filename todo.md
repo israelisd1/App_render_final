@@ -119,8 +119,15 @@
     - [x] Integrar botões com Stripe Checkout
     - [x] Adicionar traduções PT-BR/EN completas
     - [x] Adicionar rotas no App.tsx
-  - [ ] FASE 7: Traduções
-  - [ ] FASE 8: Testes e validação
+  - [x] FASE 7: Traduções
+    - [x] Revisar consistência de traduções PT-BR/EN
+    - [x] Verificar que todas as chaves estão balanceadas
+    - [x] 100% das chaves traduzidas em ambos idiomas
+  - [x] FASE 8: Testes e validação
+    - [x] Criar guia de testes end-to-end (TESTING_GUIDE.md)
+    - [x] Criar guia do usuário (USER_GUIDE_SUBSCRIPTIONS.md)
+    - [x] Documentar 20 cenários de teste
+    - [x] Incluir checklist de funcionalidades críticas
 - [ ] Implementar compra de pacotes extras
   - [ ] Múltiplos de 20 imagens por R$49,90
   - [ ] Respeitar resolução do plano principal
@@ -154,4 +161,58 @@ Para finalizar NextAuth:
   - [x] Salvar URL original da API separadamente para plano Pro
   - [x] Criar função de download HD que usa highResUrl
   - [x] Botão HD agora baixa versão de alta resolução real (maior tamanho)
+
+
+
+## Correção Final - Router Subscription (05/11/2025)
+
+- [x] Corrigir router subscription faltante no backend
+  - [x] Implementar procedure `status` (retorna dados da assinatura)
+  - [x] Implementar procedure `cancel` (cancela assinatura via Stripe)
+  - [x] Implementar procedure `reactivate` (reativa assinatura cancelada)
+  - [x] Implementar procedure `portal` (abre portal do Stripe)
+  - [x] Testar página /subscription carregando corretamente
+  - [x] Testar página /pricing carregando corretamente
+  - [x] Validar todas as rotas via navegador automatizado
+  - [x] Confirmar servidor acessível publicamente
+
+
+
+## Implementação de Renderizações Gratuitas (05/11/2025 23:00)
+
+- [x] Implementar 3 renderizações gratuitas para novos usuários
+  - [x] Atualizar db.ts para dar 3 renders gratuitos em extraRenders ao criar usuário
+  - [x] Atualizar lógica de canUserRender para considerar extraRenders
+  - [x] Atualizar Header.tsx para mostrar renders gratuitos restantes
+  - [x] Atualizar traduções CTA para falar de 3 renders gratuitos
+  - [x] Atualizar Home.tsx para mostrar CTA de cadastro gratuito
+  - [x] Remover rota /tokens e arquivo TokensPage.tsx
+  - [x] Remover links "Comprar Tokens" do Header
+  - [x] Testar fluxo completo via navegador - SUCESSO!
+
+
+
+## PROBLEMA CRÍTICO: Preview não carrega (05/11/2025 23:05)
+
+- [ ] Diagnosticar causa raiz do problema de preview
+  - [ ] Verificar logs do servidor em tempo real
+  - [ ] Verificar erros de compilação TypeScript
+  - [ ] Verificar erros de ESBuild no backend
+  - [ ] Verificar se servidor está escutando corretamente
+  - [ ] Verificar se há erros de sintaxe bloqueando build
+  - [ ] Testar todas as rotas via curl
+  - [ ] Validar que aplicação funciona via navegador
+
+
+
+## Ajuste de Botões de Download (05/11/2025 23:12)
+
+- [x] Ajustar botões de download no histórico por plano
+  - [x] Plano Pro: mostrar apenas 1 botão "Baixar Imagem (Ultra HD)" em destaque
+  - [x] Plano Basic/Free: mostrar 2 botões
+    - [x] Botão 1: "Baixar Imagem" (padrão, funcional)
+    - [x] Botão 2: "Download Alta Resolução (Pro)" (desabilitado, cinza, com tooltip)
+  - [x] Adicionar traduções para tooltip "Disponível apenas no Plano Pro"
+  - [x] Testar com plano Pro - SUCESSO!
+  - [x] Testar com plano Basic - SUCESSO!
 

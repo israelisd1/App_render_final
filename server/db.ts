@@ -64,6 +64,10 @@ export async function upsertUser(user: InsertUser): Promise<void> {
       values.lastSignedIn = new Date();
     }
 
+    // Dar 3 renderizações gratuitas para novos usuários
+    // Apenas na criação (INSERT), não no UPDATE
+    values.extraRenders = 3;
+
     if (Object.keys(updateSet).length === 0) {
       updateSet.lastSignedIn = new Date();
     }
