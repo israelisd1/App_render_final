@@ -12,6 +12,10 @@ import CheckoutSuccess from "./pages/CheckoutSuccess";
 import AdminPage from "./pages/AdminPage";
 import PricingPage from "./pages/PricingPage";
 import SubscriptionPage from "./pages/SubscriptionPage";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -24,6 +28,10 @@ function Router() {
       <Route path={"/pricing"} component={PricingPage} />
       <Route path={"/subscription"} component={SubscriptionPage} />
       <Route path={"/admin"} component={AdminPage} />
+      <Route path={"/login"} component={Login} />
+      <Route path={"/signup"} component={Signup} />
+      <Route path={"/forgot-password"} component={ForgotPassword} />
+      <Route path={"/reset-password"} component={ResetPassword} />
       <Route path={"/404"} component={NotFound} />
       <Route component={NotFound} />
     </Switch>

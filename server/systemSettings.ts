@@ -73,9 +73,9 @@ export async function setSystemSetting(
 export async function getAuthProvider(): Promise<"manus" | "nextauth"> {
   const value = await getSystemSetting("auth_provider");
   
-  // Default: nextauth (novo sistema)
+  // Default: manus (sistema legado ativo por padrão)
   if (!value || (value !== "manus" && value !== "nextauth")) {
-    return "nextauth";
+    return "manus";
   }
   
   return value as "manus" | "nextauth";

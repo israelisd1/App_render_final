@@ -10,9 +10,9 @@ CREATE TABLE IF NOT EXISTS system_settings (
   updated_by VARCHAR(320) -- email do admin que fez a alteração
 );
 
--- Inserir configuração padrão (NextAuth ativo)
+-- Inserir configuração padrão (OAuth Manus ativo por padrão)
 INSERT INTO system_settings (setting_key, setting_value, description) 
-VALUES ('auth_provider', 'nextauth', 'Sistema de autenticação ativo: manus ou nextauth')
+VALUES ('auth_provider', 'manus', 'Sistema de autenticação ativo: manus ou nextauth')
 ON DUPLICATE KEY UPDATE setting_value = setting_value;
 
 -- Índice para busca rápida

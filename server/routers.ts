@@ -608,19 +608,11 @@ export const appRouter = router({
    */
   systemConfig: router({
     /**
-     * Obter sistema de autenticação ativo
+     * Obter sistema de autenticação ativo (público para detecção no frontend)
      */
-    getAuthProvider: protectedProcedure.query(async ({ ctx }) => {
-      // Apenas admin pode ver
-      if (ctx.user.role !== "admin") {
-        throw new TRPCError({
-          code: "FORBIDDEN",
-          message: "Apenas administradores podem acessar configurações do sistema",
-        });
-      }
-
+    getAuthProvider: publicProcedure.query(async () => {
       const provider = await getAuthProvider();
-      return { provider };
+      return provider;
     }),
 
     /**

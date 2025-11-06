@@ -293,3 +293,29 @@ Para finalizar NextAuth:
   - [ ] Confirmar zero erros
   - [ ] Remover código OAuth Manus (opcional)
 
+
+
+
+## Correção Painel Admin (06/11/2025)
+
+- [x] Corrigir exibição do sistema ativo no painel admin
+  - [x] Verificar valor padrão no banco (deve ser 'manus' não 'nextauth')
+  - [x] Atualizar lógica de exibição para mostrar sistema correto
+  - [x] Testar alternância entre sistemas
+
+
+
+
+## Páginas de Autenticação Frontend (06/11/2025)
+
+- [x] Criar páginas de autenticação com detecção automática do sistema ativo
+  - [x] Página de Login (/login)
+  - [x] Página de Signup (/signup)
+  - [x] Página de Forgot Password (/forgot-password)
+  - [x] Página de Reset Password (/reset-password)
+  - [x] Hook useCustomAuth criado
+  - [x] Lógica de redirecionamento baseada em auth_provider
+  - [x] Registrar rotas no App.tsx
+  - [x] Testar com OAuth Manus - redireciona corretamente
+  - [x] Testar com NextAuth customizado - formulário funcionando!
+
