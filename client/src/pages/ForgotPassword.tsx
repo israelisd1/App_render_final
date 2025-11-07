@@ -122,12 +122,12 @@ export default function ForgotPassword() {
             <p className="text-center text-sm text-amber-600">
               Não esqueça de verificar a pasta de spam.
             </p>
-            <Link href="/login">
-              <Button className="w-full bg-amber-600 hover:bg-amber-700">
+            <Button className="w-full bg-amber-600 hover:bg-amber-700" asChild>
+              <Link href="/login">
                 <ArrowLeft className="mr-2 h-4 w-4" />
                 Voltar para Login
-              </Button>
-            </Link>
+              </Link>
+            </Button>
           </CardContent>
         </Card>
       </div>
@@ -178,11 +178,9 @@ export default function ForgotPassword() {
           </form>
 
           <div className="text-center">
-            <Link href="/login">
-              <a className="text-sm text-amber-600 hover:text-amber-700 hover:underline inline-flex items-center">
-                <ArrowLeft className="mr-1 h-4 w-4" />
-                Voltar para Login
-              </a>
+            <Link href="/login" className="text-sm text-amber-600 hover:text-amber-700 hover:underline inline-flex items-center">
+              <ArrowLeft className="mr-1 h-4 w-4" />
+              Voltar para Login
             </Link>
           </div>
         </CardContent>

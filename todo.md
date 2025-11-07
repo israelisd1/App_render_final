@@ -421,3 +421,31 @@ Para finalizar NextAuth:
   - [x] Passar className diretamente para Link
 - [x] Testar sem erros no console - build sucesso, servidor rodando
 
+
+
+
+## Busca Completa Nested Anchors (06/11/2025)
+
+- [ ] Buscar TODOS os nested anchors no projeto
+  - [ ] Verificar todos arquivos .tsx
+  - [ ] Procurar padrão `<Link.*><a`
+  - [ ] Listar todos os casos
+- [ ] Corrigir cada caso encontrado
+- [ ] Testar sem erros React
+
+
+
+
+## Correção de Nested Anchor Tags (06/11/2025 19:03)
+
+- [x] Corrigir erros React de nested anchor tags
+  - [x] RenderPage.tsx - Link com <a> interno em modal de tokens insuficientes
+  - [x] ForgotPassword.tsx - 2 Links com <a> internos (botão "Voltar para Login" e link de texto)
+  - [x] ResetPassword.tsx - 2 Links com <a> internos (botão "Ir para Login" e link de texto)
+  - [x] Remover <a> internos e passar className diretamente para <Link>
+  - [x] Usar Button com prop asChild quando necessário
+  - [x] Build validado sem erros TypeScript
+  - [x] Console do navegador sem warnings React
+  - [x] Sistema pronto para publicação
+
+

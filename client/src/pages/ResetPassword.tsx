@@ -91,11 +91,11 @@ export default function ResetPassword() {
             <p className="text-center text-amber-800">
               Você será redirecionado para a página de login em alguns segundos...
             </p>
-            <Link href="/login">
-              <Button className="w-full bg-amber-600 hover:bg-amber-700">
+            <Button className="w-full bg-amber-600 hover:bg-amber-700" asChild>
+              <Link href="/login">
                 Ir para Login
-              </Button>
-            </Link>
+              </Link>
+            </Button>
           </CardContent>
         </Card>
       </div>
@@ -160,10 +160,8 @@ export default function ResetPassword() {
           </form>
 
           <div className="text-center">
-            <Link href="/login">
-              <a className="text-sm text-amber-600 hover:text-amber-700 hover:underline">
-                Voltar para Login
-              </a>
+            <Link href="/login" className="text-sm text-amber-600 hover:text-amber-700 hover:underline">
+              Voltar para Login
             </Link>
           </div>
         </CardContent>

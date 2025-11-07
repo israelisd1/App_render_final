@@ -234,8 +234,8 @@ export default function RenderPage() {
               asChild
               className="bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white"
             >
-              <Link href="/tokens">
-                <a>{t('insufficientTokens.buy')}</a>
+              <Link href="/tokens" className="text-white hover:underline">
+                {t('insufficientTokens.buy')}
               </Link>
             </Button>
           </DialogFooter>
