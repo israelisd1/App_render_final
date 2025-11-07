@@ -489,3 +489,18 @@ Para finalizar NextAuth:
   - Status: Enviando emails reais
 
 
+
+
+
+## BUG: Email de Reset em Branco (06/11/2025 20:05)
+
+- [x] Investigar template HTML do email de reset de senha
+- [x] Corrigir template para exibir conteúdo corretamente
+- [x] Testar envio novamente
+- [x] Validar recebimento com conteúdo visível
+- [x] ✅ RESOLVIDO: Duas correções aplicadas:
+  1. Template HTML convertido para tabelas (compatibilidade Gmail)
+  2. Variáveis de ambiente com trim() para remover espaços extras
+- [x] ✅ Email chegando perfeitamente formatado com todo conteúdo
+
+

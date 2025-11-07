@@ -16,11 +16,11 @@ interface EmailOptions {
  * Criar transporter do Nodemailer
  */
 function createTransporter() {
-  const emailHost = process.env.EMAIL_HOST;
-  const emailPort = process.env.EMAIL_PORT;
-  const emailUser = process.env.EMAIL_USER;
-  const emailPassword = process.env.EMAIL_PASSWORD;
-  const emailFrom = process.env.EMAIL_FROM || emailUser;
+  const emailHost = process.env.EMAIL_HOST?.trim();
+  const emailPort = process.env.EMAIL_PORT?.trim();
+  const emailUser = process.env.EMAIL_USER?.trim();
+  const emailPassword = process.env.EMAIL_PASSWORD?.trim();
+  const emailFrom = process.env.EMAIL_FROM?.trim() || emailUser;
 
   // Se não houver configuração de email, usar modo de desenvolvimento (console)
   if (!emailHost || !emailUser || !emailPassword) {
@@ -51,52 +51,67 @@ export async function sendPasswordResetEmail(
 
   const subject = "Redefinir Senha - Architecture Rendering App";
   const html = `
-    <!DOCTYPE html>
-    <html>
-    <head>
-      <meta charset="UTF-8">
-      <style>
-        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-        .header { background: linear-gradient(135deg, #d97706 0%, #ea580c 100%); color: white; padding: 30px; text-align: center; border-radius: 8px 8px 0 0; }
-        .content { background: #fff; padding: 30px; border: 1px solid #e5e7eb; border-top: none; }
-        .button { display: inline-block; background: #d97706; color: white; padding: 12px 30px; text-decoration: none; border-radius: 6px; margin: 20px 0; }
-        .footer { text-align: center; padding: 20px; color: #6b7280; font-size: 14px; }
-        .warning { background: #fef3c7; border-left: 4px solid #f59e0b; padding: 15px; margin: 20px 0; }
-      </style>
-    </head>
-    <body>
-      <div class="container">
-        <div class="header">
-          <h1>Redefinir Senha</h1>
-        </div>
-        <div class="content">
-          <p>Olá,</p>
-          <p>Você solicitou a redefinição de senha para sua conta no <strong>Architecture Rendering App</strong>.</p>
-          <p>Clique no botão abaixo para criar uma nova senha:</p>
-          <p style="text-align: center;">
-            <a href="${resetUrl}" class="button">Redefinir Senha</a>
-          </p>
-          <p>Ou copie e cole este link no seu navegador:</p>
-          <p style="background: #f3f4f6; padding: 10px; border-radius: 4px; word-break: break-all;">
-            ${resetUrl}
-          </p>
-          <div class="warning">
-            <strong>⚠️ Importante:</strong>
-            <ul>
-              <li>Este link expira em <strong>1 hora</strong></li>
-              <li>Se você não solicitou esta redefinição, ignore este email</li>
-              <li>Nunca compartilhe este link com outras pessoas</li>
-            </ul>
-          </div>
-        </div>
-        <div class="footer">
-          <p>Este é um email automático. Por favor, não responda.</p>
-          <p>&copy; ${new Date().getFullYear()} Architecture Rendering App</p>
-        </div>
-      </div>
-    </body>
-    </html>
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body style="margin: 0; padding: 0; font-family: Arial, sans-serif; line-height: 1.6; color: #333333;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f5f5f5; padding: 20px;">
+    <tr>
+      <td align="center">
+        <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 8px; overflow: hidden;">
+          <!-- Header -->
+          <tr>
+            <td style="background-color: #d97706; padding: 30px; text-align: center;">
+              <h1 style="margin: 0; color: #ffffff; font-size: 24px;">Redefinir Senha</h1>
+            </td>
+          </tr>
+          <!-- Content -->
+          <tr>
+            <td style="padding: 30px;">
+              <p style="margin: 0 0 15px 0;">Olá,</p>
+              <p style="margin: 0 0 15px 0;">Você solicitou a redefinição de senha para sua conta no <strong>Architecture Rendering App</strong>.</p>
+              <p style="margin: 0 0 20px 0;">Clique no botão abaixo para criar uma nova senha:</p>
+              <!-- Button -->
+              <table width="100%" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td align="center" style="padding: 20px 0;">
+                    <a href="${resetUrl}" style="display: inline-block; background-color: #d97706; color: #ffffff; padding: 12px 30px; text-decoration: none; border-radius: 6px; font-weight: bold;">Redefinir Senha</a>
+                  </td>
+                </tr>
+              </table>
+              <p style="margin: 20px 0 10px 0;">Ou copie e cole este link no seu navegador:</p>
+              <p style="margin: 0 0 20px 0; background-color: #f3f4f6; padding: 10px; border-radius: 4px; word-break: break-all; font-size: 14px;">${resetUrl}</p>
+              <!-- Warning Box -->
+              <table width="100%" cellpadding="0" cellspacing="0" style="margin: 20px 0;">
+                <tr>
+                  <td style="background-color: #fef3c7; border-left: 4px solid #f59e0b; padding: 15px;">
+                    <p style="margin: 0 0 10px 0;"><strong>⚠️ Importante:</strong></p>
+                    <ul style="margin: 0; padding-left: 20px;">
+                      <li>Este link expira em <strong>1 hora</strong></li>
+                      <li>Se você não solicitou esta redefinição, ignore este email</li>
+                      <li>Nunca compartilhe este link com outras pessoas</li>
+                    </ul>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+          <!-- Footer -->
+          <tr>
+            <td style="background-color: #f9fafb; padding: 20px; text-align: center; color: #6b7280; font-size: 14px;">
+              <p style="margin: 0 0 5px 0;">Este é um email automático. Por favor, não responda.</p>
+              <p style="margin: 0;">&copy; ${new Date().getFullYear()} Architecture Rendering App</p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>
   `;
 
   const text = `
