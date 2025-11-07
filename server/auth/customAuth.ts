@@ -8,6 +8,7 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
 import * as db from "../db";
+import { sendPasswordResetEmail } from "./emailService";
 
 // Lazy loading do Google OAuth para evitar problemas de inicialização
 let _google: any = null;
@@ -363,9 +364,13 @@ export function registerCustomAuthRoutes(app: Express) {
 
       await db.setResetPasswordToken(user.id, resetToken, expires);
 
-      // TODO: Enviar email com link de reset
-      console.log(`[Auth] Reset token for ${email}: ${resetToken}`);
-      console.log(`[Auth] Reset link: ${process.env.NEXTAUTH_URL}/reset-password?token=${resetToken}`);
+      // Enviar email com link de reset
+      const resetUrl = `${process.env.NEXTAUTH_URL}/reset-password?token=${resetToken}`;
+      const emailSent = await sendPasswordResetEmail(email, resetToken, resetUrl);
+
+      if (!emailSent) {
+        console.error(`[Auth] Falha ao enviar email para ${email}`);
+      }
 
       res.json({ success: true, message: "Se o email existir, você receberá instruções" });
     } catch (error: any) {

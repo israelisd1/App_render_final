@@ -1,0 +1,15 @@
+{
+  "query": "SELECT email, resetPasswordToken, resetPasswordExpires FROM users WHERE email = 'teste@teste.com' AND resetPasswordToken IS NOT NULL LIMIT 1",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3ES6PvcnTNEV8vB.57a33a906c17 --database mJzsRrstkbLobg3DApXsgD --execute SELECT email, resetPasswordToken, resetPasswordExpires FROM users WHERE email = 'teste@teste.com' AND resetPasswordToken IS NOT NULL LIMIT 1",
+  "rows": [
+    {
+      "email": "teste@teste.com",
+      "resetPasswordToken": "7c01170f37b59f647d199894d452d15fe530dc6a3815a9b7bda2f38e7799079e",
+      "resetPasswordExpires": "2025-11-07 01:18:32"
+    }
+  ],
+  "messages": [],
+  "stdout": "email\tresetPasswordToken\tresetPasswordExpires\nteste@teste.com\t7c01170f37b59f647d199894d452d15fe530dc6a3815a9b7bda2f38e7799079e\t2025-11-07 01:18:32\n",
+  "stderr": "",
+  "execution_time_ms": 567
+}

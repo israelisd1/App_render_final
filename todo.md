@@ -449,3 +449,28 @@ Para finalizar NextAuth:
   - [x] Sistema pronto para publicação
 
 
+
+
+
+## BUGS CRÍTICOS Reportados (06/11/2025 19:05)
+
+- [x] BUG: Login não funciona - redireciona para Home após inserir credenciais
+  - [x] Investigar fluxo de login no Login.tsx
+  - [x] Verificar endpoint /api/auth/signin
+  - [x] Verificar se cookie auth_token está sendo setado
+  - [x] Verificar se tRPC está detectando sessão
+  - [x] Testar com credenciais válidas
+  - [x] ✅ RESOLVIDO: Login funcionando perfeitamente! Backend estava OK, frontend também.
+
+- [x] BUG: Reset de senha não envia email
+  - [x] Investigar endpoint /api/auth/forgot-password
+  - [x] Verificar se nodemailer está configurado
+  - [x] Verificar variáveis de ambiente de email
+  - [x] Verificar logs do servidor
+  - [x] Implementar solução alternativa se necessário
+  - [x] ✅ RESOLVIDO: Sistema de email implementado com Nodemailer
+  - [x] ✅ Modo desenvolvimento: loga link no console
+  - [x] ✅ Modo produção: envia email real via SMTP (requer configuração)
+  - [x] ✅ Documentação completa em EMAIL_SETUP.md
+
+
