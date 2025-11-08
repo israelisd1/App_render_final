@@ -115,7 +115,7 @@ export default function AdminPage() {
                 <div className="flex-1">
                   <p className="text-sm font-medium text-amber-900 mb-1">Sistema Ativo:</p>
                   <p className="text-2xl font-bold text-amber-900">
-                    {authProviderData?.provider === 'manus' ? '🔵 OAuth Manus' : '🟢 NextAuth'}
+                    {authProviderData === 'manus' ? '🔵 OAuth Manus' : '🟢 NextAuth'}
                   </p>
                 </div>
               </div>
@@ -123,9 +123,9 @@ export default function AdminPage() {
               <div className="flex gap-3">
                 <Button
                   onClick={() => handleAuthProviderChange('manus')}
-                  disabled={isChangingAuth || authProviderData?.provider === 'manus'}
-                  variant={authProviderData?.provider === 'manus' ? 'default' : 'outline'}
-                  className={authProviderData?.provider === 'manus' 
+                  disabled={isChangingAuth || authProviderData === 'manus'}
+                  variant={authProviderData === 'manus' ? 'default' : 'outline'}
+                  className={authProviderData === 'manus' 
                     ? 'bg-blue-600 hover:bg-blue-700' 
                     : 'border-blue-600 text-blue-600 hover:bg-blue-50'
                   }
@@ -135,9 +135,9 @@ export default function AdminPage() {
 
                 <Button
                   onClick={() => handleAuthProviderChange('nextauth')}
-                  disabled={isChangingAuth || authProviderData?.provider === 'nextauth'}
-                  variant={authProviderData?.provider === 'nextauth' ? 'default' : 'outline'}
-                  className={authProviderData?.provider === 'nextauth' 
+                  disabled={isChangingAuth || authProviderData === 'nextauth'}
+                  variant={authProviderData === 'nextauth' ? 'default' : 'outline'}
+                  className={authProviderData === 'nextauth' 
                     ? 'bg-green-600 hover:bg-green-700' 
                     : 'border-green-600 text-green-600 hover:bg-green-50'
                   }

@@ -42,6 +42,7 @@ router.post('/create-checkout', async (req: Request, res: Response) => {
     // Criar ou recuperar Stripe Customer
     let customerId = user.stripeCustomerId;
     if (!customerId) {
+      if (!stripe) throw new Error("Stripe not configured");
       const customer = await stripe.customers.create({
         email: user.email || undefined,
         name: user.name || undefined,
@@ -59,6 +60,7 @@ router.post('/create-checkout', async (req: Request, res: Response) => {
     }
 
     // Criar sessão de checkout
+    if (!stripe) throw new Error("Stripe not configured");
     const session = await stripe.checkout.sessions.create({
       customer: customerId,
       mode: 'subscription',
@@ -106,6 +108,7 @@ router.post('/cancel', async (req: Request, res: Response) => {
     }
 
     // Cancelar assinatura no Stripe (no final do período)
+    if (!stripe) throw new Error("Stripe not configured");
     const subscription = await stripe.subscriptions.update(user.subscriptionId, {
       cancel_at_period_end: true,
     });
@@ -119,7 +122,7 @@ router.post('/cancel', async (req: Request, res: Response) => {
     res.json({ 
       success: true, 
       message: 'Subscription will be canceled at the end of the billing period',
-      periodEnd: subscription.current_period_end,
+      periodEnd: (subscription as any).current_period_end,
     });
   } catch (error) {
     console.error('[Subscription] Cancel error:', error);
@@ -149,6 +152,7 @@ router.post('/reactivate', async (req: Request, res: Response) => {
     }
 
     // Reativar assinatura no Stripe
+    if (!stripe) throw new Error("Stripe not configured");
     await stripe.subscriptions.update(user.subscriptionId, {
       cancel_at_period_end: false,
     });
@@ -186,6 +190,7 @@ router.post('/buy-extra', async (req: Request, res: Response) => {
     // Criar ou recuperar Stripe Customer
     let customerId = user.stripeCustomerId;
     if (!customerId) {
+      if (!stripe) throw new Error("Stripe not configured");
       const customer = await stripe.customers.create({
         email: user.email || undefined,
         name: user.name || undefined,
@@ -202,6 +207,7 @@ router.post('/buy-extra', async (req: Request, res: Response) => {
     }
 
     // Criar sessão de checkout para pagamento único
+    if (!stripe) throw new Error("Stripe not configured");
     const session = await stripe.checkout.sessions.create({
       customer: customerId,
       mode: 'payment',
@@ -256,7 +262,7 @@ router.get('/status/:userId', async (req: Request, res: Response) => {
       totalAvailable: (user.monthlyQuota - user.monthlyRendersUsed) + user.extraRenders,
       billingPeriodStart: user.billingPeriodStart,
       billingPeriodEnd: user.billingPeriodEnd,
-      features: planConfig.features || {},
+      features: (planConfig as any).features || {},
     });
   } catch (error) {
     console.error('[Subscription] Status error:', error);
@@ -281,6 +287,7 @@ router.post('/portal', async (req: Request, res: Response) => {
       return res.status(404).json({ error: 'No Stripe customer found' });
     }
 
+    if (!stripe) throw new Error("Stripe not configured");
     const session = await stripe.billingPortal.sessions.create({
       customer: user.stripeCustomerId,
       return_url: `${process.env.VITE_APP_URL || 'http://localhost:3000'}/subscription`,

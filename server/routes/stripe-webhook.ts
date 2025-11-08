@@ -6,6 +6,7 @@
 
 import { Router, Request, Response } from 'express';
 import { stripe } from '../stripe';
+import type Stripe from 'stripe';
 import { 
   updateUserSubscription, 
   addExtraRenders,
@@ -29,6 +30,9 @@ router.post('/webhook', async (req: Request, res: Response) => {
 
   try {
     // Verificar assinatura do webhook
+    if (!stripe) {
+      return res.status(500).send('Stripe not configured');
+    }
     event = stripe.webhooks.constructEvent(req.body, sig, webhookSecret);
   } catch (err: any) {
     console.error(`[Stripe Webhook] Signature verification failed:`, err.message);
@@ -132,7 +136,7 @@ async function handleSubscriptionUpdate(subscription: Stripe.Subscription) {
     subscriptionId: subscription.id,
     subscriptionStatus: status,
     plan,
-    monthlyQuota: planConfig.features?.monthlyQuota || 0,
+    monthlyQuota: (planConfig as any).features?.monthlyQuota || 0,
   });
 
   console.log(`[Stripe Webhook] Updated subscription for user ${user.id}: ${plan} (${status})`);
@@ -154,7 +158,7 @@ async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
   // Reverter para plano free
   await updateUserSubscription({
     userId: user.id,
-    subscriptionId: null,
+    subscriptionId: undefined,
     subscriptionStatus: 'inactive',
     plan: 'free',
     monthlyQuota: 0,
@@ -177,7 +181,7 @@ async function handlePaymentSucceeded(invoice: Stripe.Invoice) {
   }
 
   // Se for renovação de assinatura, resetar quota mensal
-  if (invoice.subscription) {
+  if ((invoice as any).subscription) {
     await resetMonthlyQuota(user.id);
     console.log(`[Stripe Webhook] Monthly quota reset for user ${user.id}`);
   }

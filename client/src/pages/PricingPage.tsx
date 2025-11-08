@@ -34,7 +34,17 @@ export default function PricingPage() {
       return;
     }
 
-    createSubscriptionMutation.mutate({ plan });
+    // Mapear plan para priceId
+    const priceId = plan === 'basic' 
+      ? import.meta.env.VITE_STRIPE_PRICE_BASIC || process.env.STRIPE_PRICE_BASIC
+      : import.meta.env.VITE_STRIPE_PRICE_PRO || process.env.STRIPE_PRICE_PRO;
+
+    if (!priceId) {
+      toast.error('Erro: Price ID não configurado');
+      return;
+    }
+
+    createSubscriptionMutation.mutate({ priceId });
   };
 
   const plans = [

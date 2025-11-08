@@ -546,6 +546,12 @@ export const appRouter = router({
       }
 
       const stripe = (await import('./stripe')).stripe;
+      if (!stripe) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Stripe não configurado",
+        });
+      }
       await stripe.subscriptions.update(ctx.user.subscriptionId, {
         cancel_at_period_end: true,
       });
@@ -565,6 +571,12 @@ export const appRouter = router({
       }
 
       const stripe = (await import('./stripe')).stripe;
+      if (!stripe) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Stripe não configurado",
+        });
+      }
       await stripe.subscriptions.update(ctx.user.subscriptionId, {
         cancel_at_period_end: false,
       });
@@ -600,6 +612,91 @@ export const appRouter = router({
 
       return { url: session.url };
     }),
+
+    /**
+     * Cria sessão de checkout para nova assinatura
+     */
+    create: protectedProcedure
+      .input(z.object({ priceId: z.string() }))
+      .mutation(async ({ ctx, input }) => {
+        const stripeModule = await import('./stripe');
+        const stripe = stripeModule.stripe;
+        
+        if (!stripe) {
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Stripe não configurado",
+          });
+        }
+
+        // Criar ou recuperar Stripe Customer
+        let customerId = ctx.user.stripeCustomerId;
+        if (!customerId) {
+          const customer = await stripe.customers.create({
+            email: ctx.user.email || undefined,
+            name: ctx.user.name || undefined,
+            metadata: { userId: ctx.user.id.toString() },
+          });
+          customerId = customer.id;
+        }
+
+        // Criar sessão de checkout
+        const session = await stripe.checkout.sessions.create({
+          customer: customerId,
+          payment_method_types: ['card'],
+          line_items: [{ price: input.priceId, quantity: 1 }],
+          mode: 'subscription',
+          success_url: `${process.env.NEXTAUTH_URL || 'http://localhost:3000'}/subscription?success=true`,
+          cancel_url: `${process.env.NEXTAUTH_URL || 'http://localhost:3000'}/pricing?canceled=true`,
+          metadata: { userId: ctx.user.id.toString() },
+        });
+
+        return { url: session.url };
+      }),
+
+    /**
+     * Compra pacote extra de renderizações
+     */
+    buyExtra: protectedProcedure
+      .input(z.object({ quantity: z.number().min(20) }))
+      .mutation(async ({ ctx, input }) => {
+        const stripeModule = await import('./stripe');
+        const stripe = stripeModule.stripe;
+        
+        if (!stripe) {
+          throw new TRPCError({
+            code: "INTERNAL_SERVER_ERROR",
+            message: "Stripe não configurado",
+          });
+        }
+
+        // Criar sessão de checkout para compra única
+        const session = await stripe.checkout.sessions.create({
+          customer: ctx.user.stripeCustomerId || undefined,
+          payment_method_types: ['card'],
+          line_items: [{
+            price_data: {
+              currency: 'brl',
+              product_data: {
+                name: `Pacote Extra - ${input.quantity} Renderizações`,
+                description: `Adicione ${input.quantity} renderizações extras à sua conta`,
+              },
+              unit_amount: 4990, // R$ 49,90
+            },
+            quantity: 1,
+          }],
+          mode: 'payment',
+          success_url: `${process.env.NEXTAUTH_URL || 'http://localhost:3000'}/subscription?extra_success=true`,
+          cancel_url: `${process.env.NEXTAUTH_URL || 'http://localhost:3000'}/subscription?extra_canceled=true`,
+          metadata: {
+            userId: ctx.user.id.toString(),
+            type: 'extra_renders',
+            quantity: input.quantity.toString(),
+          },
+        });
+
+        return { url: session.url };
+      }),
   }),
 
   /**
