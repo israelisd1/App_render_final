@@ -507,6 +507,22 @@ export async function updateUserLastSignIn(userId: number) {
 }
 
 /**
+ * Atualizar token de verificação de email
+ */
+export async function updateUserVerificationToken(userId: number, token: string): Promise<void> {
+  const db = await getDb();
+  if (!db) {
+    console.warn("[Database] Cannot update verification token: database not available");
+    return;
+  }
+
+  await db
+    .update(users)
+    .set({ verificationToken: token, updatedAt: new Date() })
+    .where(eq(users.id, userId));
+}
+
+/**
  * Buscar usuário por token de verificação
  */
 export async function getUserByVerificationToken(token: string) {

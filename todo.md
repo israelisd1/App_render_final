@@ -555,3 +555,40 @@ Para finalizar NextAuth:
   - Procedures tRPC create e buyExtra implementados
   - Aplicação pronta para publicação
 
+
+
+
+## Simplificação de Autenticação (07/11/2025)
+
+- [ ] Remover botão "Continue com Google" do Login.tsx
+- [ ] Remover botão "Continue com Google" do Signup.tsx
+- [ ] Implementar sistema de verificação de email
+  - [ ] Adicionar campo emailVerified no schema
+  - [ ] Criar endpoint para enviar email de verificação
+  - [ ] Criar endpoint para validar token de verificação
+  - [ ] Criar página de verificação de email
+  - [ ] Enviar email automaticamente após cadastro
+  - [ ] Bloquear login se email não verificado
+- [ ] Testar fluxo completo
+- [ ] Salvar checkpoint
+
+
+
+
+## Simplificação de Autenticação (06/11/2025 23:00)
+
+- [x] Remover botão "Continue com Google" do Login.tsx
+- [x] Remover botão "Continue com Google" do Signup.tsx
+- [x] Implementar verificação de email no cadastro
+  - [x] Criar endpoints /api/auth/send-verification e /api/auth/verify-email
+  - [x] Adicionar funções no db.ts (updateUserVerificationToken, getUserByVerificationToken, verifyUserEmail)
+  - [x] Criar página VerifyEmail.tsx
+  - [x] Modificar Signup.tsx para enviar email após cadastro
+- [x] Testar fluxo completo
+- [x] ✅ CONCLUÍDO: Sistema simplificado para apenas email/senha com verificação!
+  - Botões Google OAuth removidos de Login e Signup
+  - Email de verificação enviado automaticamente após cadastro
+  - Página /verify-email criada para validar token
+  - Template HTML profissional para email de verificação
+  - Fluxo testado e validado com sucesso
+

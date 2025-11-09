@@ -409,5 +409,134 @@ export function registerCustomAuthRoutes(app: Express) {
       res.status(500).json({ error: "Erro ao redefinir senha" });
     }
   });
-}
 
+  /**
+   * POST /api/auth/send-verification
+   * Envia email de verificação
+   */
+  app.post("/api/auth/send-verification", async (req: Request, res: Response) => {
+    try {
+      const { email } = req.body;
+
+      if (!email) {
+        return res.status(400).json({ error: "Email é obrigatório" });
+      }
+
+      // Buscar usuário
+      const user = await db.getUserByEmail(email);
+      if (!user) {
+        return res.status(404).json({ error: "Usuário não encontrado" });
+      }
+
+      // Se já verificado, retornar sucesso
+      if (user.emailVerified === 1) {
+        return res.json({ success: true, message: "Email já verificado" });
+      }
+
+      // Gerar token de verificação
+      const verificationToken = crypto.randomBytes(32).toString("hex");
+      
+      // Salvar token no banco
+      await db.updateUserVerificationToken(user.id, verificationToken);
+
+      // Enviar email
+      const verificationUrl = `${process.env.NEXTAUTH_URL || 'http://localhost:3000'}/verify-email?token=${verificationToken}`;
+      await sendVerificationEmail(user.email!, verificationUrl);
+
+      console.log(`[Auth] Verification email sent to: ${email}`);
+      res.json({ success: true, message: "Email de verificação enviado" });
+    } catch (error: any) {
+      console.error("[Auth] Send verification error:", error);
+      res.status(500).json({ error: "Erro ao enviar email de verificação" });
+    }
+  });
+
+  /**
+   * POST /api/auth/verify-email
+   * Verifica email com token
+   */
+  app.post("/api/auth/verify-email", async (req: Request, res: Response) => {
+    try {
+      const { token } = req.body;
+
+      if (!token) {
+        return res.status(400).json({ error: "Token é obrigatório" });
+      }
+
+      // Buscar usuário pelo token
+      const user = await db.getUserByVerificationToken(token);
+      if (!user) {
+        return res.status(400).json({ error: "Token inválido ou expirado" });
+      }
+
+      // Marcar email como verificado
+      await db.verifyUserEmail(user.id);
+
+      console.log(`[Auth] Email verified for user: ${user.email}`);
+      res.json({ success: true, message: "Email verificado com sucesso" });
+    } catch (error: any) {
+      console.error("[Auth] Verify email error:", error);
+      res.status(500).json({ error: "Erro ao verificar email" });
+    }
+  });
+
+  /**
+   * Enviar email de verificação (função auxiliar interna)
+   */
+  async function sendVerificationEmail(email: string, verificationUrl: string): Promise<void> {
+  const { sendEmail } = await import('./emailService');
+  
+  const subject = `Verificar Email - ${process.env.VITE_APP_TITLE || 'Architecture Rendering App'}`;
+  
+  const html = `
+    <table width="100%" cellpadding="0" cellspacing="0" style="max-width: 600px; margin: 0 auto; font-family: Arial, sans-serif;">
+      <tr>
+        <td style="background-color: #f97316; padding: 30px; text-align: center;">
+          <h1 style="color: white; margin: 0; font-size: 24px;">Verificar Email</h1>
+        </td>
+      </tr>
+      <tr>
+        <td style="padding: 40px 30px; background-color: #ffffff;">
+          <p style="font-size: 16px; line-height: 1.6; color: #333; margin-bottom: 20px;">
+            Olá!
+          </p>
+          <p style="font-size: 16px; line-height: 1.6; color: #333; margin-bottom: 30px;">
+            Por favor, clique no botão abaixo para verificar seu endereço de email e ativar sua conta:
+          </p>
+          <table width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+              <td align="center">
+                <a href="${verificationUrl}" style="display: inline-block; padding: 15px 40px; background-color: #f97316; color: white; text-decoration: none; border-radius: 5px; font-size: 16px; font-weight: bold;">
+                  Verificar Email
+                </a>
+              </td>
+            </tr>
+          </table>
+          <p style="font-size: 14px; line-height: 1.6; color: #666; margin-top: 30px;">
+            Ou copie e cole este link no seu navegador:
+          </p>
+          <p style="font-size: 14px; line-height: 1.6; color: #0066cc; word-break: break-all;">
+            ${verificationUrl}
+          </p>
+        </td>
+      </tr>
+      <tr>
+        <td style="background-color: #fef3c7; padding: 20px 30px;">
+          <p style="font-size: 13px; line-height: 1.6; color: #92400e; margin: 0;">
+            ⚠️ <strong>Importante:</strong> Se você não criou uma conta, ignore este email.
+          </p>
+        </td>
+      </tr>
+      <tr>
+        <td style="padding: 20px 30px; background-color: #f9fafb; text-align: center;">
+          <p style="font-size: 12px; color: #6b7280; margin: 0;">
+            © ${new Date().getFullYear()} ${process.env.VITE_APP_TITLE || 'Architecture Rendering App'}. Todos os direitos reservados.
+          </p>
+        </td>
+      </tr>
+    </table>
+  `;
+
+    await sendEmail(email, subject, html);
+  }
+}

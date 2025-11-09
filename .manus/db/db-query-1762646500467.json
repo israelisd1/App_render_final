@@ -1,0 +1,16 @@
+{
+  "query": "SELECT id, email, emailVerified, verificationToken FROM users WHERE email = 'teste-verificacao@teste.com' LIMIT 1",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3ES6PvcnTNEV8vB.57a33a906c17 --database mJzsRrstkbLobg3DApXsgD --execute SELECT id, email, emailVerified, verificationToken FROM users WHERE email = 'teste-verificacao@teste.com' LIMIT 1",
+  "rows": [
+    {
+      "id": "3450004",
+      "email": "teste-verificacao@teste.com",
+      "emailVerified": "0",
+      "verificationToken": "e20c905104fb01d9b1543ffeab6fac0788e8838c7e78292db9622adb94b55d7e"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\temail\temailVerified\tverificationToken\n3450004\tteste-verificacao@teste.com\t0\te20c905104fb01d9b1543ffeab6fac0788e8838c7e78292db9622adb94b55d7e\n",
+  "stderr": "",
+  "execution_time_ms": 52
+}
