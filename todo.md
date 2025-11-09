@@ -592,3 +592,50 @@ Para finalizar NextAuth:
   - Template HTML profissional para email de verificação
   - Fluxo testado e validado com sucesso
 
+
+
+
+## Implementação de Campo CPF no Cadastro (06/11/2025 23:15)
+
+- [ ] Atualizar schema do banco de dados
+  - [ ] Adicionar campo cpf (varchar 14, unique, not null)
+  - [ ] Executar migração com pnpm db:push
+- [ ] Implementar validação de CPF no backend
+  - [ ] Criar função validateCPF() com validação de dígitos verificadores
+  - [ ] Adicionar validação no endpoint /api/auth/signup
+  - [ ] Verificar duplicatas de CPF e email
+- [ ] Adicionar campo CPF no frontend
+  - [ ] Adicionar input de CPF no Signup.tsx
+  - [ ] Implementar máscara de CPF (###.###.###-##)
+  - [ ] Adicionar validação no frontend
+- [ ] Testar fluxo completo
+  - [ ] Testar cadastro com CPF válido
+  - [ ] Testar rejeição de CPF inválido
+  - [ ] Testar duplicata de email
+  - [ ] Testar duplicata de CPF
+
+
+
+
+## Implementação de Campo CPF (06/11/2025 23:15)
+
+- [x] Adicionar campo CPF ao schema do banco (varchar 11, unique, not null)
+- [x] Implementar validação de CPF no backend
+  - [x] Criar módulo validateCPF.ts
+  - [x] Adicionar validação no endpoint de signup
+  - [x] Adicionar função getUserByCPF no db.ts
+- [x] Adicionar campo CPF no formulário de cadastro
+  - [x] Adicionar estado cpf no Signup.tsx
+  - [x] Adicionar máscara de CPF (###.###.###-##)
+  - [x] Atualizar useCustomAuth para incluir CPF
+- [x] Testar validação e duplicatas
+  - [x] Testar CPF inválido (deve rejeitar) - ✅ Rejeitado
+  - [x] Testar CPF válido (deve aceitar) - ✅ Aceito
+  - [x] Testar email duplicado (deve bloquear) - ✅ Bloqueado
+  - [x] Testar CPF duplicado (deve bloquear) - ✅ Bloqueado
+- [x] ✅ CONCLUÍDO: Campo CPF implementado com validação completa!
+  - Validação de dígitos verificadores do CPF
+  - Máscara automática no formulário (###.###.###-##)
+  - Proteção contra duplicatas de email e CPF
+  - Todos os testes passaram com sucesso
+

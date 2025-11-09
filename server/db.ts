@@ -466,10 +466,22 @@ export async function getUserByEmail(email: string) {
 }
 
 /**
+ * Buscar usuário por CPF
+ */
+export async function getUserByCPF(cpf: string) {
+  const db = await getDb();
+  if (!db) return null;
+
+  const result = await db.select().from(users).where(eq(users.cpf, cpf)).limit(1);
+  return result.length > 0 ? result[0] : null;
+}
+
+/**
  * Criar novo usuário (para NextAuth)
  */
 export async function createUser(userData: {
   email: string;
+  cpf: string;
   name?: string | null;
   password?: string | null;
   provider: string;
@@ -482,12 +494,14 @@ export async function createUser(userData: {
 
   const [result] = await db.insert(users).values({
     email: userData.email,
+    cpf: userData.cpf,
     name: userData.name || null,
     password: userData.password || null,
     provider: userData.provider,
     emailVerified: userData.emailVerified || 0,
     verificationToken: userData.verificationToken || null,
     tokenBalance: userData.tokenBalance || 3,
+    extraRenders: 3, // 3 renderizações gratuitas
     createdAt: new Date(),
     updatedAt: new Date(),
     lastSignedIn: new Date(),

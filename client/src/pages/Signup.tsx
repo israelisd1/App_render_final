@@ -13,6 +13,7 @@ export default function Signup() {
   const [authProvider, setAuthProvider] = useState<'manus' | 'nextauth' | null>(null);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [cpf, setCpf] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -51,8 +52,15 @@ export default function Signup() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
-    if (!name || !email || !password || !confirmPassword) {
+    if (!name || !email || !cpf || !password || !confirmPassword) {
       toast.error('Preencha todos os campos');
+      return;
+    }
+
+    // Validar formato do CPF (apenas números, 11 dígitos)
+    const cpfClean = cpf.replace(/[^\d]/g, '');
+    if (cpfClean.length !== 11) {
+      toast.error('CPF deve ter 11 dígitos');
       return;
     }
 
@@ -69,7 +77,7 @@ export default function Signup() {
     setIsLoading(true);
 
     try {
-      await customAuth.signup(email, password, name);
+      await customAuth.signup(email, password, cpf, name);
       
       // Enviar email de verificação
       try {
@@ -149,6 +157,32 @@ export default function Signup() {
                 onChange={(e) => setEmail(e.target.value)}
                 disabled={isLoading}
                 required
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="cpf">CPF</Label>
+              <Input
+                id="cpf"
+                type="text"
+                placeholder="000.000.000-00"
+                value={cpf}
+                onChange={(e) => {
+                  // Máscara de CPF
+                  let value = e.target.value.replace(/[^\d]/g, '');
+                  if (value.length > 11) value = value.slice(0, 11);
+                  if (value.length > 9) {
+                    value = value.replace(/(\d{3})(\d{3})(\d{3})(\d{1,2})/, '$1.$2.$3-$4');
+                  } else if (value.length > 6) {
+                    value = value.replace(/(\d{3})(\d{3})(\d{1,3})/, '$1.$2.$3');
+                  } else if (value.length > 3) {
+                    value = value.replace(/(\d{3})(\d{1,3})/, '$1.$2');
+                  }
+                  setCpf(value);
+                }}
+                disabled={isLoading}
+                required
+                maxLength={14}
               />
             </div>
 
