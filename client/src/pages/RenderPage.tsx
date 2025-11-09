@@ -106,9 +106,7 @@ export default function RenderPage() {
               const monthlyUsed = user?.monthlyRendersUsed || 0;
               const extraRenders = user?.extraRenders || 0;
               const monthlyRemaining = Math.max(0, monthlyQuota - monthlyUsed);
-              // Adicionar 3 renders gratuitos se for plano free e ainda tiver saldo
-              const freeBonus = (user?.plan === 'free' && (user?.tokenBalance || 0) > 0) ? (user?.tokenBalance || 0) : 0;
-              const totalAvailable = monthlyRemaining + extraRenders + freeBonus;
+              const totalAvailable = monthlyRemaining + extraRenders;
               
               const isLow = totalAvailable < 3;
               const bgColor = isLow ? 'bg-red-50 border-red-300' : 'bg-green-50 border-green-300';

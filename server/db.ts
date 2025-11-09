@@ -366,18 +366,12 @@ export async function getAllUsersWithStats() {
         const totalRendersCount = userRenders.length;
         const tokensUsed = userRenders.length; // 1 token por renderização
 
-        // Calcular renderizações disponíveis
-        const monthlyRemaining = Math.max(0, (user.monthlyQuota || 0) - (user.monthlyRendersUsed || 0));
-        const totalAvailable = monthlyRemaining + (user.extraRenders || 0);
-
         return {
           ...user,
           totalTokensPurchased,
           totalSpent,
           totalRendersCount,
           tokensUsed,
-          monthlyRemaining,
-          totalAvailable,
         };
       })
     );
@@ -898,34 +892,5 @@ export async function updateUserProfile(
     console.error("[Database] Failed to update user profile:", error);
     throw error;
   }
-}
-
-
-
-
-/**
- * Atualiza quota mensal e renderizações extras de um usuário (admin only)
- */
-export async function updateUserRenders(
-  userId: number,
-  data: {
-    monthlyQuota?: number;
-    extraRenders?: number;
-  }
-) {
-  const db = await getDb();
-  if (!db) throw new Error("Database not available");
-
-  const updateData: any = {};
-  
-  if (data.monthlyQuota !== undefined) {
-    updateData.monthlyQuota = data.monthlyQuota;
-  }
-  
-  if (data.extraRenders !== undefined) {
-    updateData.extraRenders = data.extraRenders;
-  }
-
-  await db.update(users).set(updateData).where(eq(users.id, userId));
 }
 

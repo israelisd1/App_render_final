@@ -28,20 +28,17 @@ export function useAuth(options?: UseAuthOptions) {
     try {
       await logoutMutation.mutateAsync();
     } catch (error: unknown) {
-      // Ignorar erros de UNAUTHORIZED (já deslogado)
       if (
         error instanceof TRPCClientError &&
         error.data?.code === "UNAUTHORIZED"
       ) {
-        console.log('[Logout] User already logged out');
-      } else {
-        console.error('[Logout] Error:', error);
+        return;
       }
+      throw error;
     } finally {
-      // Sempre limpar cache e redirecionar, mesmo com erro
       utils.auth.me.setData(undefined, null);
       await utils.auth.me.invalidate();
-      console.log('[Logout] Redirecting to home...');
+      // Redirecionar para home após logout
       window.location.href = "/";
     }
   }, [logoutMutation, utils]);

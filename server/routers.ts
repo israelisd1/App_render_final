@@ -514,33 +514,6 @@ export const appRouter = router({
         const { getUserDetailedStats } = await import('./db');
         return await getUserDetailedStats(input.userId);
       }),
-
-    /**
-     * Atualiza quota mensal e renderizações extras de um usuário
-     */
-    updateUserRenders: protectedProcedure
-      .input(z.object({
-        userId: z.number(),
-        monthlyQuota: z.number().min(0).optional(),
-        extraRenders: z.number().min(0).optional(),
-      }))
-      .mutation(async ({ ctx, input }) => {
-        // Verificar se é admin
-        if (ctx.user.email !== 'israelisd@gmail.com') {
-          throw new TRPCError({
-            code: 'FORBIDDEN',
-            message: 'Acesso negado. Apenas administradores podem acessar.',
-          });
-        }
-
-        const { updateUserRenders } = await import('./db');
-        await updateUserRenders(input.userId, {
-          monthlyQuota: input.monthlyQuota,
-          extraRenders: input.extraRenders,
-        });
-
-        return { success: true };
-      }),
   }),
 
   subscription: router({

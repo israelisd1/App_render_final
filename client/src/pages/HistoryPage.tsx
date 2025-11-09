@@ -193,37 +193,7 @@ export default function HistoryPage() {
       <main className="container mx-auto px-4 py-12">
         <div className="mx-auto max-w-6xl">
           <div className="mb-8 flex items-center justify-between">
-            <div>
-              <h2 className="text-4xl font-bold text-amber-900 mb-2">Histórico de Renderizações</h2>
-              {/* Contador de renderizações disponíveis */}
-              {(() => {
-                const monthlyQuota = user?.monthlyQuota || 0;
-                const monthlyUsed = user?.monthlyRendersUsed || 0;
-                const extraRenders = user?.extraRenders || 0;
-                const monthlyRemaining = Math.max(0, monthlyQuota - monthlyUsed);
-                // Adicionar 3 renders gratuitos se for plano free e ainda tiver saldo
-                const freeBonus = (user?.plan === 'free' && (user?.tokenBalance || 0) > 0) ? (user?.tokenBalance || 0) : 0;
-                const totalAvailable = monthlyRemaining + extraRenders + freeBonus;
-                
-                const isLow = totalAvailable < 3;
-                const bgColor = isLow ? 'bg-red-50 border-red-300' : 'bg-green-50 border-green-300';
-                const textColor = isLow ? 'text-red-900' : 'text-green-900';
-                
-                return (
-                  <div className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg border-2 ${bgColor}`}>
-                    <div className={`text-sm ${textColor} opacity-80`}>{t("render.availableRenders")}</div>
-                    <div className={`text-2xl font-bold ${textColor}`}>
-                      {totalAvailable}
-                    </div>
-                    {monthlyQuota > 0 && (
-                      <div className={`text-xs ${textColor} opacity-60`}>
-                        ({monthlyRemaining} {t("render.monthly")} + {extraRenders} {t("render.extra")})
-                      </div>
-                    )}
-                  </div>
-                );
-              })()}
-            </div>
+            <h2 className="text-4xl font-bold text-amber-900">Histórico de Renderizações</h2>
             <Link href="/render">
               <Button className="bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white">
                 + Nova Renderização

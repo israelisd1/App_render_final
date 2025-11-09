@@ -70,9 +70,7 @@ export default function Header() {
                 const monthlyUsed = user?.monthlyRendersUsed || 0;
                 const extraRenders = user?.extraRenders || 0;
                 const monthlyRemaining = Math.max(0, monthlyQuota - monthlyUsed);
-                // Adicionar 3 renders gratuitos se for plano free e ainda tiver saldo
-                const freeBonus = (user?.plan === 'free' && (user?.tokenBalance || 0) > 0) ? (user?.tokenBalance || 0) : 0;
-                const totalAvailable = monthlyRemaining + extraRenders + freeBonus;
+                const totalAvailable = monthlyRemaining + extraRenders;
                 
                 // Só mostrar se tiver renderizações disponíveis
                 if (totalAvailable === 0) return null;
