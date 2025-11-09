@@ -734,3 +734,18 @@ Para finalizar NextAuth:
   - [x] Corrigir chamada de sendVerificationEmail (adicionar URL completa)
   - [x] Testar fluxo completo de edição
 
+
+
+
+## Bugs Reportados (08/11/2025 22:26)
+
+- [x] Corrigir botão "Sair" que não está funcionando
+  - [x] Adicionar redirecionamento para home após logout
+- [x] Corrigir envio de email de validação (não está sendo enviado)
+  - [x] Corrigir chamada de sendEmail com objeto correto
+  - [x] Adicionar import de `or` do drizzle-orm
+- [x] Corrigir erro "fetch failed" na renderização
+  - [x] Adicionar retry logic (3 tentativas)
+  - [x] Aumentar timeout para 90s
+  - [x] Adicionar aguardo entre retries
+

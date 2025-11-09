@@ -35,43 +35,71 @@ export async function callArchitectureRenderingAPI(
     throw new Error("RAPIDAPI_KEY not configured");
   }
 
-  try {
-    // Qualidade baseada no plano do usuário:
-    // - Basic: quality="standard" (~15s, qualidade padrão)
-    // - Pro: quality="detailed" (~30s, qualidade máxima)
-    const qualityLevel = userPlan === 'pro' ? 'detailed' : 'standard';
-    
-    const enhancedRequest = {
-      ...request,
-      quality: qualityLevel,
-    };
-    
-    console.log(`[ArchitectureAPI] Rendering with quality="${qualityLevel}" for plan="${userPlan}"`);
+  // Qualidade baseada no plano do usuário:
+  // - Basic: quality="standard" (~15s, qualidade padrão)
+  // - Pro: quality="detailed" (~30s, qualidade máxima)
+  const qualityLevel = userPlan === 'pro' ? 'detailed' : 'standard';
+  
+  const enhancedRequest = {
+    ...request,
+    quality: qualityLevel,
+  };
+  
+  console.log(`[ArchitectureAPI] Rendering with quality="${qualityLevel}" for plan="${userPlan}"`);
 
-    const response = await fetch(
-      "https://architecture-rendering-api.p.rapidapi.com/render",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-rapidapi-host": "architecture-rendering-api.p.rapidapi.com",
-          "x-rapidapi-key": apiKey,
-        },
-        body: JSON.stringify(enhancedRequest),
+  // Retry logic para lidar com timeouts e conexões instáveis
+  let lastError: Error | null = null;
+  const maxRetries = 3;
+  
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      console.log(`[ArchitectureAPI] Attempt ${attempt}/${maxRetries}`);
+      
+      // Timeout de 90 segundos (renderização pode demorar)
+      const controller = new AbortController();
+      const timeout = setTimeout(() => controller.abort(), 90000);
+      
+      const response = await fetch(
+        "https://architecture-rendering-api.p.rapidapi.com/render",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-rapidapi-host": "architecture-rendering-api.p.rapidapi.com",
+            "x-rapidapi-key": apiKey,
+          },
+          body: JSON.stringify(enhancedRequest),
+          signal: controller.signal,
+        }
+      );
+      
+      clearTimeout(timeout);
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("[ArchitectureAPI] Error response:", errorText);
+        throw new Error(`API request failed: ${response.status} ${response.statusText}`);
       }
-    );
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error("[ArchitectureAPI] Error response:", errorText);
-      throw new Error(`API request failed: ${response.status} ${response.statusText}`);
+      const data = await response.json();
+      console.log(`[ArchitectureAPI] Success on attempt ${attempt}`);
+      return data;
+      
+    } catch (error: any) {
+      lastError = error;
+      console.error(`[ArchitectureAPI] Attempt ${attempt} failed:`, error.message);
+      
+      // Se não for o último retry, aguarda antes de tentar novamente
+      if (attempt < maxRetries) {
+        const waitTime = attempt * 2000; // 2s, 4s
+        console.log(`[ArchitectureAPI] Waiting ${waitTime}ms before retry...`);
+        await new Promise(resolve => setTimeout(resolve, waitTime));
+      }
     }
-
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error("[ArchitectureAPI] Request failed:", error);
-    throw error;
   }
+  
+  // Se chegou aqui, todas as tentativas falharam
+  console.error("[ArchitectureAPI] All attempts failed");
+  throw lastError || new Error("API request failed after all retries");
 }
 

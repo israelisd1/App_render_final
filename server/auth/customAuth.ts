@@ -563,7 +563,11 @@ export function registerCustomAuthRoutes(app: Express) {
     </table>
   `;
 
-    await sendEmail(email, subject, html);
+    await sendEmail({
+      to: email,
+      subject,
+      html,
+    });
   }
 
   // ============================================
