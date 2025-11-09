@@ -14,6 +14,7 @@ export default function Signup() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [cpf, setCpf] = useState('');
+  const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -52,7 +53,7 @@ export default function Signup() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
 
-    if (!name || !email || !cpf || !password || !confirmPassword) {
+    if (!name || !email || !cpf || !phone || !password || !confirmPassword) {
       toast.error('Preencha todos os campos');
       return;
     }
@@ -61,6 +62,13 @@ export default function Signup() {
     const cpfClean = cpf.replace(/[^\d]/g, '');
     if (cpfClean.length !== 11) {
       toast.error('CPF deve ter 11 dígitos');
+      return;
+    }
+
+    // Validar formato do telefone (apenas números, 11 dígitos)
+    const phoneClean = phone.replace(/[^\d]/g, '');
+    if (phoneClean.length !== 11) {
+      toast.error('Telefone deve ter 11 dígitos (DDD + 9 dígitos)');
       return;
     }
 
@@ -77,7 +85,7 @@ export default function Signup() {
     setIsLoading(true);
 
     try {
-      await customAuth.signup(email, password, cpf, name);
+      await customAuth.signup(email, password, cpf, phone, name);
       
       // Enviar email de verificação
       try {
@@ -183,6 +191,32 @@ export default function Signup() {
                 disabled={isLoading}
                 required
                 maxLength={14}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="phone">Telefone Celular</Label>
+              <Input
+                id="phone"
+                type="text"
+                placeholder="(00) 00000-0000"
+                value={phone}
+                onChange={(e) => {
+                  // Máscara de telefone
+                  let value = e.target.value.replace(/[^\d]/g, '');
+                  if (value.length > 11) value = value.slice(0, 11);
+                  if (value.length > 10) {
+                    value = value.replace(/(\d{2})(\d{5})(\d{1,4})/, '($1) $2-$3');
+                  } else if (value.length > 6) {
+                    value = value.replace(/(\d{2})(\d{1,5})/, '($1) $2');
+                  } else if (value.length > 2) {
+                    value = value.replace(/(\d{2})(\d{1,4})/, '($1) $2');
+                  }
+                  setPhone(value);
+                }}
+                disabled={isLoading}
+                required
+                maxLength={15}
               />
             </div>
 

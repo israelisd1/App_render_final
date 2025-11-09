@@ -85,10 +85,10 @@ export function registerCustomAuthRoutes(app: Express) {
   // Rota de signup (Email/Senha)
   app.post("/api/auth/signup", async (req: Request, res: Response) => {
     try {
-      const { email, password, name, cpf } = req.body;
+      const { email, password, name, cpf, phone } = req.body;
 
-      if (!email || !password || !cpf) {
-        return res.status(400).json({ error: "Email, senha e CPF são obrigatórios" });
+      if (!email || !password || !cpf || !phone) {
+        return res.status(400).json({ error: "Email, senha, CPF e telefone são obrigatórios" });
       }
 
       // Validar CPF
@@ -98,6 +98,14 @@ export function registerCustomAuthRoutes(app: Express) {
       }
 
       const cpfClean = cleanCPF(cpf);
+
+      // Validar telefone
+      const { validatePhone, cleanPhone } = await import("../utils/validatePhone");
+      if (!validatePhone(phone)) {
+        return res.status(400).json({ error: "Telefone inválido. Use o formato (##) #####-####" });
+      }
+
+      const phoneClean = cleanPhone(phone);
 
       // Verificar se email já existe
       const existingUser = await db.getUserByEmail(email);
@@ -118,6 +126,7 @@ export function registerCustomAuthRoutes(app: Express) {
       await db.createUser({
         email,
         cpf: cpfClean,
+        phone: phoneClean,
         name: name || null,
         password: hashedPassword,
         provider: "email",

@@ -17,6 +17,8 @@ export const users = mysqlTable("users", {
   email: varchar("email", { length: 320 }).unique(),
   /** CPF do usuário (apenas números, 11 dígitos) */
   cpf: varchar("cpf", { length: 11 }).unique().notNull(),
+  /** Telefone celular (DDD + 9 dígitos, apenas números) */
+  phone: varchar("phone", { length: 11 }).notNull(),
   /** Senha hash (bcrypt) - usado apenas para login com email/senha */
   password: varchar("password", { length: 255 }),
   /** Provider de autenticação: 'email', 'google', 'manus' */

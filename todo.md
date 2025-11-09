@@ -639,3 +639,50 @@ Para finalizar NextAuth:
   - Proteção contra duplicatas de email e CPF
   - Todos os testes passaram com sucesso
 
+
+
+
+## Implementação de Campo Telefone Celular (06/11/2025 23:30)
+
+- [ ] Adicionar campo phone ao schema do banco (varchar 11)
+- [ ] Implementar validação de telefone no backend
+  - [ ] Criar função validatePhone
+  - [ ] Validar DDD (11-99)
+  - [ ] Validar formato (11 dígitos)
+  - [ ] Adicionar validação no endpoint de signup
+  - [ ] Atualizar createUser para incluir phone
+- [ ] Adicionar campo telefone no formulário de cadastro
+  - [ ] Adicionar estado phone no Signup.tsx
+  - [ ] Adicionar máscara (##) #####-####
+  - [ ] Atualizar useCustomAuth para incluir phone
+- [ ] Testar validação de telefone
+  - [ ] Testar DDD inválido
+  - [ ] Testar telefone válido
+  - [ ] Testar formato incorreto
+
+
+
+
+## Implementação de Campo Telefone (06/11/2025 23:30)
+
+- [x] Adicionar campo phone ao schema do banco (varchar 11, not null)
+- [x] Implementar validação de telefone no backend
+  - [x] Criar módulo validatePhone.ts
+  - [x] Validar DDD (11-99, exceto inválidos)
+  - [x] Validar terceiro dígito = 9 (celular)
+  - [x] Adicionar validação no endpoint de signup
+- [x] Adicionar campo telefone no formulário de cadastro
+  - [x] Adicionar estado phone no Signup.tsx
+  - [x] Adicionar máscara de telefone ((##) #####-####)
+  - [x] Atualizar useCustomAuth para incluir phone
+  - [x] Atualizar createUser no db.ts
+- [x] Testar validação de telefone
+  - [x] Testar DDD inválido (deve rejeitar) - ✅ Rejeitado
+  - [x] Testar telefone celular válido (deve aceitar) - ✅ Aceito
+  - [x] Testar telefone fixo sem 9 (deve rejeitar) - ✅ Rejeitado
+- [x] ✅ CONCLUÍDO: Campo telefone celular implementado com validação completa!
+  - Validação de DDD brasileiro (11-99, exceto inválidos)
+  - Validação de celular (terceiro dígito = 9)
+  - Máscara automática no formulário ((##) #####-####)
+  - Todos os testes passaram com sucesso
+

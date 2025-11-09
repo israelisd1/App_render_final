@@ -21,7 +21,7 @@ export interface UseCustomAuthReturn {
   error: string | null;
   isAuthenticated: boolean;
   login: (email: string, password: string) => Promise<void>;
-  signup: (email: string, password: string, cpf: string, name?: string) => Promise<void>;
+  signup: (email: string, password: string, cpf: string, phone: string, name?: string) => Promise<void>;
   logout: () => Promise<void>;
   loginWithGoogle: () => void;
 }
@@ -86,7 +86,7 @@ export function useCustomAuth(): UseCustomAuthReturn {
     }
   }
 
-  async function signup(email: string, password: string, cpf: string, name?: string) {
+  async function signup(email: string, password: string, cpf: string, phone: string, name?: string) {
     try {
       setLoading(true);
       setError(null);
@@ -95,7 +95,7 @@ export function useCustomAuth(): UseCustomAuthReturn {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
-        body: JSON.stringify({ email, password, cpf, name }),
+        body: JSON.stringify({ email, password, cpf, phone, name }),
       });
 
       const data = await response.json();
