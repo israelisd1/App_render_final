@@ -783,3 +783,114 @@ export async function getUserById(userId: number) {
   return result.length > 0 ? result[0] : undefined;
 }
 
+
+
+
+// ============================================
+// PROFILE MANAGEMENT FUNCTIONS
+// ============================================
+
+/**
+ * Verifica se um email já existe (current ou histórico)
+ */
+export async function checkEmailExists(email: string, excludeUserId?: number): Promise<boolean> {
+  const db = await getDb();
+  if (!db) return false;
+
+  try {
+    // Verifica email atual
+    const currentUsers = await db
+      .select()
+      .from(users)
+      .where(eq(users.email, email))
+      .limit(1);
+
+    if (currentUsers.length > 0) {
+      // Se encontrou, verifica se é do próprio usuário
+      if (excludeUserId && currentUsers[0].id === excludeUserId) {
+        return false; // É o próprio email do usuário
+      }
+      return true; // Email já usado por outro usuário
+    }
+
+    // Verifica histórico de emails
+    const { emailHistory } = await import("../drizzle/schema");
+    const historyEmails = await db
+      .select()
+      .from(emailHistory)
+      .where(
+        or(
+          eq(emailHistory.oldEmail, email),
+          eq(emailHistory.newEmail, email)
+        )
+      )
+      .limit(1);
+
+    return historyEmails.length > 0;
+  } catch (error) {
+    console.error("[Database] Failed to check email:", error);
+    return false;
+  }
+}
+
+/**
+ * Salva alteração de email no histórico
+ */
+export async function saveEmailHistory(userId: number, oldEmail: string, newEmail: string): Promise<void> {
+  const db = await getDb();
+  if (!db) return;
+
+  try {
+    const { emailHistory } = await import("../drizzle/schema");
+    await db.insert(emailHistory).values({
+      userId,
+      oldEmail,
+      newEmail,
+    });
+  } catch (error) {
+    console.error("[Database] Failed to save email history:", error);
+    throw error;
+  }
+}
+
+/**
+ * Atualiza perfil do usuário
+ */
+export async function updateUserProfile(
+  userId: number,
+  updates: {
+    name?: string;
+    email?: string;
+    phone?: string;
+  }
+): Promise<void> {
+  const db = await getDb();
+  if (!db) {
+    throw new Error("Database not available");
+  }
+
+  try {
+    const updateData: any = {};
+
+    if (updates.name !== undefined) {
+      updateData.name = updates.name;
+    }
+
+    if (updates.email !== undefined) {
+      updateData.email = updates.email;
+      updateData.emailVerified = 0; // Resetar verificação ao trocar email
+    }
+
+    if (updates.phone !== undefined) {
+      updateData.phone = updates.phone;
+    }
+
+    if (Object.keys(updateData).length > 0) {
+      await db.update(users).set(updateData).where(eq(users.id, userId));
+    }
+  } catch (error) {
+    console.error("[Database] Failed to update user profile:", error);
+    throw error;
+  }
+}
+

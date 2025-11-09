@@ -1,0 +1,9 @@
+{
+  "query": "CREATE TABLE IF NOT EXISTS email_history (\n  id INT AUTO_INCREMENT PRIMARY KEY,\n  userId INT NOT NULL,\n  oldEmail VARCHAR(320) NOT NULL,\n  newEmail VARCHAR(320) NOT NULL,\n  changedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,\n  INDEX idx_user_id (userId),\n  INDEX idx_old_email (oldEmail),\n  INDEX idx_new_email (newEmail)\n);",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3ES6PvcnTNEV8vB.57a33a906c17 --database mJzsRrstkbLobg3DApXsgD --execute CREATE TABLE IF NOT EXISTS email_history (\n  id INT AUTO_INCREMENT PRIMARY KEY,\n  userId INT NOT NULL,\n  oldEmail VARCHAR(320) NOT NULL,\n  newEmail VARCHAR(320) NOT NULL,\n  changedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,\n  INDEX idx_user_id (userId),\n  INDEX idx_old_email (oldEmail),\n  INDEX idx_new_email (newEmail)\n);",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 171
+}

@@ -686,3 +686,51 @@ Para finalizar NextAuth:
   - Máscara automática no formulário ((##) #####-####)
   - Todos os testes passaram com sucesso
 
+
+
+
+## Implementação de Edição de Perfil (07/11/2025 00:00)
+
+- [ ] Criar tabela de histórico de emails no banco
+  - [ ] Criar schema email_history (id, user_id, old_email, new_email, changed_at)
+  - [ ] Aplicar migração no banco
+  - [ ] Criar índice único para emails (current + history)
+- [ ] Implementar endpoints de atualização de perfil no backend
+  - [ ] Criar endpoint PUT /api/auth/profile
+  - [ ] Validar telefone (se alterado)
+  - [ ] Validar email único (current + history)
+  - [ ] Salvar email antigo no histórico antes de alterar
+  - [ ] Enviar email de confirmação para novo email
+  - [ ] Criar funções no db.ts (updateUserProfile, saveEmailHistory, checkEmailExists)
+- [ ] Criar página de perfil no frontend
+  - [ ] Criar ProfilePage.tsx (/profile)
+  - [ ] Formulário com campos: nome, email, telefone
+  - [ ] Máscara de telefone
+  - [ ] Validação de email
+  - [ ] Mensagens de sucesso/erro
+  - [ ] Adicionar rota no App.tsx
+  - [ ] Adicionar link no Header
+- [ ] Testar fluxo completo
+  - [ ] Testar alteração de telefone
+  - [ ] Testar alteração de email válido
+  - [ ] Testar email já usado (deve bloquear)
+  - [ ] Testar email do histórico (deve bloquear)
+
+
+
+
+## Sistema de Edição de Perfil (08/11/2025)
+
+- [x] Implementar edição de perfil de usuário
+  - [x] Criar tabela email_history para rastrear alterações de email
+  - [x] Criar endpoint PUT /api/auth/profile
+  - [x] Implementar validações de nome, email e telefone
+  - [x] Implementar histórico de emails (evitar reutilização)
+  - [x] Enviar email de verificação ao alterar email
+  - [x] Criar página Profile.tsx com formulário de edição
+  - [x] Adicionar máscara de telefone no frontend
+  - [x] Adicionar link "Perfil" no header
+  - [x] Corrigir verificação de JWT (userId → id)
+  - [x] Corrigir chamada de sendVerificationEmail (adicionar URL completa)
+  - [x] Testar fluxo completo de edição
+

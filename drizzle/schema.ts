@@ -15,10 +15,10 @@ export const users = mysqlTable("users", {
   openId: varchar("openId", { length: 64 }).unique(),
   name: text("name"),
   email: varchar("email", { length: 320 }).unique(),
-  /** CPF do usuário (apenas números, 11 dígitos) */
-  cpf: varchar("cpf", { length: 11 }).unique().notNull(),
-  /** Telefone celular (DDD + 9 dígitos, apenas números) */
-  phone: varchar("phone", { length: 11 }).notNull(),
+  /** CPF do usuário (apenas números, 11 dígitos) - opcional para OAuth */
+  cpf: varchar("cpf", { length: 11 }).unique(),
+  /** Telefone celular (DDD + 9 dígitos, apenas números) - opcional para OAuth */
+  phone: varchar("phone", { length: 11 }),
   /** Senha hash (bcrypt) - usado apenas para login com email/senha */
   password: varchar("password", { length: 255 }),
   /** Provider de autenticação: 'email', 'google', 'manus' */
@@ -177,3 +177,17 @@ export const coupons = mysqlTable("coupons", {
 
 export type Coupon = typeof coupons.$inferSelect;
 export type InsertCoupon = typeof coupons.$inferInsert;
+
+/**
+ * Histórico de emails dos usuários (para impedir reutilização)
+ */
+export const emailHistory = mysqlTable("email_history", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  oldEmail: varchar("oldEmail", { length: 320 }).notNull(),
+  newEmail: varchar("newEmail", { length: 320 }).notNull(),
+  changedAt: timestamp("changedAt").defaultNow().notNull(),
+});
+
+export type EmailHistory = typeof emailHistory.$inferSelect;
+export type InsertEmailHistory = typeof emailHistory.$inferInsert;

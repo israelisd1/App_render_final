@@ -8,6 +8,8 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import crypto from "crypto";
 import * as db from "../db";
+import { validatePhone } from "../utils/validatePhone";
+const { checkEmailExists, saveEmailHistory, updateUserProfile, getUserById, updateUserVerificationToken } = db;
 import { sendPasswordResetEmail } from "./emailService";
 
 // Lazy loading do Google OAuth para evitar problemas de inicialização
@@ -563,4 +565,102 @@ export function registerCustomAuthRoutes(app: Express) {
 
     await sendEmail(email, subject, html);
   }
+
+  // ============================================
+  // PROFILE UPDATE ENDPOINT
+  // ============================================
+
+  app.put("/api/auth/profile", async (req, res) => {
+    try {
+      console.log("[Profile] Cookies recebidos:", req.cookies);
+      const token = req.cookies.auth_token;
+      if (!token) {
+        console.log("[Profile] Token não encontrado nos cookies");
+        return res.status(401).json({ error: "Não autenticado" });
+      }
+      console.log("[Profile] Token encontrado:", token.substring(0, 20) + "...");
+
+      const decoded = jwt.verify(token, JWT_SECRET) as { id: number };
+      const user = await getUserById(decoded.id);
+
+      if (!user) {
+        return res.status(404).json({ error: "Usuário não encontrado" });
+      }
+
+      const { name, email, phone } = req.body;
+      const updates: any = {};
+
+      // Validação de nome
+      if (name !== undefined) {
+        if (!name || name.trim().length === 0) {
+          return res.status(400).json({ error: "Nome é obrigatório" });
+        }
+        updates.name = name.trim();
+      }
+
+      // Validação de telefone
+      if (phone !== undefined) {
+        const phoneDigits = phone.replace(/\D/g, "");
+        if (!validatePhone(phoneDigits)) {
+          return res.status(400).json({ error: "Telefone inválido. Use o formato (##) #####-####" });
+        }
+        updates.phone = phoneDigits;
+      }
+
+      // Validação de email
+      if (email !== undefined && email !== user.email) {
+        // Valida formato
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+          return res.status(400).json({ error: "Email inválido" });
+        }
+
+        // Verifica se email já existe (current ou histórico)
+        const emailExists = await checkEmailExists(email, user.id);
+        if (emailExists) {
+          return res.status(400).json({ 
+            error: "Este email já foi utilizado anteriormente e não pode ser reutilizado" 
+          });
+        }
+
+        // Salva email antigo no histórico
+        if (user.email) {
+          await saveEmailHistory(user.id, user.email, email);
+        }
+
+        updates.email = email;
+
+        // Envia email de verificação para o novo email
+        const verificationToken = crypto.randomBytes(32).toString("hex");
+        await updateUserVerificationToken(user.id, verificationToken);
+        const verificationUrl = `${process.env.NEXTAUTH_URL || 'http://localhost:3000'}/verify-email?token=${verificationToken}`;
+        await sendVerificationEmail(email, verificationUrl);
+        
+        updates.emailVerified = 0; // Marca email como não verificado
+      }
+
+      // Atualiza perfil
+      await updateUserProfile(user.id, updates);
+
+      // Busca usuário atualizado
+      const updatedUser = await getUserById(user.id);
+
+      res.json({
+        success: true,
+        user: {
+          id: updatedUser!.id,
+          name: updatedUser!.name,
+          email: updatedUser!.email,
+          phone: updatedUser!.phone,
+          emailVerified: updatedUser!.emailVerified,
+        },
+        message: email !== undefined && email !== user.email
+          ? "Perfil atualizado! Verifique seu novo email para confirmar a alteração."
+          : "Perfil atualizado com sucesso!",
+      });
+    } catch (error: any) {
+      console.error("[Auth] Error updating profile:", error);
+      res.status(500).json({ error: "Erro ao atualizar perfil" });
+    }
+  });
 }

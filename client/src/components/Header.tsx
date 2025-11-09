@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { APP_LOGO, APP_TITLE } from "@/const";
 import { useLoginUrl } from "@/components/LoginButton";
 import { Link } from "wouter";
-import { Coins, ShoppingCart, Menu, X, Globe, Crown, Zap } from "lucide-react";
+import { Coins, ShoppingCart, Menu, X, Globe, Crown, Zap, User } from "lucide-react";
 import { useState } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
 
@@ -85,6 +85,12 @@ export default function Header() {
               <Link href="/history">
                 <span className="text-amber-800 hover:text-amber-900 transition-colors cursor-pointer">{t("header.history")}</span>
               </Link>
+              <Link href="/profile">
+                <span className="text-amber-800 hover:text-amber-900 transition-colors cursor-pointer flex items-center gap-1">
+                  <User className="h-4 w-4" />
+                  Perfil
+                </span>
+              </Link>
               {user?.email === "israelisd@gmail.com" && (
                 <Link href="/admin">
                   <span className="text-amber-800 hover:text-amber-900 transition-colors cursor-pointer font-semibold">Admin</span>
@@ -121,6 +127,12 @@ export default function Header() {
                 </Link>
                 <Link href="/history">
                   <span className="block py-2 text-amber-800 hover:text-amber-900 transition-colors cursor-pointer">{t("header.history")}</span>
+                </Link>
+                <Link href="/profile">
+                  <span className="block py-2 text-amber-800 hover:text-amber-900 transition-colors cursor-pointer flex items-center gap-1">
+                    <User className="h-4 w-4" />
+                    Perfil
+                  </span>
                 </Link>
                 {user?.email === "israelisd@gmail.com" && (
                   <Link href="/admin">
