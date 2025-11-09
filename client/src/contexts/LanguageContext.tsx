@@ -21,6 +21,7 @@ const translations = {
     "header.basicPlan": "Basic",
     "header.proPlan": "Pro",
     "header.viewPlans": "Ver Planos",
+    "header.rendersAvailable": "disponíveis",
     
     // Home Page
     "home.title": "Arqrender",
@@ -51,6 +52,9 @@ const translations = {
     "render.promptHelp": "Descreva o estilo e atmosfera desejados para a renderização",
     "render.submit": "Iniciar Renderização",
     "render.processing": "Processando...",
+    "render.availableRenders": "Renderizações Disponíveis",
+    "render.monthly": "mensais",
+    "render.extra": "extras",
     
     // History Page
     "history.title": "Histórico de Renderizações",
@@ -279,6 +283,7 @@ const translations = {
     "header.basicPlan": "Basic",
     "header.proPlan": "Pro",
     "header.viewPlans": "View Plans",
+    "header.rendersAvailable": "available",
     
     // Home Page
     "home.title": "Arqrender",
@@ -309,6 +314,9 @@ const translations = {
     "render.promptHelp": "Describe the desired style and atmosphere for the rendering",
     "render.submit": "Start Rendering",
     "render.processing": "Processing...",
+    "render.availableRenders": "Available Renders",
+    "render.monthly": "monthly",
+    "render.extra": "extra",
     
     // History Page
     "history.title": "Rendering History",

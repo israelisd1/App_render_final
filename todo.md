@@ -749,3 +749,14 @@ Para finalizar NextAuth:
   - [x] Aumentar timeout para 90s
   - [x] Adicionar aguardo entre retries
 
+
+
+
+## Indicador de Renderizações Disponíveis (08/11/2025 22:35)
+
+- [x] Adicionar contador de renderizações disponíveis
+  - [x] Mostrar no header (quota mensal + extras + 3 gratuitos)
+  - [x] Mostrar na página de nova renderização
+  - [x] Adicionar traduções PT-BR/EN
+  - [x] Destacar visualmente quando estiver acabando (< 3 restantes)
+

@@ -97,7 +97,36 @@ export default function RenderPage() {
       {/* Main Content */}
       <main className="container mx-auto px-4 py-12">
         <div className="mx-auto max-w-4xl">
-          <h2 className="mb-8 text-4xl font-bold text-amber-900">{t('render.title')}</h2>
+          <div className="flex items-center justify-between mb-8">
+            <h2 className="text-4xl font-bold text-amber-900">{t('render.title')}</h2>
+            
+            {/* Contador de renderizações disponíveis */}
+            {(() => {
+              const monthlyQuota = user?.monthlyQuota || 0;
+              const monthlyUsed = user?.monthlyRendersUsed || 0;
+              const extraRenders = user?.extraRenders || 0;
+              const monthlyRemaining = Math.max(0, monthlyQuota - monthlyUsed);
+              const totalAvailable = monthlyRemaining + extraRenders;
+              
+              const isLow = totalAvailable < 3;
+              const bgColor = isLow ? 'bg-red-50 border-red-300' : 'bg-green-50 border-green-300';
+              const textColor = isLow ? 'text-red-900' : 'text-green-900';
+              
+              return (
+                <div className={`px-6 py-4 rounded-lg border-2 ${bgColor}`}>
+                  <div className="text-sm ${textColor} opacity-80 mb-1">{t("render.availableRenders")}</div>
+                  <div className={`text-3xl font-bold ${textColor}`}>
+                    {totalAvailable}
+                  </div>
+                  {monthlyQuota > 0 && (
+                    <div className="text-xs ${textColor} opacity-60 mt-1">
+                      {monthlyRemaining} {t("render.monthly")} + {extraRenders} {t("render.extra")}
+                    </div>
+                  )}
+                </div>
+              );
+            })()}
+          </div>
           
           <form onSubmit={handleSubmit}>
             <div className="grid gap-8 md:grid-cols-2">

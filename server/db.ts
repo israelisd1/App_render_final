@@ -481,8 +481,8 @@ export async function getUserByCPF(cpf: string) {
  */
 export async function createUser(userData: {
   email: string;
-  cpf: string;
-  phone: string;
+  cpf?: string | null;
+  phone?: string | null;
   name?: string | null;
   password?: string | null;
   provider: string;
@@ -495,8 +495,8 @@ export async function createUser(userData: {
 
   const [result] = await db.insert(users).values({
     email: userData.email,
-    cpf: userData.cpf,
-    phone: userData.phone,
+    cpf: userData.cpf || null,
+    phone: userData.phone || null,
     name: userData.name || null,
     password: userData.password || null,
     provider: userData.provider,

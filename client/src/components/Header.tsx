@@ -64,15 +64,31 @@ export default function Header() {
                   </span>
                 </div>
               </Link>
-              {/* Mostrar renderizações gratuitas restantes se não tiver plano */}
-              {user?.plan === 'free' && user?.extraRenders && user.extraRenders > 0 ? (
-                <div className="flex items-center gap-2 bg-green-100 px-3 py-1.5 rounded-full border border-green-300">
-                  <Zap className="h-4 w-4 text-green-600" />
-                  <span className="text-green-900 font-semibold text-sm">
-                    {user.extraRenders} {t("header.freeRenders") || "renders gratuitos"}
-                  </span>
-                </div>
-              ) : null}
+              {/* Mostrar renderizações disponíveis */}
+              {(() => {
+                const monthlyQuota = user?.monthlyQuota || 0;
+                const monthlyUsed = user?.monthlyRendersUsed || 0;
+                const extraRenders = user?.extraRenders || 0;
+                const monthlyRemaining = Math.max(0, monthlyQuota - monthlyUsed);
+                const totalAvailable = monthlyRemaining + extraRenders;
+                
+                // Só mostrar se tiver renderizações disponíveis
+                if (totalAvailable === 0) return null;
+                
+                const isLow = totalAvailable < 3;
+                const bgColor = isLow ? 'bg-red-100 border-red-300' : 'bg-green-100 border-green-300';
+                const textColor = isLow ? 'text-red-900' : 'text-green-900';
+                const iconColor = isLow ? 'text-red-600' : 'text-green-600';
+                
+                return (
+                  <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full border ${bgColor}`}>
+                    <Zap className={`h-4 w-4 ${iconColor}`} />
+                    <span className={`${textColor} font-semibold text-sm`}>
+                      {totalAvailable} {t("header.rendersAvailable")}
+                    </span>
+                  </div>
+                );
+              })()}
               <Link href="/pricing">
                 <Button size="sm" className="bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white flex items-center gap-2">
                   <Crown className="h-4 w-4" />
