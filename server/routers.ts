@@ -19,7 +19,9 @@ export const appRouter = router({
     me: publicProcedure.query(opts => opts.ctx.user),
     logout: publicProcedure.mutation(({ ctx }) => {
       const cookieOptions = getSessionCookieOptions(ctx.req);
+      // Limpar ambos os cookies (OAuth e customAuth)
       ctx.res.clearCookie(COOKIE_NAME, { ...cookieOptions, maxAge: -1 });
+      ctx.res.clearCookie('auth_token', { ...cookieOptions, maxAge: -1 });
       return {
         success: true,
       } as const;

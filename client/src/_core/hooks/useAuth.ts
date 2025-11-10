@@ -28,19 +28,15 @@ export function useAuth(options?: UseAuthOptions) {
     try {
       await logoutMutation.mutateAsync();
     } catch (error: unknown) {
-      if (
-        error instanceof TRPCClientError &&
-        error.data?.code === "UNAUTHORIZED"
-      ) {
-        return;
-      }
-      throw error;
-    } finally {
-      utils.auth.me.setData(undefined, null);
-      await utils.auth.me.invalidate();
-      // Redirecionar para home após logout
-      window.location.href = "/";
+      // Ignorar erros - sempre fazer logout local
+      console.log('[Logout] Server error ignored:', error);
     }
+    
+    // Sempre limpar e redirecionar, independente de erros
+    utils.auth.me.setData(undefined, null);
+    await utils.auth.me.invalidate();
+    localStorage.removeItem('manus-runtime-user-info');
+    window.location.href = "/";
   }, [logoutMutation, utils]);
 
   const state = useMemo(() => {
