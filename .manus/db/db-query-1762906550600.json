@@ -1,0 +1,18 @@
+{
+  "query": "SELECT * FROM system_settings WHERE setting_key = 'auth_provider';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3ES6PvcnTNEV8vB.57a33a906c17 --database mJzsRrstkbLobg3DApXsgD --execute SELECT * FROM system_settings WHERE setting_key = 'auth_provider';",
+  "rows": [
+    {
+      "id": "1",
+      "setting_key": "auth_provider",
+      "setting_value": "nextauth",
+      "description": "Sistema de autenticação ativo: nextauth",
+      "updated_at": "2025-11-06 13:14:08",
+      "updated_by": "israelisd@gmail.com"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tsetting_key\tsetting_value\tdescription\tupdated_at\tupdated_by\n1\tauth_provider\tnextauth\tSistema de autenticação ativo: nextauth\t2025-11-06 13:14:08\tisraelisd@gmail.com\n",
+  "stderr": "",
+  "execution_time_ms": 52
+}

@@ -1,0 +1,20 @@
+{
+  "query": "SELECT id, email, name, role, provider, openId, emailVerified, plan FROM users;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3ES6PvcnTNEV8vB.57a33a906c17 --database mJzsRrstkbLobg3DApXsgD --execute SELECT id, email, name, role, provider, openId, emailVerified, plan FROM users;",
+  "rows": [
+    {
+      "id": "3630001",
+      "email": "israelisd@gmail.com",
+      "name": "Israel Dias",
+      "role": "admin",
+      "provider": "email",
+      "openId": "NULL",
+      "emailVerified": "1",
+      "plan": "free"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\temail\tname\trole\tprovider\topenId\temailVerified\tplan\n3630001\tisraelisd@gmail.com\tIsrael Dias\tadmin\temail\tNULL\t1\tfree\n",
+  "stderr": "",
+  "execution_time_ms": 50
+}

@@ -760,3 +760,31 @@ Para finalizar NextAuth:
   - [x] Adicionar traduções PT-BR/EN
   - [x] Destacar visualmente quando estiver acabando (< 3 restantes)
 
+
+
+## Bug: Envio de Email (09/11/2025 20:30)
+
+- [x] Investigar problema de envio de emails
+  - [x] Verificar configuração do emailService - OK
+  - [x] Verificar chamadas de sendEmail - OK
+  - [x] Testar com credenciais dos secrets - SUCESSO ✅
+  - [x] Confirmar SMTP funcionando (smtp.gmail.com)
+  - [ ] Validar alteração de senha
+  - [ ] Validar troca de email
+
+
+## Limpeza de Usuários (09/11/2025 20:35)
+
+- [x] Deletar todos os usuários exceto israelisd@gmail.com
+- [x] Configurar israelisd@gmail.com como admin
+- [x] Remover vínculo com Manus OAuth (openId = NULL)
+- [x] Remover vínculo com Google (provider = 'email')
+- [x] Validar configurações - 2 registros encontrados (duplicados)
+
+
+## Correção Sistema de Autenticação (09/11/2025 20:40)
+
+- [x] Alterar sistema ativo de 'manus' para 'nextauth' (customAuth)
+- [x] Sistema alterado no banco de dados
+- [ ] Nota: Sessão antiga ainda ativa, usuário precisa fazer logout
+- [ ] Criar checkpoint publicável
