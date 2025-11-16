@@ -16,6 +16,9 @@ export default function PricingPage() {
   const { t } = useLanguage();
   const [, setLocation] = useLocation();
 
+  // Buscar price IDs do backend
+  const { data: prices } = trpc.subscription.prices.useQuery();
+
   const createSubscriptionMutation = trpc.subscription.create.useMutation({
     onSuccess: (data) => {
       if (data.url) {
@@ -34,10 +37,13 @@ export default function PricingPage() {
       return;
     }
 
+    if (!prices) {
+      toast.error('Erro: Carregando informações de preço...');
+      return;
+    }
+
     // Mapear plan para priceId
-    const priceId = plan === 'basic' 
-      ? import.meta.env.VITE_STRIPE_PRICE_BASIC || process.env.STRIPE_PRICE_BASIC
-      : import.meta.env.VITE_STRIPE_PRICE_PRO || process.env.STRIPE_PRICE_PRO;
+    const priceId = plan === 'basic' ? prices.basic : prices.pro;
 
     if (!priceId) {
       toast.error('Erro: Price ID não configurado');

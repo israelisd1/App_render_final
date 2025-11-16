@@ -520,6 +520,17 @@ export const appRouter = router({
 
   subscription: router({
     /**
+     * Retorna price IDs dos planos
+     */
+    prices: publicProcedure.query(() => {
+      return {
+        basic: process.env.STRIPE_PRICE_BASIC || '',
+        pro: process.env.STRIPE_PRICE_PRO || '',
+        extra: process.env.STRIPE_PRICE_EXTRA || '',
+      };
+    }),
+
+    /**
      * Retorna status da assinatura do usuário
      */
     status: protectedProcedure.query(async ({ ctx }) => {

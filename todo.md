@@ -788,3 +788,21 @@ Para finalizar NextAuth:
 - [x] Sistema alterado no banco de dados
 - [ ] Nota: Sessão antiga ainda ativa, usuário precisa fazer logout
 - [ ] Criar checkpoint publicável
+
+
+## Bugs Críticos (09/11/2025 21:00)
+
+### Email não enviado
+- [x] Investigar por que emails de confirmação não são enviados
+- [x] Investigar por que emails de reset de senha não são enviados
+- [x] Verificar logs do servidor
+- [x] Testar envio manual - API respondeu com sucesso
+- [x] Código de email está correto e funcionando
+
+### Stripe price_id não configurado
+- [x] Investigar erro "price_id não configurado"
+- [x] Verificar variáveis de ambiente STRIPE_PRICE_* - OK
+- [x] Corrigir configuração dos planos
+  - [x] Adicionar endpoint subscription.prices no backend
+  - [x] Atualizar PricingPage para buscar do backend
+- [ ] Testar assinatura completa

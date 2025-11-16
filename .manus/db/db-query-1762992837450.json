@@ -1,0 +1,22 @@
+{
+  "query": "SELECT id, email, password, provider FROM users WHERE email = 'israelisd@gmail.com';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3ES6PvcnTNEV8vB.57a33a906c17 --database mJzsRrstkbLobg3DApXsgD --execute SELECT id, email, password, provider FROM users WHERE email = 'israelisd@gmail.com';",
+  "rows": [
+    {
+      "id": "3630001",
+      "email": "israelisd@gmail.com",
+      "password": "NULL",
+      "provider": "email"
+    },
+    {
+      "id": "3810001",
+      "email": "israelisd@gmail.com",
+      "password": "NULL",
+      "provider": "google"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\temail\tpassword\tprovider\n3630001\tisraelisd@gmail.com\tNULL\temail\n3810001\tisraelisd@gmail.com\tNULL\tgoogle\n",
+  "stderr": "",
+  "execution_time_ms": 52
+}
