@@ -806,3 +806,14 @@ Para finalizar NextAuth:
   - [x] Adicionar endpoint subscription.prices no backend
   - [x] Atualizar PricingPage para buscar do backend
 - [ ] Testar assinatura completa
+
+
+## Bug: Price ID vs Product ID (09/11/2025 22:10)
+
+- [x] Problema: Variáveis STRIPE_PRICE_* contêm Product IDs (prod_*) ao invés de Price IDs (price_*)
+- [x] Verificar Price IDs corretos no dashboard Stripe via MCP
+- [x] Atualizar secrets com Price IDs corretos
+  - [x] STRIPE_PRICE_BASIC: price_1SNOfLHQcWbIhpydePr8qlZE
+  - [x] STRIPE_PRICE_PRO: price_1SNOhfHQcWbIhpydChRAstFR
+  - [x] STRIPE_PRICE_EXTRA: price_1SNOjqHQcWbIhpyddZ91UGWV
+- [x] Endpoint subscription.prices retornando corretamente
