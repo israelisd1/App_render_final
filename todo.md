@@ -817,3 +817,13 @@ Para finalizar NextAuth:
   - [x] STRIPE_PRICE_PRO: price_1SNOhfHQcWbIhpydChRAstFR
   - [x] STRIPE_PRICE_EXTRA: price_1SNOjqHQcWbIhpyddZ91UGWV
 - [x] Endpoint subscription.prices retornando corretamente
+
+
+## Bug: Erro ao carregar preços (09/11/2025 23:13) - RESOLVIDO
+
+- [x] Erro: "Carregando informações de preço..." ao clicar em assinar
+- [x] Investigar logs do servidor
+- [x] Verificar endpoint subscription.prices
+- [x] Corrigir problema e testar
+- [x] Sistema funcionando: todos os 3 planos (Basic, Pro, Extra) abrem Stripe Checkout corretamente
+- [x] Price IDs corretos configurados via MCP Stripe
