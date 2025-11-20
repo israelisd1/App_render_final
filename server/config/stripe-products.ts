@@ -7,10 +7,12 @@
  * - STRIPE_PRICE_EXTRA
  */
 
+import { ENV } from '../_core/env';
+
 export const STRIPE_PRODUCTS = {
   BASIC: {
     name: 'Arqrender Basic',
-    priceId: process.env.STRIPE_PRICE_BASIC || '',
+    priceId: ENV.stripePriceBasic || '',
     price: 9990, // R$ 99,90 em centavos
     currency: 'brl',
     interval: 'month' as const,
@@ -22,7 +24,7 @@ export const STRIPE_PRODUCTS = {
   },
   PRO: {
     name: 'Arqrender Pro',
-    priceId: process.env.STRIPE_PRICE_PRO || '',
+    priceId: ENV.stripePricePro || '',
     price: 14990, // R$ 149,90 em centavos
     currency: 'brl',
     interval: 'month' as const,
@@ -34,7 +36,7 @@ export const STRIPE_PRODUCTS = {
   },
   EXTRA: {
     name: 'Arqrender - Pacote Extra',
-    priceId: process.env.STRIPE_PRICE_EXTRA || '',
+    priceId: ENV.stripePriceExtra || '',
     price: 4990, // R$ 49,90 em centavos
     currency: 'brl',
     type: 'one_time' as const,

@@ -10,4 +10,7 @@ export const ENV = {
   stripeSecretKey: process.env.STRIPE_SECRET_KEY ?? "",
   stripePublishableKey: process.env.STRIPE_PUBLISHABLE_KEY ?? "",
   stripeWebhookSecret: process.env.STRIPE_WEBHOOK_SECRET ?? "",
+  stripePriceBasic: process.env.STRIPE_PRICE_BASIC ?? "",
+  stripePricePro: process.env.STRIPE_PRICE_PRO ?? "",
+  stripePriceExtra: process.env.STRIPE_PRICE_EXTRA ?? "",
 };

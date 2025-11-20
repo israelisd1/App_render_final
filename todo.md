@@ -827,3 +827,14 @@ Para finalizar NextAuth:
 - [x] Corrigir problema e testar
 - [x] Sistema funcionando: todos os 3 planos (Basic, Pro, Extra) abrem Stripe Checkout corretamente
 - [x] Price IDs corretos configurados via MCP Stripe
+
+
+## Bug: Price IDs não configurados em produção (09/11/2025 23:50) - CORRIGIDO
+
+- [x] Ambiente de produção retornando erro "Price ID não configurado"
+- [x] Verificar variáveis de ambiente STRIPE_PRICE_BASIC, STRIPE_PRICE_PRO, STRIPE_PRICE_EXTRA
+- [x] Problema identificado: env.ts não incluía as 3 variáveis de Price IDs
+- [x] Adicionado stripePriceBasic, stripePricePro, stripePriceExtra ao env.ts
+- [x] Atualizado stripe-products.ts para usar ENV ao invés de process.env
+- [x] Atualizado routers.ts (subscription.prices) para usar ENV
+- [ ] Testar em produção após publicação

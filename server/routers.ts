@@ -4,6 +4,7 @@ import { z } from "zod";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { protectedProcedure, publicProcedure, router } from "./_core/trpc";
+import { ENV } from "./_core/env";
 import { callArchitectureRenderingAPI } from "./architectureApi";
 import { addTokens, createRender, deductTokens, getActiveTokenPackages, getRenderById, getUserTokenTransactions, getUserRenders, updateRenderStatus, getDb, createStripeTransaction, getCouponByCode, getUserStripeTransactions } from "./db";
 import { createCheckoutSession, validateCoupon, calculateDiscount } from "./stripe";
@@ -524,9 +525,9 @@ export const appRouter = router({
      */
     prices: publicProcedure.query(() => {
       return {
-        basic: process.env.STRIPE_PRICE_BASIC || '',
-        pro: process.env.STRIPE_PRICE_PRO || '',
-        extra: process.env.STRIPE_PRICE_EXTRA || '',
+        basic: ENV.stripePriceBasic || '',
+        pro: ENV.stripePricePro || '',
+        extra: ENV.stripePriceExtra || '',
       };
     }),
 
