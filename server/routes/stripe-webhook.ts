@@ -7,6 +7,7 @@
 import { Router, Request, Response } from 'express';
 import { stripe } from '../stripe';
 import type Stripe from 'stripe';
+import { ENV } from '../_core/env';
 import { 
   updateUserSubscription, 
   addExtraRenders,
@@ -17,7 +18,7 @@ import { getPlanFromPriceId, getPlanConfig } from '../config/stripe-products';
 
 const router = Router();
 
-const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET || '';
+const webhookSecret = ENV.stripeWebhookSecret || '';
 
 /**
  * POST /api/stripe/webhook

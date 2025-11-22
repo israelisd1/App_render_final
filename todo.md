@@ -838,3 +838,32 @@ Para finalizar NextAuth:
 - [x] Atualizado stripe-products.ts para usar ENV ao invés de process.env
 - [x] Atualizado routers.ts (subscription.prices) para usar ENV
 - [ ] Testar em produção após publicação
+
+
+## Implementação de Webhook Stripe e Página de Assinatura (10/11/2025 00:15) - COMPLETO
+
+- [x] Implementar webhook do Stripe (/api/stripe/webhook)
+  - [x] Processar evento checkout.session.completed
+  - [x] Processar evento customer.subscription.updated
+  - [x] Processar evento customer.subscription.deleted
+  - [x] Processar evento invoice.payment_succeeded
+  - [x] Processar evento invoice.payment_failed
+  - [x] Validar assinatura do webhook com STRIPE_WEBHOOK_SECRET
+  - [x] Atualizar banco de dados com status da assinatura
+  - [x] Atualizado para usar ENV ao invés de process.env
+- [x] Criar página de gerenciamento de assinatura (/subscription)
+  - [x] Mostrar plano atual e status
+  - [x] Mostrar próxima data de cobrança
+  - [x] Mostrar estatísticas de uso (quota mensal, usado, restante)
+  - [x] Botão para mudar de plano (redireciona para /pricing)
+  - [x] Botão para cancelar assinatura
+  - [x] Botão para reativar assinatura cancelada
+  - [x] Botão para comprar pacote extra de renderizações
+  - [x] Link para Stripe Customer Portal (gerenciar método de pagamento)
+  - [x] Traduções PT-BR/EN completas
+  - [x] Design responsivo com tema laranja/âmbar
+- [x] Testar fluxo completo de assinatura
+  - [x] Página /subscription carrega corretamente
+  - [x] Mostra plano atual (Basic)
+  - [x] Mostra estatísticas de uso (quota 0, usado 0, disponíveis 3)
+  - [x] Botões funcionando (Mudar Plano, Comprar Extras, Gerenciar)
