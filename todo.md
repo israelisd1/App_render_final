@@ -896,3 +896,13 @@ Para finalizar NextAuth:
 - [x] Testar email de cancelamento
 - [x] Todos os 5 emails enviados com sucesso para israelisd@gmail.com
 - [x] Corrigido bug de espaço extra em EMAIL_HOST (adicionado .trim())
+
+
+## Configuração de Webhook Stripe (10/11/2025 02:15) - DOCUMENTADO
+
+- [x] Verificar ferramentas disponíveis no MCP Stripe (não há suporte para webhooks via API)
+- [x] Criar documentação completa de configuração (docs/STRIPE_WEBHOOK_SETUP.md)
+- [x] Documentar 6 eventos necessários
+- [x] Incluir instruções de teste e troubleshooting
+- [ ] Usuário precisa configurar manualmente no Stripe Dashboard
+- [ ] Testar webhook em produção após configuração
