@@ -574,6 +574,313 @@ export const appRouter = router({
         const { getUserDetailedStats } = await import('./db');
         return await getUserDetailedStats(input.userId);
       }),
+
+    /**
+     * Gerenciamento de cupons Stripe
+     */
+    coupons: router({
+      /**
+       * Lista todos os cupons
+       */
+      list: protectedProcedure.query(async ({ ctx }) => {
+        if (ctx.user.role !== 'admin') {
+          throw new TRPCError({
+            code: 'FORBIDDEN',
+            message: 'Apenas administradores podem acessar esta rota',
+          });
+        }
+
+        const stripe = (await import('./stripe')).stripe;
+        if (!stripe) {
+          throw new TRPCError({
+            code: 'INTERNAL_SERVER_ERROR',
+            message: 'Stripe não configurado',
+          });
+        }
+
+        try {
+          const coupons = await stripe.coupons.list({ limit: 100 });
+          return coupons.data.map(coupon => ({
+            id: coupon.id,
+            name: coupon.name,
+            percentOff: coupon.percent_off,
+            amountOff: coupon.amount_off ? coupon.amount_off / 100 : null,
+            currency: coupon.currency,
+            duration: coupon.duration,
+            durationInMonths: coupon.duration_in_months,
+            maxRedemptions: coupon.max_redemptions,
+            timesRedeemed: coupon.times_redeemed,
+            valid: coupon.valid,
+            created: new Date(coupon.created * 1000),
+            redeemBy: coupon.redeem_by ? new Date(coupon.redeem_by * 1000) : null,
+          }));
+        } catch (error) {
+          console.error('[Admin] Erro ao listar cupons:', error);
+          throw new TRPCError({
+            code: 'INTERNAL_SERVER_ERROR',
+            message: 'Erro ao listar cupons',
+          });
+        }
+      }),
+
+      /**
+       * Cria um novo cupom
+       */
+      create: protectedProcedure
+        .input(
+          z.object({
+            id: z.string().min(1).max(50),
+            name: z.string().optional(),
+            percentOff: z.number().min(1).max(100).optional(),
+            amountOff: z.number().min(0).optional(),
+            currency: z.string().default('brl'),
+            duration: z.enum(['once', 'repeating', 'forever']),
+            durationInMonths: z.number().optional(),
+            maxRedemptions: z.number().optional(),
+            redeemBy: z.date().optional(),
+          })
+        )
+        .mutation(async ({ ctx, input }) => {
+          if (ctx.user.role !== 'admin') {
+            throw new TRPCError({
+              code: 'FORBIDDEN',
+              message: 'Apenas administradores podem criar cupons',
+            });
+          }
+
+          const stripe = (await import('./stripe')).stripe;
+          if (!stripe) {
+            throw new TRPCError({
+              code: 'INTERNAL_SERVER_ERROR',
+              message: 'Stripe não configurado',
+            });
+          }
+
+          try {
+            const couponData: any = {
+              id: input.id.toUpperCase(),
+              name: input.name,
+              duration: input.duration,
+            };
+
+            if (input.percentOff) {
+              couponData.percent_off = input.percentOff;
+            } else if (input.amountOff) {
+              couponData.amount_off = Math.round(input.amountOff * 100);
+              couponData.currency = input.currency;
+            } else {
+              throw new TRPCError({
+                code: 'BAD_REQUEST',
+                message: 'Deve fornecer percentOff ou amountOff',
+              });
+            }
+
+            if (input.duration === 'repeating' && input.durationInMonths) {
+              couponData.duration_in_months = input.durationInMonths;
+            }
+
+            if (input.maxRedemptions) {
+              couponData.max_redemptions = input.maxRedemptions;
+            }
+
+            if (input.redeemBy) {
+              couponData.redeem_by = Math.floor(input.redeemBy.getTime() / 1000);
+            }
+
+            const coupon = await stripe.coupons.create(couponData);
+
+            return {
+              success: true,
+              coupon: {
+                id: coupon.id,
+                name: coupon.name,
+                percentOff: coupon.percent_off,
+                amountOff: coupon.amount_off ? coupon.amount_off / 100 : null,
+              },
+            };
+          } catch (error: any) {
+            console.error('[Admin] Erro ao criar cupom:', error);
+            throw new TRPCError({
+              code: 'INTERNAL_SERVER_ERROR',
+              message: error.message || 'Erro ao criar cupom',
+            });
+          }
+        }),
+
+      /**
+       * Deleta um cupom
+       */
+      delete: protectedProcedure
+        .input(z.object({ id: z.string() }))
+        .mutation(async ({ ctx, input }) => {
+          if (ctx.user.role !== 'admin') {
+            throw new TRPCError({
+              code: 'FORBIDDEN',
+              message: 'Apenas administradores podem deletar cupons',
+            });
+          }
+
+          const stripe = (await import('./stripe')).stripe;
+          if (!stripe) {
+            throw new TRPCError({
+              code: 'INTERNAL_SERVER_ERROR',
+              message: 'Stripe não configurado',
+            });
+          }
+
+          try {
+            await stripe.coupons.del(input.id);
+            return { success: true };
+          } catch (error: any) {
+            console.error('[Admin] Erro ao deletar cupom:', error);
+            throw new TRPCError({
+              code: 'INTERNAL_SERVER_ERROR',
+              message: error.message || 'Erro ao deletar cupom',
+            });
+          }
+        }),
+    }),
+
+    /**
+     * Gerenciamento de códigos promocionais
+     */
+    promotionCodes: router({
+      /**
+       * Lista todos os códigos promocionais
+       */
+      list: protectedProcedure.query(async ({ ctx }) => {
+        if (ctx.user.role !== 'admin') {
+          throw new TRPCError({
+            code: 'FORBIDDEN',
+            message: 'Apenas administradores podem acessar esta rota',
+          });
+        }
+
+        const stripe = (await import('./stripe')).stripe;
+        if (!stripe) {
+          throw new TRPCError({
+            code: 'INTERNAL_SERVER_ERROR',
+            message: 'Stripe não configurado',
+          });
+        }
+
+        try {
+          const codes = await stripe.promotionCodes.list({ limit: 100, expand: ['data.coupon'] });
+          return codes.data.map((code: any) => ({
+            id: code.id,
+            code: code.code,
+            couponId: typeof code.coupon === 'string' ? code.coupon : code.coupon.id,
+            couponName: typeof code.coupon === 'string' ? null : code.coupon.name,
+            percentOff: typeof code.coupon === 'string' ? null : code.coupon.percent_off,
+            amountOff: typeof code.coupon === 'string' ? null : (code.coupon.amount_off ? code.coupon.amount_off / 100 : null),
+            active: code.active,
+            timesRedeemed: code.times_redeemed,
+            maxRedemptions: code.max_redemptions,
+            expiresAt: code.expires_at ? new Date(code.expires_at * 1000) : null,
+            created: new Date(code.created * 1000),
+          }));
+        } catch (error) {
+          console.error('[Admin] Erro ao listar códigos promocionais:', error);
+          throw new TRPCError({
+            code: 'INTERNAL_SERVER_ERROR',
+            message: 'Erro ao listar códigos promocionais',
+          });
+        }
+      }),
+
+      /**
+       * Cria um novo código promocional
+       */
+      create: protectedProcedure
+        .input(
+          z.object({
+            code: z.string().min(1).max(50),
+            couponId: z.string(),
+            maxRedemptions: z.number().optional(),
+            expiresAt: z.date().optional(),
+          })
+        )
+        .mutation(async ({ ctx, input }) => {
+          if (ctx.user.role !== 'admin') {
+            throw new TRPCError({
+              code: 'FORBIDDEN',
+              message: 'Apenas administradores podem criar códigos promocionais',
+            });
+          }
+
+          const stripe = (await import('./stripe')).stripe;
+          if (!stripe) {
+            throw new TRPCError({
+              code: 'INTERNAL_SERVER_ERROR',
+              message: 'Stripe não configurado',
+            });
+          }
+
+          try {
+            const codeData: any = {
+              code: input.code.toUpperCase(),
+              coupon: input.couponId,
+            };
+
+            if (input.maxRedemptions) {
+              codeData.max_redemptions = input.maxRedemptions;
+            }
+
+            if (input.expiresAt) {
+              codeData.expires_at = Math.floor(input.expiresAt.getTime() / 1000);
+            }
+
+            const promotionCode = await stripe.promotionCodes.create(codeData);
+
+            return {
+              success: true,
+              code: {
+                id: promotionCode.id,
+                code: promotionCode.code,
+              },
+            };
+          } catch (error: any) {
+            console.error('[Admin] Erro ao criar código promocional:', error);
+            throw new TRPCError({
+              code: 'INTERNAL_SERVER_ERROR',
+              message: error.message || 'Erro ao criar código promocional',
+            });
+          }
+        }),
+
+      /**
+       * Desativa um código promocional
+       */
+      deactivate: protectedProcedure
+        .input(z.object({ id: z.string() }))
+        .mutation(async ({ ctx, input }) => {
+          if (ctx.user.role !== 'admin') {
+            throw new TRPCError({
+              code: 'FORBIDDEN',
+              message: 'Apenas administradores podem desativar códigos promocionais',
+            });
+          }
+
+          const stripe = (await import('./stripe')).stripe;
+          if (!stripe) {
+            throw new TRPCError({
+              code: 'INTERNAL_SERVER_ERROR',
+              message: 'Stripe não configurado',
+            });
+          }
+
+          try {
+            await stripe.promotionCodes.update(input.id, { active: false });
+            return { success: true };
+          } catch (error: any) {
+            console.error('[Admin] Erro ao desativar código promocional:', error);
+            throw new TRPCError({
+              code: 'INTERNAL_SERVER_ERROR',
+              message: error.message || 'Erro ao desativar código promocional',
+            });
+          }
+        }),
+    }),
   }),
 
   subscription: router({
@@ -707,7 +1014,10 @@ export const appRouter = router({
      * Cria sessão de checkout para nova assinatura
      */
     create: protectedProcedure
-      .input(z.object({ priceId: z.string() }))
+      .input(z.object({ 
+        priceId: z.string(),
+        promotionCode: z.string().optional(),
+      }))
       .mutation(async ({ ctx, input }) => {
         const stripeModule = await import('./stripe');
         const stripe = stripeModule.stripe;
@@ -730,8 +1040,8 @@ export const appRouter = router({
           customerId = customer.id;
         }
 
-        // Criar sessão de checkout
-        const session = await stripe.checkout.sessions.create({
+        // Preparar dados da sessão
+        const sessionData: any = {
           customer: customerId,
           payment_method_types: ['card'],
           line_items: [{ price: input.priceId, quantity: 1 }],
@@ -739,7 +1049,37 @@ export const appRouter = router({
           success_url: `${process.env.NEXTAUTH_URL || 'http://localhost:3000'}/subscription?success=true`,
           cancel_url: `${process.env.NEXTAUTH_URL || 'http://localhost:3000'}/pricing?canceled=true`,
           metadata: { userId: ctx.user.id.toString() },
-        });
+        };
+
+        // Adicionar código promocional se fornecido
+        if (input.promotionCode) {
+          try {
+            // Buscar código promocional no Stripe
+            const promoCodes = await stripe.promotionCodes.list({
+              code: input.promotionCode.toUpperCase(),
+              active: true,
+              limit: 1,
+            });
+
+            if (promoCodes.data.length > 0) {
+              sessionData.discounts = [{ promotion_code: promoCodes.data[0].id }];
+            } else {
+              throw new TRPCError({
+                code: 'BAD_REQUEST',
+                message: 'Código promocional inválido ou expirado',
+              });
+            }
+          } catch (error: any) {
+            if (error instanceof TRPCError) throw error;
+            throw new TRPCError({
+              code: 'INTERNAL_SERVER_ERROR',
+              message: 'Erro ao validar código promocional',
+            });
+          }
+        }
+
+        // Criar sessão de checkout
+        const session = await stripe.checkout.sessions.create(sessionData);
 
         return { url: session.url };
       }),
@@ -847,6 +1187,312 @@ export const appRouter = router({
       return { settings };
     }),
   }),
+    /**
+     * Gerenciamento de cupons Stripe
+     */
+    coupons: router({
+      /**
+       * Lista todos os cupons
+       */
+      list: protectedProcedure.query(async ({ ctx }) => {
+        if (ctx.user.role !== 'admin') {
+          throw new TRPCError({
+            code: 'FORBIDDEN',
+            message: 'Apenas administradores podem acessar esta rota',
+          });
+        }
+
+        const stripe = (await import('./stripe')).stripe;
+        if (!stripe) {
+          throw new TRPCError({
+            code: 'INTERNAL_SERVER_ERROR',
+            message: 'Stripe não configurado',
+          });
+        }
+
+        try {
+          const coupons = await stripe.coupons.list({ limit: 100 });
+          return coupons.data.map(coupon => ({
+            id: coupon.id,
+            name: coupon.name,
+            percentOff: coupon.percent_off,
+            amountOff: coupon.amount_off ? coupon.amount_off / 100 : null,
+            currency: coupon.currency,
+            duration: coupon.duration,
+            durationInMonths: coupon.duration_in_months,
+            maxRedemptions: coupon.max_redemptions,
+            timesRedeemed: coupon.times_redeemed,
+            valid: coupon.valid,
+            created: new Date(coupon.created * 1000),
+            redeemBy: coupon.redeem_by ? new Date(coupon.redeem_by * 1000) : null,
+          }));
+        } catch (error) {
+          console.error('[Admin] Erro ao listar cupons:', error);
+          throw new TRPCError({
+            code: 'INTERNAL_SERVER_ERROR',
+            message: 'Erro ao listar cupons',
+          });
+        }
+      }),
+
+      /**
+       * Cria um novo cupom
+       */
+      create: protectedProcedure
+        .input(
+          z.object({
+            id: z.string().min(1).max(50),
+            name: z.string().optional(),
+            percentOff: z.number().min(1).max(100).optional(),
+            amountOff: z.number().min(0).optional(),
+            currency: z.string().default('brl'),
+            duration: z.enum(['once', 'repeating', 'forever']),
+            durationInMonths: z.number().optional(),
+            maxRedemptions: z.number().optional(),
+            redeemBy: z.date().optional(),
+          })
+        )
+        .mutation(async ({ ctx, input }) => {
+          if (ctx.user.role !== 'admin') {
+            throw new TRPCError({
+              code: 'FORBIDDEN',
+              message: 'Apenas administradores podem criar cupons',
+            });
+          }
+
+          const stripe = (await import('./stripe')).stripe;
+          if (!stripe) {
+            throw new TRPCError({
+              code: 'INTERNAL_SERVER_ERROR',
+              message: 'Stripe não configurado',
+            });
+          }
+
+          try {
+            const couponData: any = {
+              id: input.id.toUpperCase(),
+              name: input.name,
+              duration: input.duration,
+            };
+
+            if (input.percentOff) {
+              couponData.percent_off = input.percentOff;
+            } else if (input.amountOff) {
+              couponData.amount_off = Math.round(input.amountOff * 100);
+              couponData.currency = input.currency;
+            } else {
+              throw new TRPCError({
+                code: 'BAD_REQUEST',
+                message: 'Deve fornecer percentOff ou amountOff',
+              });
+            }
+
+            if (input.duration === 'repeating' && input.durationInMonths) {
+              couponData.duration_in_months = input.durationInMonths;
+            }
+
+            if (input.maxRedemptions) {
+              couponData.max_redemptions = input.maxRedemptions;
+            }
+
+            if (input.redeemBy) {
+              couponData.redeem_by = Math.floor(input.redeemBy.getTime() / 1000);
+            }
+
+            const coupon = await stripe.coupons.create(couponData);
+
+            return {
+              success: true,
+              coupon: {
+                id: coupon.id,
+                name: coupon.name,
+                percentOff: coupon.percent_off,
+                amountOff: coupon.amount_off ? coupon.amount_off / 100 : null,
+              },
+            };
+          } catch (error: any) {
+            console.error('[Admin] Erro ao criar cupom:', error);
+            throw new TRPCError({
+              code: 'INTERNAL_SERVER_ERROR',
+              message: error.message || 'Erro ao criar cupom',
+            });
+          }
+        }),
+
+      /**
+       * Deleta um cupom
+       */
+      delete: protectedProcedure
+        .input(z.object({ id: z.string() }))
+        .mutation(async ({ ctx, input }) => {
+          if (ctx.user.role !== 'admin') {
+            throw new TRPCError({
+              code: 'FORBIDDEN',
+              message: 'Apenas administradores podem deletar cupons',
+            });
+          }
+
+          const stripe = (await import('./stripe')).stripe;
+          if (!stripe) {
+            throw new TRPCError({
+              code: 'INTERNAL_SERVER_ERROR',
+              message: 'Stripe não configurado',
+            });
+          }
+
+          try {
+            await stripe.coupons.del(input.id);
+            return { success: true };
+          } catch (error: any) {
+            console.error('[Admin] Erro ao deletar cupom:', error);
+            throw new TRPCError({
+              code: 'INTERNAL_SERVER_ERROR',
+              message: error.message || 'Erro ao deletar cupom',
+            });
+          }
+        }),
+    }),
+
+    /**
+     * Gerenciamento de códigos promocionais
+     */
+    promotionCodes: router({
+      /**
+       * Lista todos os códigos promocionais
+       */
+      list: protectedProcedure.query(async ({ ctx }) => {
+        if (ctx.user.role !== 'admin') {
+          throw new TRPCError({
+            code: 'FORBIDDEN',
+            message: 'Apenas administradores podem acessar esta rota',
+          });
+        }
+
+        const stripe = (await import('./stripe')).stripe;
+        if (!stripe) {
+          throw new TRPCError({
+            code: 'INTERNAL_SERVER_ERROR',
+            message: 'Stripe não configurado',
+          });
+        }
+
+        try {
+          const codes = await stripe.promotionCodes.list({ limit: 100 });
+          return codes.data.map((code: any) => ({
+            id: code.id,
+            code: code.code,
+            couponId: typeof code.coupon === 'string' ? code.coupon : code.coupon.id,
+            couponName: typeof code.coupon === 'string' ? null : code.coupon.name,
+            percentOff: typeof code.coupon === 'string' ? null : code.coupon.percent_off,
+            amountOff: typeof code.coupon === 'string' ? null : (code.coupon.amount_off ? code.coupon.amount_off / 100 : null),
+            active: code.active,
+            timesRedeemed: code.times_redeemed,
+            maxRedemptions: code.max_redemptions,
+            expiresAt: code.expires_at ? new Date(code.expires_at * 1000) : null,
+            created: new Date(code.created * 1000),
+          }));
+        } catch (error) {
+          console.error('[Admin] Erro ao listar códigos promocionais:', error);
+          throw new TRPCError({
+            code: 'INTERNAL_SERVER_ERROR',
+            message: 'Erro ao listar códigos promocionais',
+          });
+        }
+      }),
+
+      /**
+       * Cria um novo código promocional
+       */
+      create: protectedProcedure
+        .input(
+          z.object({
+            code: z.string().min(1).max(50),
+            couponId: z.string(),
+            maxRedemptions: z.number().optional(),
+            expiresAt: z.date().optional(),
+          })
+        )
+        .mutation(async ({ ctx, input }) => {
+          if (ctx.user.role !== 'admin') {
+            throw new TRPCError({
+              code: 'FORBIDDEN',
+              message: 'Apenas administradores podem criar códigos promocionais',
+            });
+          }
+
+          const stripe = (await import('./stripe')).stripe;
+          if (!stripe) {
+            throw new TRPCError({
+              code: 'INTERNAL_SERVER_ERROR',
+              message: 'Stripe não configurado',
+            });
+          }
+
+          try {
+            const codeData: any = {
+              code: input.code.toUpperCase(),
+              coupon: input.couponId,
+            };
+
+            if (input.maxRedemptions) {
+              codeData.max_redemptions = input.maxRedemptions;
+            }
+
+            if (input.expiresAt) {
+              codeData.expires_at = Math.floor(input.expiresAt.getTime() / 1000);
+            }
+
+            const promotionCode = await stripe.promotionCodes.create(codeData);
+
+            return {
+              success: true,
+              code: {
+                id: promotionCode.id,
+                code: promotionCode.code,
+              },
+            };
+          } catch (error: any) {
+            console.error('[Admin] Erro ao criar código promocional:', error);
+            throw new TRPCError({
+              code: 'INTERNAL_SERVER_ERROR',
+              message: error.message || 'Erro ao criar código promocional',
+            });
+          }
+        }),
+
+      /**
+       * Desativa um código promocional
+       */
+      deactivate: protectedProcedure
+        .input(z.object({ id: z.string() }))
+        .mutation(async ({ ctx, input }) => {
+          if (ctx.user.role !== 'admin') {
+            throw new TRPCError({
+              code: 'FORBIDDEN',
+              message: 'Apenas administradores podem desativar códigos promocionais',
+            });
+          }
+
+          const stripe = (await import('./stripe')).stripe;
+          if (!stripe) {
+            throw new TRPCError({
+              code: 'INTERNAL_SERVER_ERROR',
+              message: 'Stripe não configurado',
+            });
+          }
+
+          try {
+            await stripe.promotionCodes.update(input.id, { active: false });
+            return { success: true };
+          } catch (error: any) {
+            console.error('[Admin] Erro ao desativar código promocional:', error);
+            throw new TRPCError({
+              code: 'INTERNAL_SERVER_ERROR',
+              message: error.message || 'Erro ao desativar código promocional',
+            });
+          }
+        }),
+    }),
 });
 
 export type AppRouter = typeof appRouter;

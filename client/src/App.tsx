@@ -10,6 +10,7 @@ import RenderPage from "./pages/RenderPage";
 import HistoryPage from "./pages/HistoryPage";
 import CheckoutSuccess from "./pages/CheckoutSuccess";
 import AdminPage from "./pages/AdminPage";
+import AdminCouponsPage from "./pages/AdminCouponsPage";
 import PricingPage from "./pages/PricingPage";
 import SubscriptionPage from "./pages/SubscriptionPage";
 import Login from "./pages/Login";
@@ -30,6 +31,7 @@ function Router() {
       <Route path={"/pricing"} component={PricingPage} />
       <Route path={"/subscription"} component={SubscriptionPage} />
       <Route path={"/admin"} component={AdminPage} />
+      <Route path={"/admin/coupons"} component={AdminCouponsPage} />
       <Route path={"/login"} component={Login} />
       <Route path={"/signup"} component={Signup} />
       <Route path={"/forgot-password"} component={ForgotPassword} />

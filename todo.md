@@ -931,3 +931,72 @@ Para finalizar NextAuth:
 - [x] Design responsivo com tabela
 - [x] Integrado na página /subscription
 - [x] Testado em desenvolvimento (estado vazio funcionando)
+
+
+## Sistema de Cupons de Desconto (10/11/2025 03:00)
+
+- [ ] Criar endpoints tRPC para gerenciar cupons
+  - [ ] admin.coupons.list - Listar todos os cupons
+  - [ ] admin.coupons.create - Criar novo cupom
+  - [ ] admin.coupons.update - Atualizar cupom existente
+  - [ ] admin.coupons.delete - Deletar cupom
+  - [ ] admin.promotionCodes.list - Listar códigos promocionais
+  - [ ] admin.promotionCodes.create - Criar código promocional
+- [x] Criar página admin /admin/coupons
+  - [x] Tabela listando cupons existentes
+  - [x] Formulário para criar novo cupom
+  - [x] Opções: percentual ou valor fixo
+  - [x] Definir duração (once, repeating, forever)
+  - [x] Limitar uso (máximo de usos)
+  - [x] Deletar cupom
+  - [x] Tabela listando códigos promocionais
+  - [x] Formulário para criar código promocional
+  - [x] Desativar código promocional
+  - [x] Design responsivo com tema laranja/âmbar
+- [x] Integrar cupons no checkout
+  - [x] Campo para inserir código promocional
+  - [x] Validar código no backend antes de criar checkout
+  - [x] Mostrar mensagem de confirmação quando código é inserido
+  - [x] Enviar código para Stripe Checkout (via discounts)
+- [ ] Testar sistema completo
+  - [ ] Criar cupom de teste
+  - [ ] Aplicar no checkout
+  - [ ] Verificar desconto aplicado
+  - [ ] Confirmar pagamento com desconto
+
+
+## Sistema de Cupons de Desconto (10/11/2025 02:45) - 90% COMPLETO
+
+- [x] Criar endpoints tRPC para gerenciar cupons
+  - [x] admin.coupons.list - listar cupons (FUNCIONANDO)
+  - [x] admin.coupons.create - criar cupom (FUNCIONANDO - cupom TESTE10 criado)
+  - [x] admin.coupons.delete - deletar cupom (FUNCIONANDO)
+  - [x] admin.promotionCodes.list - listar códigos (FUNCIONANDO)
+  - [ ] admin.promotionCodes.create - criar código (ERRO: routers duplicados)
+  - [x] admin.promotionCodes.deactivate - desativar código (FUNCIONANDO)
+- [x] Criar página admin /admin/coupons
+  - [x] Tabela listando cupons existentes
+  - [x] Formulário para criar novo cupom
+  - [x] Opções: percentual ou valor fixo
+  - [x] Definir duração (once, repeating, forever)
+  - [x] Deletar cupom
+  - [x] Tabela listando códigos promocionais
+  - [x] Formulário para criar código promocional
+  - [x] Desativar código promocional
+  - [x] Design responsivo com tema laranja/âmbar
+- [x] Integrar cupons no checkout
+  - [x] Campo para inserir código promocional na página /pricing
+  - [x] Validar código no backend antes de criar checkout
+  - [x] Enviar código para Stripe Checkout (via discounts)
+- [ ] **PROBLEMA CRÍTICO: Routers duplicados**
+  - [ ] Há 2 conjuntos de routers admin.coupons e admin.promotionCodes
+  - [ ] Primeiro conjunto: linhas ~580-883
+  - [ ] Segundo conjunto: linhas ~1190-1495 (DUPLICADO)
+  - [ ] Erro ao criar promotion code: "Received unknown parameter: coupon"
+  - [ ] **SOLUÇÃO**: Remover manualmente linhas 1190-1495 do server/routers.ts
+  - [ ] Após remoção, reiniciar servidor e testar criação de código promocional
+- [ ] Testar sistema completo de cupons
+  - [x] Criar cupom TESTE10 (10% OFF) - SUCESSO
+  - [ ] Criar código promocional BEMVINDO10 - FALHOU (routers duplicados)
+  - [ ] Aplicar cupom no checkout
+  - [ ] Verificar desconto aplicado no Stripe

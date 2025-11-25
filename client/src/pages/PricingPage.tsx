@@ -2,10 +2,13 @@ import { useAuth } from "@/_core/hooks/useAuth";
 import { useLoginUrl } from "@/components/LoginButton";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { getLoginUrl } from "@/const";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { trpc } from "@/lib/trpc";
-import { Check, Sparkles, Zap } from "lucide-react";
+import { Check, Sparkles, Tag, Zap } from "lucide-react";
+import { useState } from "react";
 import { toast } from "sonner";
 import { useLocation } from "wouter";
 import Header from "@/components/Header";
@@ -15,6 +18,8 @@ export default function PricingPage() {
   const { user, isAuthenticated } = useAuth();
   const { t } = useLanguage();
   const [, setLocation] = useLocation();
+  const [promoCode, setPromoCode] = useState("");
+  const [showPromoInput, setShowPromoInput] = useState(false);
 
   // Buscar price IDs do backend
   const { data: prices } = trpc.subscription.prices.useQuery();
@@ -50,7 +55,10 @@ export default function PricingPage() {
       return;
     }
 
-    createSubscriptionMutation.mutate({ priceId });
+    createSubscriptionMutation.mutate({ 
+      priceId,
+      promotionCode: promoCode || undefined,
+    });
   };
 
   const plans = [
@@ -107,6 +115,49 @@ export default function PricingPage() {
             <p className="text-xl text-amber-700 max-w-2xl mx-auto">
               {t('pricing.subtitle')}
             </p>
+          </div>
+
+          {/* Promo Code Input */}
+          <div className="max-w-md mx-auto mb-8">
+            {!showPromoInput ? (
+              <button
+                onClick={() => setShowPromoInput(true)}
+                className="flex items-center gap-2 mx-auto text-orange-600 hover:text-orange-700 font-medium"
+              >
+                <Tag className="h-4 w-4" />
+                Tem um código promocional?
+              </button>
+            ) : (
+              <div className="space-y-2">
+                <Label htmlFor="promoCode" className="text-amber-900">
+                  Código Promocional
+                </Label>
+                <div className="flex gap-2">
+                  <Input
+                    id="promoCode"
+                    value={promoCode}
+                    onChange={(e) => setPromoCode(e.target.value.toUpperCase())}
+                    placeholder="BEMVINDO10"
+                    className="uppercase"
+                  />
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => {
+                      setShowPromoInput(false);
+                      setPromoCode("");
+                    }}
+                  >
+                    Cancelar
+                  </Button>
+                </div>
+                {promoCode && (
+                  <p className="text-sm text-green-600">
+                    ✓ Código {promoCode} será aplicado no checkout
+                  </p>
+                )}
+              </div>
+            )}
           </div>
 
           {/* Plans Grid */}
