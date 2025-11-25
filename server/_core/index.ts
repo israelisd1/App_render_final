@@ -42,6 +42,12 @@ async function startServer() {
     stripeWebhookRouter = (await import("../routes/stripe-webhook")).default;
   }
   
+  // Import test email route (apenas em desenvolvimento)
+  let testEmailRouter: any = null;
+  if (process.env.NODE_ENV === "development") {
+    testEmailRouter = (await import("../routes/test-email")).default;
+  }
+  
   // Stripe webhook - DEVE vir ANTES do body parser JSON
   // O Stripe precisa do raw body para verificar a assinatura
   if (stripeWebhookRouter) {
@@ -71,6 +77,11 @@ async function startServer() {
   // Subscription routes (apenas se Stripe configurado)
   if (subscriptionRouter) {
     app.use("/api/subscription", subscriptionRouter);
+  }
+  
+  // Test email routes (apenas em desenvolvimento)
+  if (testEmailRouter) {
+    app.use("/api", testEmailRouter);
   }
   // tRPC API
   app.use(

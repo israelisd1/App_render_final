@@ -883,4 +883,16 @@ Para finalizar NextAuth:
 - [x] Adicionar variáveis de email ao env.ts
 - [x] Templates HTML responsivos com design da marca
 - [x] Testes unitários dos templates passando (6/6)
-- [ ] Testar envio de emails em produção (requer configuração SMTP)
+- [x] Testar envio de emails em produção (5/5 emails recebidos com sucesso)
+
+
+## Teste de Envio de Emails (10/11/2025 02:00) - COMPLETO
+
+- [x] Criar endpoint de teste para disparar emails (GET /api/test-email/all/:email)
+- [x] Testar email de boas-vindas
+- [x] Testar email de pagamento bem-sucedido
+- [x] Testar email de falha no pagamento
+- [x] Testar email de alerta de quota
+- [x] Testar email de cancelamento
+- [x] Todos os 5 emails enviados com sucesso para israelisd@gmail.com
+- [x] Corrigido bug de espaço extra em EMAIL_HOST (adicionado .trim())
