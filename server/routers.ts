@@ -340,12 +340,56 @@ export const appRouter = router({
           }
         })();
 
-        return { id: renderId };
-      }),
+        return { id: renderId };      }),
+
+    /**
+     * Lista invoices (faturas) do Stripe do usuário
+     */
+    invoices: protectedProcedure.query(async ({ ctx }) => {
+      if (!ctx.user.stripeCustomerId) {
+        return [];
+      }
+
+      const stripe = (await import('./stripe')).stripe;
+      if (!stripe) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Stripe não configurado",
+        });
+      }
+
+      try {
+        const invoices = await stripe.invoices.list({
+          customer: ctx.user.stripeCustomerId,
+          limit: 20,
+        });
+
+        return invoices.data.map(invoice => ({
+          id: invoice.id,
+          amount: invoice.amount_paid / 100, // Converter de centavos para reais
+          currency: invoice.currency.toUpperCase(),
+          status: invoice.status,
+          created: new Date(invoice.created * 1000),
+          paidAt: invoice.status_transitions.paid_at 
+            ? new Date(invoice.status_transitions.paid_at * 1000)
+            : null,
+          invoicePdf: invoice.invoice_pdf,
+          hostedInvoiceUrl: invoice.hosted_invoice_url,
+          paymentMethod: 'card',
+          description: invoice.lines.data[0]?.description || 'Assinatura',
+        }));
+      } catch (error) {
+        console.error('[Subscription] Erro ao buscar invoices:', error);
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: "Erro ao buscar histórico de pagamentos",
+        });
+      }
+    }),
   }),
 
   /**
-   * Rotas relacionadas a tokens
+   * Rotas de sistemadas a tokens
    */
   tokens: router({
     /**

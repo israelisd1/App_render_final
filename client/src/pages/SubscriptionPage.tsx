@@ -9,6 +9,7 @@ import { AlertCircle, Calendar, CheckCircle, CreditCard, Loader2, Sparkles, XCir
 import { toast } from "sonner";
 import { useLocation } from "wouter";
 import Header from "@/components/Header";
+import TransactionHistory from "@/components/TransactionHistory";
 
 export default function SubscriptionPage() {
   const loginUrl = useLoginUrl();
@@ -307,6 +308,9 @@ export default function SubscriptionPage() {
               )}
             </CardContent>
           </Card>
+
+          {/* Histórico de Transações */}
+          <TransactionHistory />
         </div>
       </main>
     </div>

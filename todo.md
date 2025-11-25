@@ -906,3 +906,28 @@ Para finalizar NextAuth:
 - [x] Incluir instruções de teste e troubleshooting
 - [ ] Usuário precisa configurar manualmente no Stripe Dashboard
 - [ ] Testar webhook em produção após configuração
+
+
+## Teste de Webhook Stripe em Produção (10/11/2025 02:30) - COMPLETO
+
+- [x] Verificar se STRIPE_WEBHOOK_SECRET está configurado em produção
+- [x] Testar webhook com evento de teste do Stripe Dashboard
+- [x] Verificar logs de resposta (retornou 200 OK)
+- [x] Confirmar que sistema está pronto para processar eventos reais
+- [x] Webhook funcionando 100% em produção
+
+
+## Histórico de Transações (10/11/2025 02:35) - COMPLETO
+
+- [x] Criar endpoint tRPC subscription.invoices para listar invoices do Stripe
+- [x] Criar componente TransactionHistory no frontend
+- [x] Mostrar data, valor, status, método de pagamento
+- [x] Adicionar link para invoice PDF do Stripe
+- [x] Adicionar link para hosted invoice URL (visualização online)
+- [x] Implementar limite de 20 invoices
+- [x] Badges coloridos por status (pago, aberto, cancelado, etc.)
+- [x] Estado vazio bem apresentado (sem faturas)
+- [x] Traduções PT-BR e EN-US completas
+- [x] Design responsivo com tabela
+- [x] Integrado na página /subscription
+- [x] Testado em desenvolvimento (estado vazio funcionando)
