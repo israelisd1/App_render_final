@@ -1000,3 +1000,12 @@ Para finalizar NextAuth:
   - [ ] Criar código promocional BEMVINDO10 - FALHOU (routers duplicados)
   - [ ] Aplicar cupom no checkout
   - [ ] Verificar desconto aplicado no Stripe
+
+
+## Remoção de Routers Duplicados (10/11/2025 03:00)
+
+- [ ] Identificar linhas exatas dos routers duplicados
+- [ ] Remover segundo conjunto de admin.coupons (linhas ~1190-1354)
+- [ ] Remover segundo conjunto de admin.promotionCodes (linhas ~1356-1495)
+- [ ] Testar criação de código promocional BEMVINDO10
+- [ ] Verificar que não há erros de compilação
