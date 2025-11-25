@@ -825,7 +825,10 @@ export const appRouter = router({
 
             const codeData: any = {
               code: input.code.toUpperCase(),
-              coupon: input.couponId,
+              promotion: {
+                type: 'coupon',
+                coupon: input.couponId,
+              },
             };
 
             if (input.maxRedemptions) {

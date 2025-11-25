@@ -1009,3 +1009,14 @@ Para finalizar NextAuth:
 - [ ] Remover segundo conjunto de admin.promotionCodes (linhas ~1356-1495)
 - [ ] Testar criação de código promocional BEMVINDO10
 - [ ] Verificar que não há erros de compilação
+
+
+## Correção de Erro de Código Promocional Stripe (10/11/2025 03:50)
+
+- [ ] Investigar documentação do Stripe API para promotion codes
+- [ ] Testar criação de código promocional via MCP Stripe
+- [ ] Identificar parâmetro correto (coupon vs promotion vs outro)
+- [ ] Corrigir código do endpoint admin.promotionCodes.create
+- [ ] Testar criação de código BEMVINDO10 com cupom TESTE10
+- [ ] Validar que código aparece na lista
+- [ ] Testar aplicação do código no checkout
