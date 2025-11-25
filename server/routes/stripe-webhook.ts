@@ -15,6 +15,11 @@ import {
   resetMonthlyQuota
 } from '../db';
 import { getPlanFromPriceId, getPlanConfig } from '../config/stripe-products';
+import {
+  sendWelcomeEmail,
+  sendPaymentSuccessEmail,
+  sendPaymentFailedEmail,
+} from '../email/emailService';
 
 const router = Router();
 
@@ -141,6 +146,26 @@ async function handleSubscriptionUpdate(subscription: Stripe.Subscription) {
   });
 
   console.log(`[Stripe Webhook] Updated subscription for user ${user.id}: ${plan} (${status})`);
+
+  // Enviar email de boas-vindas se for nova assinatura ativa
+  if (status === 'active' && user.email) {
+    const billingPeriodEnd = (subscription as any).current_period_end 
+      ? new Date((subscription as any).current_period_end * 1000).toLocaleDateString('pt-BR')
+      : 'N/A';
+    
+    const planName = plan === 'basic' ? 'Basic' : 'Pro';
+    const planValue = plan === 'basic' ? '99,90' : '149,90';
+
+    await sendWelcomeEmail({
+      to: user.email,
+      nome: user.name || 'Usuário',
+      plano: planName,
+      quota: (planConfig as any).features?.monthlyQuota || 0,
+      proximaCobranca: billingPeriodEnd,
+      valor: planValue,
+    });
+    console.log(`[Stripe Webhook] Welcome email sent to ${user.email}`);
+  }
 }
 
 /**
@@ -182,9 +207,33 @@ async function handlePaymentSucceeded(invoice: Stripe.Invoice) {
   }
 
   // Se for renovação de assinatura, resetar quota mensal
-  if ((invoice as any).subscription) {
+  if ((invoice as any).subscription && user.email) {
     await resetMonthlyQuota(user.id);
     console.log(`[Stripe Webhook] Monthly quota reset for user ${user.id}`);
+
+    // Enviar email de confirmação de pagamento
+    const planName = user.plan === 'basic' ? 'Basic' : 'Pro';
+    const planValue = user.plan === 'basic' ? '99,90' : '149,90';
+    const paymentDate = new Date((invoice as any).created * 1000).toLocaleDateString('pt-BR');
+    const nextBilling = (invoice as any).period_end 
+      ? new Date((invoice as any).period_end * 1000).toLocaleDateString('pt-BR')
+      : 'N/A';
+    
+    const lastFour = (invoice as any).charge?.payment_method_details?.card?.last4 || '****';
+
+    await sendPaymentSuccessEmail({
+      to: user.email,
+      nome: user.name || 'Usuário',
+      plano: planName,
+      valor: planValue,
+      data: paymentDate,
+      metodoPagamento: `Cartão final ${lastFour}`,
+      proximaCobranca: nextBilling,
+      quota: user.monthlyQuota || 0,
+      extras: user.extraRenders || 0,
+      linkRecibo: (invoice as any).hosted_invoice_url,
+    });
+    console.log(`[Stripe Webhook] Payment success email sent to ${user.email}`);
   }
 }
 
@@ -209,7 +258,23 @@ async function handlePaymentFailed(invoice: Stripe.Invoice) {
 
   console.log(`[Stripe Webhook] Payment failed for user ${user.id}, status set to past_due`);
 
-  // TODO: Enviar email notificando sobre falha no pagamento
+  // Enviar email de falha no pagamento
+  if (user.email) {
+    const planName = user.plan === 'basic' ? 'Basic' : 'Pro';
+    const planValue = user.plan === 'basic' ? '99,90' : '149,90';
+    const failureDate = new Date((invoice as any).created * 1000).toLocaleDateString('pt-BR');
+    const failureReason = (invoice as any).last_finalization_error?.message || 'Cartão recusado';
+
+    await sendPaymentFailedEmail({
+      to: user.email,
+      nome: user.name || 'Usuário',
+      plano: planName,
+      valor: planValue,
+      data: failureDate,
+      motivo: failureReason,
+    });
+    console.log(`[Stripe Webhook] Payment failed email sent to ${user.email}`);
+  }
 }
 
 export default router;

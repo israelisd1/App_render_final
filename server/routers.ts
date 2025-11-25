@@ -3,7 +3,9 @@ import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
-import { protectedProcedure, publicProcedure, router } from "./_core/trpc";
+import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
+import { sendSubscriptionCanceledEmail } from "./email/emailService";
+import { checkAndSendQuotaAlert } from "./email/quotaAlert";
 import { ENV } from "./_core/env";
 import { callArchitectureRenderingAPI } from "./architectureApi";
 import { addTokens, createRender, deductTokens, getActiveTokenPackages, getRenderById, getUserTokenTransactions, getUserRenders, updateRenderStatus, getDb, createStripeTransaction, getCouponByCode, getUserStripeTransactions } from "./db";
@@ -156,6 +158,17 @@ export const appRouter = router({
                 highResUrl: highResUrl,
                 completedAt: new Date(),
               });
+
+              // Verificar e enviar alerta de quota se necessário
+              try {
+                const { getUserById } = await import('./db');
+                const updatedUser = await getUserById(ctx.user.id);
+                if (updatedUser) {
+                  await checkAndSendQuotaAlert(updatedUser);
+                }
+              } catch (alertError) {
+                console.error(`[Render ${renderId}] Erro ao verificar quota:`, alertError);
+              }
             } else {
               const errorMsg = apiResponse.error || apiResponse.message || "API não retornou imagem renderizada";
               console.error(`[Render ${renderId}] Falha: ${errorMsg}`);
@@ -566,9 +579,28 @@ export const appRouter = router({
           message: "Stripe não configurado",
         });
       }
-      await stripe.subscriptions.update(ctx.user.subscriptionId, {
+      const subscription = await stripe.subscriptions.update(ctx.user.subscriptionId, {
         cancel_at_period_end: true,
       });
+
+      // Enviar email de confirmação de cancelamento
+      if (ctx.user.email) {
+        const planName = ctx.user.plan === 'basic' ? 'Basic' : 'Pro';
+        const endDate = (subscription as any).current_period_end
+          ? new Date((subscription as any).current_period_end * 1000).toLocaleDateString('pt-BR')
+          : 'N/A';
+        
+        const restantes = (ctx.user.monthlyQuota || 0) - (ctx.user.monthlyRendersUsed || 0);
+
+        await sendSubscriptionCanceledEmail({
+          to: ctx.user.email,
+          nome: ctx.user.name || 'Usuário',
+          plano: planName,
+          dataFim: endDate,
+          restantes,
+          extras: ctx.user.extraRenders || 0,
+        });
+      }
 
       return { success: true };
     }),

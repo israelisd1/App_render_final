@@ -867,3 +867,20 @@ Para finalizar NextAuth:
   - [x] Mostra plano atual (Basic)
   - [x] Mostra estatísticas de uso (quota 0, usado 0, disponíveis 3)
   - [x] Botões funcionando (Mudar Plano, Comprar Extras, Gerenciar)
+
+
+## Sistema de Notificações por Email (10/11/2025 01:30) - COMPLETO
+
+- [x] Criar templates de email
+  - [x] Email de boas-vindas (assinatura ativada)
+  - [x] Email de pagamento bem-sucedido
+  - [x] Email de falha no pagamento
+  - [x] Email de alerta de quota (90%)
+  - [x] Email de assinatura cancelada
+- [x] Implementar funções de envio de email (server/email/emailService.ts)
+- [x] Integrar com webhook do Stripe (server/routes/stripe-webhook.ts)
+- [x] Integrar com sistema de renderização (alerta de quota - server/email/quotaAlert.ts)
+- [x] Adicionar variáveis de email ao env.ts
+- [x] Templates HTML responsivos com design da marca
+- [x] Testes unitários dos templates passando (6/6)
+- [ ] Testar envio de emails em produção (requer configuração SMTP)

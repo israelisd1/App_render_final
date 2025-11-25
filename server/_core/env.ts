@@ -13,4 +13,9 @@ export const ENV = {
   stripePriceBasic: process.env.STRIPE_PRICE_BASIC ?? "",
   stripePricePro: process.env.STRIPE_PRICE_PRO ?? "",
   stripePriceExtra: process.env.STRIPE_PRICE_EXTRA ?? "",
+  emailHost: process.env.EMAIL_HOST ?? "",
+  emailPort: process.env.EMAIL_PORT ?? "587",
+  emailUser: process.env.EMAIL_USER ?? "",
+  emailPassword: process.env.EMAIL_PASSWORD ?? "",
+  emailFrom: process.env.EMAIL_FROM ?? "",
 };
